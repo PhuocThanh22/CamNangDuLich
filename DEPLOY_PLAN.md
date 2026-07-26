@@ -1,13 +1,18 @@
 # Kế hoạch triển khai (Deployment Plan)
 
+> **Trạng thái hiện tại: ✅ Đã deploy thành công**
+> - Frontend: https://cam-nang-du-lich.vercel.app
+> - Backend: https://foodmap-api-osdq.onrender.com
+> - Database: Supabase PostgreSQL
+
 ## Kiến trúc
 
 ```
-Cloudflare (domain.com)
+Cloudflare (domain.com) — tuỳ chọn
     │
     ├── domain.com ──────────► Vercel (Next.js frontend)
     │                              │
-    │                              └── NEXT_PUBLIC_API_URL = https://api.domain.com
+    │                              └── API proxy → Render (next.config.js rewrites)
     │
     ├── api.domain.com ───────► Render (FastAPI backend)
     │                              │
@@ -206,9 +211,22 @@ https://cam-nang-du-lich.vercel.app
 | Thành phần | URL |
 |------------|-----|
 | Frontend | `https://cam-nang-du-lich.vercel.app` |
-| API | `https://foodmap-api.onrender.com` |
-| Database | Supabase PostgreSQL |
+| API | `https://foodmap-api-osdq.onrender.com` |
+| Database | Supabase PostgreSQL (`db.rzvkvbimhybjmjcjwwek.supabase.co`) |
 | Domain (nếu có) | `https://your-domain.com` |
+
+---
+
+## Lưu ý quan trọng
+
+1. **Render URL**: Không phải `foodmap-api.onrender.com` mà là `foodmap-api-osdq.onrender.com` (Render tự sinh)
+2. **DATABASE_URL**: Dùng **Session pooler** của Supabase:
+   - Username: `postgres.rzvkvbimhybjmjcjwwek` (không phải `postgres`)
+   - Host: `aws-0-ap-southeast-1.pooler.supabase.com`
+   - Thêm `?sslmode=require` ở cuối
+3. **API Proxy**: Frontend gọi API qua Vercel proxy (`next.config.js` rewrite), không gọi trực tiếp đến Render
+4. **Map tiles**: Mặc định là OpenStreetMap (không cần API key). Stadia Maps có sẵn để chuyển đổi thủ công
+5. **Không cần** set `NEXT_PUBLIC_API_URL` trên Vercel — dùng proxy là đủ
 
 ---
 
@@ -218,6 +236,8 @@ https://cam-nang-du-lich.vercel.app
 |-----|-------------|-----|
 | `CORS error` | Frontend gọi API không đúng origin | Thêm frontend URL vào `origins` trong `main.py` |
 | `ECONNREFUSED` | DATABASE_URL sai | Kiểm tra connection string, thêm `?sslmode=require` |
+| `password authentication failed` | Username thiếu `.project_ref` | Dùng `postgres.rzvkvbimhybjmjcjwwek` thay vì `postgres` |
+| `Map tiles 401` | Stadia Maps thiếu API key | Chuyển sang OSM (mặc định), hoặc đăng ký key Stadia |
 | `Mixed content` | HTTP gọi HTTPS | Đảm bảo tất cả URL đều dùng HTTPS |
 | Social login fail | Redirect URI không khớp | Cập nhật Google/FB console với URL Render thật |
 | `Module not found` | Thiếu package trong requirements.txt | Kiểm tra và thêm package còn thiếu |
