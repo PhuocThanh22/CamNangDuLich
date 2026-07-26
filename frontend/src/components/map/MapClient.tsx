@@ -292,7 +292,7 @@ export default function MapClient() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedPlace, setSelectedPlace] = useState<Place | null>(null);
   const [showFilters, setShowFilters] = useState(false);
-  const [activeTile, setActiveTile] = useState('smooth');
+  const [activeTile, setActiveTile] = useState('osm');
   const [isGlobeMode, setIsGlobeMode] = useState(false);
   const [showSidebar, setShowSidebar] = useState(true);
   const [locating, setLocating] = useState(false);
