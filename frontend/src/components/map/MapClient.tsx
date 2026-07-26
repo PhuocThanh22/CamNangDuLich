@@ -26,16 +26,16 @@ interface MapTile {
 
 const MAP_TILES: MapTile[] = [
   {
-    id: 'smooth', label: 'Mặc định', icon: <Map className="h-4 w-4" />,
+    id: 'osm', label: 'Mặc định', icon: <Leaf className="h-4 w-4" />,
+    url: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', attr: '© OpenStreetMap contributors',
+  },
+  {
+    id: 'smooth', label: 'Stadia', icon: <Map className="h-4 w-4" />,
     url: 'https://tiles.stadiamaps.com/tiles/alidade_smooth/{z}/{x}/{y}{r}.png', attr: '© Stadia Maps',
   },
   {
     id: 'dark', label: 'Tối', icon: <Moon className="h-4 w-4" />,
     url: 'https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{r}.png', attr: '© Stadia Maps',
-  },
-  {
-    id: 'osm', label: 'OpenStreetMap', icon: <Leaf className="h-4 w-4" />,
-    url: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', attr: '© OpenStreetMap contributors',
   },
   {
     id: 'satellite', label: 'Vệ tinh', icon: <Satellite className="h-4 w-4" />,
