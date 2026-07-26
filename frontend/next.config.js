@@ -4,7 +4,7 @@ const nextConfig = {
     return [
       {
         source: '/api/:path*',
-        destination: 'https://foodmap-api.onrender.com/api/:path*',
+        destination: 'https://foodmap-api-osdq.onrender.com/api/:path*',
       },
     ];
   },
