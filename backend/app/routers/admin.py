@@ -1,3 +1,4 @@
+import os
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from sqlalchemy import func
@@ -53,6 +54,21 @@ def approve_place(
     place.trangthai = "Mở"
     db.commit()
     return {"message": "Dia diem da duoc duyet", "id": place.id}
+
+
+@router.post("/setup")
+def setup_admin(db: Session = Depends(get_db)):
+    user = db.query(User).filter(User.email == "admin2@foodmap.com").first()
+    if user:
+        user.vaitro = "admin"
+        db.commit()
+        return {"message": "Admin2 da duoc set lam admin"}
+    user = db.query(User).filter(User.email == "admin@foodmap.com").first()
+    if user:
+        user.vaitro = "admin"
+        db.commit()
+        return {"message": "Admin da duoc set lam admin"}
+    return {"message": "Khong tim thay user"}
 
 
 @router.delete("/places/{place_id}")
