@@ -269,8 +269,11 @@ export default function PlacePage() {
 
   const coords: [number, number] = [item.vido || 21.035, item.kinhdo || 105.849];
 
-  const galleryImages = placeImages.length > 0
-    ? placeImages.map((img) => ({ src: img.url, alt: img.alt || item.ten }))
+  const allImages: { src: string; alt: string }[] = [];
+  if (item.hinh) allImages.push({ src: item.hinh, alt: item.ten });
+  placeImages.forEach((img) => allImages.push({ src: img.url, alt: img.alt || item.ten }));
+  const galleryImages = allImages.length > 0
+    ? allImages
     : item.danhsachhinh
       ? item.danhsachhinh.split(',').map((url, i) => ({ src: url.trim(), alt: `${item.ten} ${i + 1}` }))
       : destinationGallery;
