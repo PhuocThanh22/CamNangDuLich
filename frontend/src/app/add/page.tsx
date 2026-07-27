@@ -24,9 +24,11 @@ export default function AddPlacePage() {
   const [gia, setGia] = useState('');
   const [diachi, setDiachi] = useState('');
   const [mota, setMota] = useState('');
-  const [giomocua, setGiomocua] = useState('');
-  const [giodongcua, setGiodongcua] = useState('');
-  const [hinh, setHinh] = useState('');
+  const [gioMo, setGioMo] = useState('06');
+  const [phutMo, setPhutMo] = useState('00');
+  const [gioDong, setGioDong] = useState('22');
+  const [phutDong, setPhutDong] = useState('00');
+  const [hinhs, setHinhs] = useState<string[]>([]);
   const [vido, setVido] = useState<number | null>(null);
   const [kinhdo, setKinhdo] = useState<number | null>(null);
 
@@ -43,13 +45,21 @@ export default function AddPlacePage() {
   }, []);
 
   function handleImageUpload(e: React.ChangeEvent<HTMLInputElement>) {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    const reader = new FileReader();
-    reader.onload = (event) => {
-      setHinh(event.target?.result as string);
-    };
-    reader.readAsDataURL(file);
+    const files = Array.from(e.target.files || []);
+    const remaining = 10 - hinhs.length;
+    if (remaining <= 0) return;
+    const toProcess = files.slice(0, remaining);
+    toProcess.forEach((file) => {
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        setHinhs((prev) => {
+          if (prev.length >= 10) return prev;
+          return [...prev, event.target?.result as string];
+        });
+      };
+      reader.readAsDataURL(file);
+    });
+    e.target.value = '';
   }
 
   async function handleSubmit(e: React.FormEvent) {
@@ -59,7 +69,9 @@ export default function AddPlacePage() {
     setSubmitting(true);
 
     try {
-      const giohoatdong = [giomocua, giodongcua].filter(Boolean).join(' – ');
+      const gioMoStr = `${gioMo}:${phutMo}`;
+      const gioDongStr = `${gioDong}:${phutDong}`;
+      const giohoatdong = `${gioMoStr} – ${gioDongStr}`;
       await placeService.create({
         ten,
         phanloai,
@@ -67,8 +79,8 @@ export default function AddPlacePage() {
         diachi: diachi || null,
         mota: mota || null,
         giohoatdong: giohoatdong || null,
-        giomocua: giomocua || null,
-        hinh: hinh || null,
+        giomocua: gioMoStr || null,
+        hinh: hinhs[0] || null,
         vido: vido || null,
         kinhdo: kinhdo || null,
       });
@@ -78,9 +90,11 @@ export default function AddPlacePage() {
       setGia('');
       setDiachi('');
       setMota('');
-      setGiomocua('');
-      setGiodongcua('');
-      setHinh('');
+      setGioMo('06');
+      setPhutMo('00');
+      setGioDong('22');
+      setPhutDong('00');
+      setHinhs([]);
       setVido(null);
       setKinhdo(null);
       setTimeout(() => router.push('/'), 2000);
@@ -231,64 +245,73 @@ export default function AddPlacePage() {
                 <div className="mt-5 grid gap-5 sm:grid-cols-2">
                   <label className="block text-sm font-semibold text-[#1a202c]">
                     <span className="mb-2 block">Giờ mở cửa</span>
-                    <div className="flex items-center gap-2 rounded-[10px] border border-[#e2ecf5] bg-[#f7fafc] px-4 py-3 text-[#1a202c]">
+                    <div className="flex items-center gap-2 rounded-[10px] border border-[#e2ecf5] bg-[#f7fafc] px-4 py-3">
                       <Clock3 className="h-4 w-4 text-[#a0aec0]" />
-                      <input
-                        value={giomocua}
-                        onChange={(e) => setGiomocua(e.target.value)}
-                        className="w-full bg-transparent text-[14px] outline-none placeholder:text-[#a0aec0]"
-                        placeholder="06:00"
-                      />
+                      <select value={gioMo} onChange={(e) => setGioMo(e.target.value)} className="bg-transparent text-[14px] outline-none">
+                        {Array.from({ length: 24 }, (_, i) => String(i).padStart(2, '0')).map((h) => <option key={h} value={h}>{h}</option>)}
+                      </select>
+                      <span className="text-slate-400">:</span>
+                      <select value={phutMo} onChange={(e) => setPhutMo(e.target.value)} className="bg-transparent text-[14px] outline-none">
+                        {['00', '15', '30', '45'].map((m) => <option key={m} value={m}>{m}</option>)}
+                      </select>
                     </div>
                   </label>
                   <label className="block text-sm font-semibold text-[#1a202c]">
                     <span className="mb-2 block">Giờ đóng cửa</span>
-                    <div className="flex items-center gap-2 rounded-[10px] border border-[#e2ecf5] bg-[#f7fafc] px-4 py-3 text-[#1a202c]">
+                    <div className="flex items-center gap-2 rounded-[10px] border border-[#e2ecf5] bg-[#f7fafc] px-4 py-3">
                       <Clock3 className="h-4 w-4 text-[#a0aec0]" />
-                      <input
-                        value={giodongcua}
-                        onChange={(e) => setGiodongcua(e.target.value)}
-                        className="w-full bg-transparent text-[14px] outline-none placeholder:text-[#a0aec0]"
-                        placeholder="22:00"
-                      />
+                      <select value={gioDong} onChange={(e) => setGioDong(e.target.value)} className="bg-transparent text-[14px] outline-none">
+                        {Array.from({ length: 24 }, (_, i) => String(i).padStart(2, '0')).map((h) => <option key={h} value={h}>{h}</option>)}
+                      </select>
+                      <span className="text-slate-400">:</span>
+                      <select value={phutDong} onChange={(e) => setPhutDong(e.target.value)} className="bg-transparent text-[14px] outline-none">
+                        {['00', '15', '30', '45'].map((m) => <option key={m} value={m}>{m}</option>)}
+                      </select>
                     </div>
                   </label>
                 </div>
 
                 <div className="mt-5">
-                  <div
-                    onClick={() => fileInputRef.current?.click()}
-                    className="cursor-pointer rounded-[10px] border-2 border-dashed border-[#cbd5e1] bg-[#f7fafc] p-4 transition hover:border-[#3b82f6] hover:bg-blue-50"
-                  >
-                    <div className="mb-3 flex items-center gap-2 text-[#3b82f6]">
-                      <Camera className="h-4 w-4" />
-                      <span className="text-sm font-semibold">Hình ảnh</span>
+                  <div className="mb-2 flex items-center gap-2 text-[#3b82f6]">
+                    <Camera className="h-4 w-4" />
+                    <span className="text-sm font-semibold">Hình ảnh</span>
+                    <span className="text-[12px] text-slate-400">({hinhs.length}/10)</span>
+                  </div>
+                  {hinhs.length > 0 && (
+                    <div className="mb-3 flex flex-wrap gap-2">
+                      {hinhs.map((src, idx) => (
+                        <div key={idx} className="relative">
+                          <img src={src} alt={`Ảnh ${idx + 1}`} className="h-20 w-20 rounded-lg object-cover" />
+                          <button
+                            type="button"
+                            onClick={() => setHinhs((prev) => prev.filter((_, i) => i !== idx))}
+                            className="absolute -top-2 -right-2 flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-white shadow"
+                          >
+                            <X className="h-3 w-3" />
+                          </button>
+                        </div>
+                      ))}
                     </div>
-                    {hinh ? (
-                      <div className="relative inline-block">
-                        <img src={hinh} alt="Preview" className="h-24 w-24 rounded-lg object-cover" />
-                        <button
-                          type="button"
-                          onClick={(e) => { e.stopPropagation(); setHinh(''); }}
-                          className="absolute -top-2 -right-2 flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-white shadow"
-                        >
-                          <X className="h-3 w-3" />
-                        </button>
-                      </div>
-                    ) : (
+                  )}
+                  {hinhs.length < 10 && (
+                    <div
+                      onClick={() => fileInputRef.current?.click()}
+                      className="cursor-pointer rounded-[10px] border-2 border-dashed border-[#cbd5e1] bg-[#f7fafc] p-4 transition hover:border-[#3b82f6] hover:bg-blue-50"
+                    >
                       <p className="text-sm text-[#718096]">
                         <Upload className="mr-1 inline h-4 w-4" />
-                        Tải ảnh lên · PNG, JPG, WEBP (tối đa 10MB)
+                        Tải ảnh lên · PNG, JPG, WEBP (tối đa 10MB, còn {10 - hinhs.length} ảnh)
                       </p>
-                    )}
-                    <input
-                      ref={fileInputRef}
-                      type="file"
-                      accept="image/*"
-                      className="hidden"
-                      onChange={handleImageUpload}
-                    />
-                  </div>
+                    </div>
+                  )}
+                  <input
+                    ref={fileInputRef}
+                    type="file"
+                    multiple
+                    accept="image/*"
+                    className="hidden"
+                    onChange={handleImageUpload}
+                  />
                 </div>
 
                 <div className="mt-5 rounded-xl bg-blue-50 p-4 text-[13px] leading-relaxed text-blue-700">
