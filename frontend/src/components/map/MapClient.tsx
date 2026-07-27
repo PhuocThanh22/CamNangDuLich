@@ -30,12 +30,12 @@ const MAP_TILES: MapTile[] = [
     url: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', attr: '© OpenStreetMap contributors',
   },
   {
-    id: 'smooth', label: 'Stadia', icon: <Map className="h-4 w-4" />,
-    url: 'https://tiles.stadiamaps.com/tiles/alidade_smooth/{z}/{x}/{y}{r}.png', attr: '© Stadia Maps',
+    id: 'smooth', label: 'Sáng', icon: <Map className="h-4 w-4" />,
+    url: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', attr: '© OpenStreetMap contributors',
   },
   {
     id: 'dark', label: 'Tối', icon: <Moon className="h-4 w-4" />,
-    url: 'https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{r}.png', attr: '© Stadia Maps',
+    url: 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', attr: '© OpenStreetMap contributors © CARTO',
   },
   {
     id: 'satellite', label: 'Vệ tinh', icon: <Satellite className="h-4 w-4" />,

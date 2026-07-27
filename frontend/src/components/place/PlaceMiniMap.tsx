@@ -31,7 +31,10 @@ export default function PlaceMiniMap({ coords }: PlaceMiniMapProps) {
         dragging={false}
         style={{ width: '100%', height: '100%' }}
       >
-        <TileLayer url="https://tiles.stadiamaps.com/tiles/alidade_smooth/{z}/{x}/{y}{r}.png" />
+        <TileLayer
+          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+          attribution="&copy; OpenStreetMap contributors"
+        />
         <Marker position={coords} icon={pinIcon} />
       </MapContainer>
       <div className="absolute inset-x-0 bottom-0 flex justify-center p-3">
