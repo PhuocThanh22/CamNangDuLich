@@ -262,10 +262,15 @@ def send_verification_code(data: dict, db: Session = Depends(get_db)):
     msg["To"] = email
 
     try:
-        with smtplib.SMTP(smtp_host, smtp_port, timeout=10) as server:
+        use_ssl = smtp_port == 465
+        if use_ssl:
+            server = smtplib.SMTP_SSL(smtp_host, smtp_port, timeout=10)
+        else:
+            server = smtplib.SMTP(smtp_host, smtp_port, timeout=10)
             server.starttls()
-            server.login(smtp_user, smtp_pass)
-            server.sendmail(smtp_user, [email], msg.as_string())
+        server.login(smtp_user, smtp_pass)
+        server.sendmail(smtp_user, [email], msg.as_string())
+        server.quit()
     except Exception as e:
         verification_codes.pop(email, None)
         raise HTTPException(status_code=500, detail=f"Gui email that bai: {str(e)}")
