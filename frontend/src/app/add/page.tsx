@@ -72,7 +72,7 @@ export default function AddPlacePage() {
       const gioMoStr = `${gioMo}:${phutMo}`;
       const gioDongStr = `${gioDong}:${phutDong}`;
       const giohoatdong = `${gioMoStr} – ${gioDongStr}`;
-      await placeService.create({
+      const res = await placeService.create({
         ten,
         phanloai,
         gia: gia || null,
@@ -84,6 +84,12 @@ export default function AddPlacePage() {
         vido: vido || null,
         kinhdo: kinhdo || null,
       });
+      const createdPlace = res.data;
+      for (let i = 1; i < hinhs.length; i++) {
+        try {
+          await placeService.createPlaceImage(createdPlace.id, { url: hinhs[i] });
+        } catch { }
+      }
       setSuccess('Địa điểm đã được gửi để xét duyệt!');
       setTen('');
       setPhanloai('');

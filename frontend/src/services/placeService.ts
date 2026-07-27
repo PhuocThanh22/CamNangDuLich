@@ -37,4 +37,5 @@ export const placeService = {
   createMenuItem: (placeId: number, data: { ten: string; gia?: string; mota?: string; hinh?: string }) => api.post(`/api/places/${placeId}/menu`, data),
   deleteMenuItem: (placeId: number, itemId: number) => api.delete(`/api/places/${placeId}/menu/${itemId}`),
   getPlaceImages: (placeId: number) => api.get(`/api/places/${placeId}/images`),
+  createPlaceImage: (placeId: number, data: { url: string; alt?: string }) => api.post(`/api/places/${placeId}/images`, data),
 };
