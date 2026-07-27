@@ -2,10 +2,8 @@ import bcrypt
 import os
 import secrets
 import random
-import smtplib
 import requests
 from urllib.parse import urlencode
-from email.mime.text import MIMEText
 from fastapi import APIRouter, Depends, HTTPException, status, Request
 from fastapi.responses import RedirectResponse, HTMLResponse
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
@@ -228,34 +226,18 @@ if (window.opener) {{
 # ─── Email Verification ───────────────────────────────────────────
 
 
-def send_email_smtp(smtp_host, smtp_port, smtp_user, smtp_pass, to_email, subject, body):
-    msg = MIMEText(body)
-    msg["Subject"] = subject
-    msg["From"] = smtp_user
-    msg["To"] = to_email
-    use_ssl = smtp_port == 465
-    if use_ssl:
-        server = smtplib.SMTP_SSL(smtp_host, smtp_port, timeout=10)
-    else:
-        server = smtplib.SMTP(smtp_host, smtp_port, timeout=10)
-        server.starttls()
-    server.login(smtp_user, smtp_pass)
-    server.sendmail(smtp_user, [to_email], msg.as_string())
-    server.quit()
-
-
-def send_email_sendgrid(api_key, from_email, to_email, subject, body):
+def send_email_brevo(api_key, from_email, to_email, subject, body):
     requests.post(
-        "https://api.sendgrid.com/v3/mail/send",
+        "https://api.brevo.com/v3/smtp/email",
         headers={
-            "Authorization": f"Bearer {api_key}",
+            "api-key": api_key,
             "Content-Type": "application/json",
         },
         json={
-            "personalizations": [{"to": [{"email": to_email}]}],
-            "from": {"email": from_email},
+            "sender": {"email": from_email},
+            "to": [{"email": to_email}],
             "subject": subject,
-            "content": [{"type": "text/plain", "value": body}],
+            "textContent": body,
         },
         timeout=15,
     )
@@ -280,34 +262,22 @@ def send_verification_code(data: dict, db: Session = Depends(get_db)):
     subject = "Xac thuc email - Cam Nang Du Lich"
     body = f"Ma xac thuc cua ban la: {code}\nMa co hieu luc trong 5 phut."
 
-    sendgrid_key = os.getenv("SENDGRID_API_KEY", "")
-    if sendgrid_key:
+    brevo_key = os.getenv("BREVO_API_KEY", "")
+    from_email = os.getenv("EMAIL_FROM", "")
+
+    if brevo_key and from_email:
         try:
-            send_email_sendgrid(sendgrid_key, "phuocthanhtranvan@gmail.com", email, subject, body)
+            send_email_brevo(brevo_key, from_email, email, subject, body)
             return {"message": f"Ma xac thuc da duoc gui den {email}"}
         except Exception as e:
             verification_codes.pop(email, None)
             raise HTTPException(status_code=500, detail=f"Gui email that bai: {str(e)}")
 
-    smtp_host = os.getenv("SMTP_HOST", "smtp.gmail.com")
-    smtp_port = int(os.getenv("SMTP_PORT", "587"))
-    smtp_user = os.getenv("SMTP_USER", "")
-    smtp_pass = os.getenv("SMTP_PASSWORD", "")
-
-    if not smtp_user or not smtp_pass:
-        verification_codes.pop(email, None)
-        raise HTTPException(
-            status_code=500,
-            detail="Email chua duoc cau hinh. Vui long thu lai sau.",
-        )
-
-    try:
-        send_email_smtp(smtp_host, smtp_port, smtp_user, smtp_pass, email, subject, body)
-    except Exception as e:
-        verification_codes.pop(email, None)
-        raise HTTPException(status_code=500, detail=f"Gui email that bai: {str(e)}")
-
-    return {"message": f"Ma xac thuc da duoc gui den {email}"}
+    verification_codes.pop(email, None)
+    raise HTTPException(
+        status_code=500,
+        detail="Email chua duoc cau hinh. Vui long thu lai sau.",
+    )
 
 
 @router.post("/verify-code")
