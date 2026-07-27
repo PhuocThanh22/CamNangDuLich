@@ -166,7 +166,7 @@ def facebook_redirect():
         "response_type": "code",
         "scope": "public_profile",
     }
-    url = f"https://www.facebook.com/v19.0/dialog/oauth?{urlencode(params)}"
+    url = f"https://www.facebook.com/v22.0/dialog/oauth?{urlencode(params)}"
     return RedirectResponse(url)
 
 
@@ -178,11 +178,11 @@ def facebook_callback(code: str, db: Session = Depends(get_db)):
         "redirect_uri": FACEBOOK_REDIRECT_URI,
         "code": code,
     }
-    token_resp = requests.get("https://graph.facebook.com/v19.0/oauth/access_token", params=token_data, timeout=10)
+    token_resp = requests.get("https://graph.facebook.com/v22.0/oauth/access_token", params=token_data, timeout=10)
     token_json = token_resp.json()
 
     if "access_token" not in token_json:
-        raise HTTPException(status_code=400, detail="Facebook xac thuc that bai")
+        raise HTTPException(status_code=400, detail=f"Facebook xac thuc that bai: {token_json.get('error', {}).get('message', token_json)}")
 
     access_token = token_json["access_token"]
     fields = "id,name,email,picture"
