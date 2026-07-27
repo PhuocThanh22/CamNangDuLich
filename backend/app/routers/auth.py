@@ -24,6 +24,7 @@ SECRET_KEY = "foodmap-secret-key-doi-sau-nay"
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_DAYS = 7
 
+FRONTEND_URL = os.getenv("FRONTEND_URL", "http://localhost:3000")
 GOOGLE_CLIENT_ID = os.getenv("GOOGLE_CLIENT_ID", "")
 GOOGLE_CLIENT_SECRET = os.getenv("GOOGLE_CLIENT_SECRET", "")
 GOOGLE_REDIRECT_URI = os.getenv("GOOGLE_REDIRECT_URI", "http://localhost:8000/api/auth/google/callback")
@@ -145,10 +146,10 @@ if (window.opener) {{
         provider: 'google',
         access_token: '{token}',
         user: {UserResponse.model_validate(user).model_dump_json()}
-    }}, 'http://localhost:3000');
+    }}, '{FRONTEND_URL}');
     window.close();
 }} else {{
-    window.location.href = 'http://localhost:3000/login?token={token}';
+    window.location.href = '{FRONTEND_URL}/login?token={token}';
 }}
 </script></body></html>"""
     return HTMLResponse(content=html)
@@ -215,10 +216,10 @@ if (window.opener) {{
         provider: 'facebook',
         access_token: '{token}',
         user: {UserResponse.model_validate(user).model_dump_json()}
-    }}, 'http://localhost:3000');
+    }}, '{FRONTEND_URL}');
     window.close();
 }} else {{
-    window.location.href = 'http://localhost:3000/login?token={token}';
+    window.location.href = '{FRONTEND_URL}/login?token={token}';
 }}
 </script></body></html>"""
     return HTMLResponse(content=html)

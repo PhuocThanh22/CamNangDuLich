@@ -75,12 +75,13 @@ origins = [
 6. **Start Command**: `uvicorn app.main:app --host 0.0.0.0 --port $PORT`
 7. **Add Environment Variable**:
    - `DATABASE_URL` = chuỗi Supabase từ Bước 1
+   - `FRONTEND_URL` = `https://cam-nang-du-lich.vercel.app`
    - `GOOGLE_CLIENT_ID` = giá trị từ `.env` cũ
    - `GOOGLE_CLIENT_SECRET` = giá trị từ `.env` cũ
-   - `GOOGLE_REDIRECT_URI` = `https://your-api.onrender.com/api/auth/google/callback`
+   - `GOOGLE_REDIRECT_URI` = `https://foodmap-api-osdq.onrender.com/api/auth/google/callback`
    - `FACEBOOK_APP_ID` = giá trị từ `.env` cũ
    - `FACEBOOK_APP_SECRET` = giá trị từ `.env` cũ
-   - `FACEBOOK_REDIRECT_URI` = `https://your-api.onrender.com/api/auth/facebook/callback`
+   - `FACEBOOK_REDIRECT_URI` = `https://foodmap-api-osdq.onrender.com/api/auth/facebook/callback`
    - `SMTP_HOST` = smtp.gmail.com
    - `SMTP_PORT` = 587
    - `SMTP_USER` = ...
@@ -182,12 +183,12 @@ Redeploy backend (Render sẽ tự động rebuild nếu push code mới, hoặc
 ### Google
 1. Vào https://console.cloud.google.com → APIs & Services → Credentials
 2. Sửa OAuth 2.0 Client IDs → **Authorized redirect URIs**:
-   - `https://your-api.onrender.com/api/auth/google/callback`
+   - `https://foodmap-api-osdq.onrender.com/api/auth/google/callback`
 
 ### Facebook
 1. Vào https://developers.facebook.com → App → Facebook Login → Settings
 2. Sửa **Valid OAuth Redirect URIs**:
-   - `https://your-api.onrender.com/api/auth/facebook/callback`
+   - `https://foodmap-api-osdq.onrender.com/api/auth/facebook/callback`
 
 ---
 

@@ -25,13 +25,15 @@ export default function LoginPage() {
   const [success, setSuccess] = useState('');
   const [countdown, setCountdown] = useState(0);
 
+  const API_ORIGIN = (process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000').replace(/\/+$/, '');
+
   const handleSocialMessage = useCallback((event: MessageEvent) => {
-    if (event.origin !== 'http://localhost:8000') return;
+    if (event.origin !== API_ORIGIN) return;
     if (event.data?.type !== 'social-auth') return;
     setToken(event.data.access_token);
     setUser(event.data.user);
     router.push('/');
-  }, [router]);
+  }, [router, API_ORIGIN]);
 
   useEffect(() => {
     window.addEventListener('message', handleSocialMessage);
@@ -116,7 +118,7 @@ export default function LoginPage() {
 
   function handleSocialLogin(provider: 'google' | 'facebook') {
     window.open(
-      `http://localhost:8000/api/auth/${provider}/redirect`,
+      `${API_ORIGIN}/api/auth/${provider}/redirect`,
       '_blank',
       'width=600,height=700'
     );
