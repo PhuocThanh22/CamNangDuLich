@@ -223,7 +223,7 @@ export default function AddPlacePage() {
                   <label className="block text-[13px] font-semibold text-slate-800 mb-2">
                     Vị trí trên bản đồ <span className="text-slate-400 font-normal">(nhấp để chọn)</span>
                   </label>
-                  <div className="h-[260px] overflow-hidden rounded-xl border border-slate-200">
+                  <div className="h-[260px] overflow-hidden rounded-xl border border-slate-200" style={{ isolation: 'isolate', position: 'relative', zIndex: 0 }}>
                     <MapPicker
                       vido={vido}
                       kinhdo={kinhdo}
