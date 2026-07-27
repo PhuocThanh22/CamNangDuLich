@@ -228,6 +228,39 @@ if (window.opener) {{
 # ─── Email Verification ───────────────────────────────────────────
 
 
+def send_email_smtp(smtp_host, smtp_port, smtp_user, smtp_pass, to_email, subject, body):
+    msg = MIMEText(body)
+    msg["Subject"] = subject
+    msg["From"] = smtp_user
+    msg["To"] = to_email
+    use_ssl = smtp_port == 465
+    if use_ssl:
+        server = smtplib.SMTP_SSL(smtp_host, smtp_port, timeout=10)
+    else:
+        server = smtplib.SMTP(smtp_host, smtp_port, timeout=10)
+        server.starttls()
+    server.login(smtp_user, smtp_pass)
+    server.sendmail(smtp_user, [to_email], msg.as_string())
+    server.quit()
+
+
+def send_email_sendgrid(api_key, from_email, to_email, subject, body):
+    requests.post(
+        "https://api.sendgrid.com/v3/mail/send",
+        headers={
+            "Authorization": f"Bearer {api_key}",
+            "Content-Type": "application/json",
+        },
+        json={
+            "personalizations": [{"to": [{"email": to_email}]}],
+            "from": {"email": from_email},
+            "subject": subject,
+            "content": [{"type": "text/plain", "value": body}],
+        },
+        timeout=15,
+    )
+
+
 @router.post("/send-verification-code")
 def send_verification_code(data: dict, db: Session = Depends(get_db)):
     email = data.get("email")
@@ -244,6 +277,18 @@ def send_verification_code(data: dict, db: Session = Depends(get_db)):
         "expires_at": (datetime.now(timezone.utc) + timedelta(minutes=5)).isoformat(),
     }
 
+    subject = "Xac thuc email - Cam Nang Du Lich"
+    body = f"Ma xac thuc cua ban la: {code}\nMa co hieu luc trong 5 phut."
+
+    sendgrid_key = os.getenv("SENDGRID_API_KEY", "")
+    if sendgrid_key:
+        try:
+            send_email_sendgrid(sendgrid_key, "phuocthanhtranvan@gmail.com", email, subject, body)
+            return {"message": f"Ma xac thuc da duoc gui den {email}"}
+        except Exception as e:
+            verification_codes.pop(email, None)
+            raise HTTPException(status_code=500, detail=f"Gui email that bai: {str(e)}")
+
     smtp_host = os.getenv("SMTP_HOST", "smtp.gmail.com")
     smtp_port = int(os.getenv("SMTP_PORT", "587"))
     smtp_user = os.getenv("SMTP_USER", "")
@@ -253,24 +298,11 @@ def send_verification_code(data: dict, db: Session = Depends(get_db)):
         verification_codes.pop(email, None)
         raise HTTPException(
             status_code=500,
-            detail="SMTP chua duoc cau hinh. Vui long thu lai sau.",
+            detail="Email chua duoc cau hinh. Vui long thu lai sau.",
         )
 
-    msg = MIMEText(f"Ma xac thuc cua ban la: {code}\nMa co hieu luc trong 5 phut.")
-    msg["Subject"] = "Xac thuc email - Cam Nang Du Lich"
-    msg["From"] = smtp_user
-    msg["To"] = email
-
     try:
-        use_ssl = smtp_port == 465
-        if use_ssl:
-            server = smtplib.SMTP_SSL(smtp_host, smtp_port, timeout=10)
-        else:
-            server = smtplib.SMTP(smtp_host, smtp_port, timeout=10)
-            server.starttls()
-        server.login(smtp_user, smtp_pass)
-        server.sendmail(smtp_user, [email], msg.as_string())
-        server.quit()
+        send_email_smtp(smtp_host, smtp_port, smtp_user, smtp_pass, email, subject, body)
     except Exception as e:
         verification_codes.pop(email, None)
         raise HTTPException(status_code=500, detail=f"Gui email that bai: {str(e)}")
