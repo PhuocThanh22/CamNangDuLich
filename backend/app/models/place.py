@@ -31,6 +31,7 @@ class Place(Base):
     trangweb = Column(String(255), nullable=True)
     ladulieu = Column(Boolean, default=True)
     noibat = Column(Boolean, default=False)
+    daduyet = Column(Boolean, default=True)
     nguoidung_id = Column(Integer, ForeignKey("users.id"), nullable=True)
     created_at = Column(String(50), nullable=True)
 

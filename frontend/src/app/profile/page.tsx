@@ -7,7 +7,7 @@ import {
   User, Mail, Lock, Camera, MapPin, Heart, 
   Clock3, Star, ArrowLeft, Loader2, LogOut,
   ChevronRight, Upload, Check, X, Trash2,
-  Navigation, Utensils
+  Navigation, Utensils, Shield
 } from 'lucide-react';
 import { authService, setUser, getUser, removeToken, getToken } from '@/services/authService';
 import { placeService } from '@/services/placeService';
@@ -18,12 +18,6 @@ interface Tab {
   label: string;
   icon: React.ReactNode;
 }
-
-const tabs: Tab[] = [
-  { key: 'info', label: 'Thông tin tài khoản', icon: <User className="h-4 w-4" /> },
-  { key: 'favorites', label: 'Địa điểm yêu thích', icon: <Heart className="h-4 w-4" /> },
-  { key: 'contributions', label: 'Địa điểm đã đóng góp', icon: <MapPin className="h-4 w-4" /> },
-];
 
 const DEFAULT_AVATAR = 'https://ui-avatars.com/api/?name=User&background=3b82f6&color=fff&size=200';
 
@@ -235,10 +229,18 @@ export default function ProfilePage() {
           <div className="lg:w-64">
             <div className="overflow-hidden rounded-2xl bg-white shadow-[0_2px_16px_rgba(0,0,0,0.06)]">
               <div className="flex gap-1 overflow-x-auto p-2 lg:flex-col">
-                {tabs.map((tab) => (
+                {[
+                  { key: 'info', label: 'Thông tin tài khoản', icon: <User className="h-4 w-4" /> },
+                  { key: 'favorites', label: 'Địa điểm yêu thích', icon: <Heart className="h-4 w-4" /> },
+                  { key: 'contributions', label: 'Địa điểm đã đóng góp', icon: <MapPin className="h-4 w-4" /> },
+                  ...(user?.vaitro === 'admin' ? [{ key: 'admin', label: 'Quản trị', icon: <Shield className="h-4 w-4" /> }] : []),
+                ].map((tab) => (
                   <button
                     key={tab.key}
-                    onClick={() => setActiveTab(tab.key)}
+                    onClick={() => {
+                      if (tab.key === 'admin') { router.push('/admin'); return; }
+                      setActiveTab(tab.key);
+                    }}
                     className={`flex shrink-0 items-center gap-2.5 rounded-xl px-4 py-3 text-[13px] font-semibold transition lg:w-full ${
                       activeTab === tab.key
                         ? 'bg-[#eff6ff] text-[#3b82f6]'

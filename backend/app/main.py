@@ -5,6 +5,7 @@ from app.routers import places
 from app.routers import auth
 from app.routers import reviews
 from app.routers import menu
+from app.routers import admin
 from app.database.database import engine, Base
 
 Base.metadata.create_all(bind=engine)
@@ -16,6 +17,8 @@ def migrate_schema():
             conn.execute(text("ALTER TABLE users ADD COLUMN avatar TEXT"))
         if "nguoidung_id" not in [c["name"] for c in inspector.get_columns("places")]:
             conn.execute(text("ALTER TABLE places ADD COLUMN nguoidung_id INTEGER REFERENCES users(id)"))
+        if "daduyet" not in [c["name"] for c in inspector.get_columns("places")]:
+            conn.execute(text("ALTER TABLE places ADD COLUMN daduyet BOOLEAN DEFAULT TRUE"))
         conn.commit()
 
 migrate_schema()
@@ -45,6 +48,7 @@ app.include_router(places.router)
 app.include_router(auth.router)
 app.include_router(reviews.router)
 app.include_router(menu.router)
+app.include_router(admin.router)
 
 
 @app.get("/api/health")

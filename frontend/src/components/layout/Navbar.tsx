@@ -17,9 +17,12 @@ export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [user, setUser] = useState<User | null>(null);
+  const [isAdmin, setIsAdmin] = useState(false);
 
   useEffect(() => {
-    setUser(getUser());
+    const u = getUser();
+    setUser(u);
+    setIsAdmin(u?.vaitro === 'admin');
   }, [pathname]);
 
   useEffect(() => {
@@ -32,6 +35,7 @@ export default function Navbar() {
     { label: 'Trang chủ', path: '/' },
     { label: 'Bản đồ', path: '/map' },
     { label: 'Thêm địa điểm', path: '/add' },
+    ...(isAdmin ? [{ label: 'Quản trị', path: '/admin' }] : []),
   ];
 
   const isActive = (path: string): boolean => {
@@ -128,6 +132,7 @@ export default function Navbar() {
                     : 'text-slate-600 hover:bg-slate-50'
                 }`}
               >
+                {link.path === '/admin' && <Shield className="mr-1.5 inline h-3.5 w-3.5 text-blue-600" />}
                 {link.label}
               </Link>
             ))}

@@ -57,11 +57,13 @@ class PlaceUpdate(BaseModel):
     tienich: Optional[str] = None
     trangweb: Optional[str] = None
     noibat: Optional[bool] = None
+    daduyet: Optional[bool] = None
 
 
 class PlaceResponse(PlaceBase):
     id: int
     nguoidung_id: Optional[int] = None
+    daduyet: Optional[bool] = True
 
     model_config = {
         "from_attributes": True,

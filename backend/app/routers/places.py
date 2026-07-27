@@ -25,7 +25,7 @@ def read_places(
     sort_by: Optional[str] = Query(None),
     db: Session = Depends(get_db),
 ):
-    query = db.query(PlaceModel)
+    query = db.query(PlaceModel).filter(PlaceModel.daduyet == True)
 
     if search:
         query = query.filter(
@@ -88,6 +88,7 @@ def read_nearby(
     query = db.query(PlaceModel).filter(
         PlaceModel.vido.isnot(None),
         PlaceModel.kinhdo.isnot(None),
+        PlaceModel.daduyet == True,
         haversine < radius_km,
     )
     if category and category != "all":
@@ -178,7 +179,9 @@ def create_place(
     db: Session = Depends(get_db),
     user: User = Depends(get_current_user),
 ):
-    db_place = PlaceModel(**place.model_dump(), nguoidung_id=user.id)
+    data = place.model_dump()
+    data["daduyet"] = user.vaitro == "admin"
+    db_place = PlaceModel(**data, nguoidung_id=user.id)
     db.add(db_place)
     db.commit()
     db.refresh(db_place)
