@@ -242,3 +242,34 @@ https://cam-nang-du-lich.vercel.app
 | `Mixed content` | HTTP gọi HTTPS | Đảm bảo tất cả URL đều dùng HTTPS |
 | Social login fail | Redirect URI không khớp | Cập nhật Google/FB console với URL Render thật |
 | `Module not found` | Thiếu package trong requirements.txt | Kiểm tra và thêm package còn thiếu |
+| SMTP `Network is unreachable` | Render chặn cổng SMTP (25, 587, 465) | Dùng email HTTP API thay vì SMTP |
+| `Gui email that bai` | SMTP timeout hoặc thiếu credentials | Chuyển sang Brevo/SendGrid API |
+
+---
+
+## Email Service — Brevo (khuyến nghị thay thế SMTP)
+
+Render chặn outbound SMTP nên cần dùng email HTTP API. **Brevo** là lựa chọn tốt nhất: free 300 email/ngày, đăng ký dễ, không bị review tài khoản như SendGrid.
+
+### Cách setup Brevo
+
+1. Đăng ký tại https://app.brevo.com/register
+2. Vào **SMTP & API** → **API Keys** → tạo **v3 API key**
+3. Thêm biến môi trường trên Render:
+   - `BREVO_API_KEY` = key vừa tạo
+   - `EMAIL_FROM` = email người gửi (VD: `phuocthanhtranvan@gmail.com`)
+4. **Xoá** các biến SMTP cũ (`SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `SMTP_PASSWORD`, `SENDGRID_API_KEY`)
+5. Deploy lại backend
+
+### Kiểm tra
+
+```bash
+curl -X POST https://foodmap-api-osdq.onrender.com/api/auth/send-verification-code \
+  -H "Content-Type: application/json" \
+  -d '{"email": "tranvanphuocthanh2106@gmail.com"}'
+```
+
+### Lưu ý
+
+- Nếu muốn dùng SendGrid thay Brevo: tạo API key tại https://sendgrid.com → Settings → API Keys, set biến `SENDGRID_API_KEY` trên Render
+- `EMAIL_FROM` phải là email đã được xác thực (verified sender) trên Brevo/SendGrid
