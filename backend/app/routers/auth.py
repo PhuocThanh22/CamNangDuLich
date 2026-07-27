@@ -249,13 +249,20 @@ def send_verification_code(data: dict, db: Session = Depends(get_db)):
     smtp_user = os.getenv("SMTP_USER", "")
     smtp_pass = os.getenv("SMTP_PASSWORD", "")
 
+    if not smtp_user or not smtp_pass:
+        verification_codes.pop(email, None)
+        raise HTTPException(
+            status_code=500,
+            detail="SMTP chua duoc cau hinh. Vui long thu lai sau.",
+        )
+
     msg = MIMEText(f"Ma xac thuc cua ban la: {code}\nMa co hieu luc trong 5 phut.")
     msg["Subject"] = "Xac thuc email - Cam Nang Du Lich"
     msg["From"] = smtp_user
     msg["To"] = email
 
     try:
-        with smtplib.SMTP(smtp_host, smtp_port) as server:
+        with smtplib.SMTP(smtp_host, smtp_port, timeout=10) as server:
             server.starttls()
             server.login(smtp_user, smtp_pass)
             server.sendmail(smtp_user, [email], msg.as_string())
