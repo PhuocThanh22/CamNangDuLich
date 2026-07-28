@@ -82,6 +82,8 @@ interface NearbyItem {
   giomocua: string;
   diachi: string;
   hinh: string;
+  vido?: number;
+  kinhdo?: number;
 }
 
 const mapToFeatured = (item: Record<string, unknown>, index: number): FeaturedItem => ({
@@ -105,6 +107,8 @@ const mapToNearby = (item: Record<string, unknown>, index: number): NearbyItem =
   giomocua: (item.giomocua as string) || '06:00 – 22:00',
   diachi: (item.diachi as string) || '',
   hinh: (item.hinh as string) || nearbyImages[index % nearbyImages.length],
+  vido: item.vido as number | undefined,
+  kinhdo: item.kinhdo as number | undefined,
 });
 
 interface Filter {
@@ -119,7 +123,32 @@ export default function HomePage() {
   const [featuredPlaces, setFeaturedPlaces] = useState<FeaturedItem[]>(fallbackFeatured);
   const [nearbyPlaces, setNearbyPlaces] = useState<NearbyItem[]>(fallbackNearby);
   const [categoriesList, setCategoriesList] = useState<{ title: string; count: string; icon: React.ReactNode; bg: string }[]>(fallbackCategories);
+  const [userLocation, setUserLocation] = useState<[number, number] | null>(null);
   const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (pos) => setUserLocation([pos.coords.latitude, pos.coords.longitude]),
+        () => {},
+        { enableHighAccuracy: true, timeout: 8000, maximumAge: 60000 }
+      );
+    }
+  }, []);
+
+  function calcDistance(lat1: number, lng1: number, lat2: number, lng2: number): string {
+    const R = 6371;
+    const dLat = ((lat2 - lat1) * Math.PI) / 180;
+    const dLng = ((lng2 - lng1) * Math.PI) / 180;
+    const a =
+      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+      Math.cos((lat1 * Math.PI) / 180) * Math.cos((lat2 * Math.PI) / 180) *
+      Math.sin(dLng / 2) * Math.sin(dLng / 2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    const d = R * c;
+    if (d < 1) return `${Math.round(d * 1000)} m`;
+    return `${d.toFixed(1)} km`;
+  }
 
   useEffect(() => {
     async function fetchData() {
@@ -136,7 +165,7 @@ export default function HomePage() {
             .map(mapToFeatured);
           if (featured.length) setFeaturedPlaces(featured);
 
-          const nearby = allData.slice(0, 9).map(mapToNearby);
+          const nearby = allData.slice(0, 6).map(mapToNearby);
           if (nearby.length) setNearbyPlaces(nearby);
         }
         if ((catRes.data as Record<string, unknown>[])?.length) {
@@ -167,6 +196,15 @@ export default function HomePage() {
 
   const filteredNearby = useMemo(() => {
     let result = [...nearbyPlaces];
+    if (userLocation) {
+      result = result.map((p) => {
+        if (p.vido != null && p.kinhdo != null) {
+          const d = calcDistance(userLocation[0], userLocation[1], p.vido, p.kinhdo);
+          return { ...p, khoangcach: d };
+        }
+        return p;
+      });
+    }
     if (activeFilter === 'open') {
       result = result.filter((p) => p.trangthai === 'Mở');
     } else if (activeFilter === 'top') {
@@ -179,7 +217,7 @@ export default function HomePage() {
       });
     }
     return result;
-  }, [nearbyPlaces, activeFilter]);
+  }, [nearbyPlaces, activeFilter, userLocation]);
 
   return (
     <div className="w-full bg-white">
@@ -256,13 +294,22 @@ export default function HomePage() {
         className="bg-[#f8fafc] px-5 py-14 sm:px-8 lg:px-10"
       >
         <div className="mx-auto max-w-7xl">
-          <div className="mb-7">
-            <p className="mb-1.5 text-[11px] font-bold uppercase tracking-[1.5px] text-[#3b82f6]">
-              GẦN BẠN NHẤT
-            </p>
-            <h2 className="text-[32px] font-black tracking-tight text-slate-900 sm:text-[38px]">
-              Quán ăn đang được yêu thích
-            </h2>
+          <div className="mb-7 flex items-end justify-between">
+            <div>
+              <p className="mb-1.5 text-[11px] font-bold uppercase tracking-[1.5px] text-[#3b82f6]">
+                GẦN BẠN NHẤT
+              </p>
+              <h2 className="text-[32px] font-black tracking-tight text-slate-900 sm:text-[38px]">
+                Quán ăn đang được yêu thích
+              </h2>
+            </div>
+            <button
+              type="button"
+              onClick={() => router.push('/map')}
+              className="hidden items-center gap-1 text-[14px] font-semibold text-[#3b82f6] transition hover:text-[#2563eb] sm:inline-flex"
+            >
+              Xem tất cả <ChevronRight className="h-4 w-4" />
+            </button>
           </div>
 
           <div className="mb-7 flex flex-wrap gap-2">
