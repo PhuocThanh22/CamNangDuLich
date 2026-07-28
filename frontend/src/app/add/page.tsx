@@ -9,6 +9,8 @@ import { getUser } from '@/services/authService';
 import { placeService } from '@/services/placeService';
 import type { User } from '@/services/authService';
 
+import 'leaflet/dist/leaflet.css';
+
 const MapPicker = dynamic(() => import('@/components/map/MapPicker'), { ssr: false });
 
 export default function AddPlacePage() {
