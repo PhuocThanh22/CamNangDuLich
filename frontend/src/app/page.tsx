@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useRef, useState, createElement } from 'react';
+import React, { useEffect, useRef, useState, useMemo, createElement } from 'react';
 import { ChevronRight, Sparkles, LocateFixed, Clock3, Star, Map, ArrowRight, List, Navigation, MapPin, Sandwich, Soup, UtensilsCrossed, Utensils, Fish, CakeSlice, Coffee } from 'lucide-react';
 import { motion, useInView } from 'framer-motion';
 import { useRouter } from 'next/navigation';
@@ -161,6 +161,22 @@ export default function HomePage() {
     { key: 'top', label: 'Đánh giá cao', icon: <Star className="h-3.5 w-3.5" /> },
   ];
 
+  const filteredNearby = useMemo(() => {
+    let result = [...nearbyPlaces];
+    if (activeFilter === 'open') {
+      result = result.filter((p) => p.trangthai === 'Mở');
+    } else if (activeFilter === 'top') {
+      result = result.sort((a, b) => parseFloat(b.danhgia) - parseFloat(a.danhgia));
+    } else if (activeFilter === 'near') {
+      result = result.sort((a, b) => {
+        const distA = parseFloat(a.khoangcach.replace(/[^0-9.]/g, ''));
+        const distB = parseFloat(b.khoangcach.replace(/[^0-9.]/g, ''));
+        return distA - distB;
+      });
+    }
+    return result;
+  }, [nearbyPlaces, activeFilter]);
+
   return (
     <div className="w-full bg-white">
       <Hero />
@@ -177,6 +193,7 @@ export default function HomePage() {
             <h2 className="text-[22px] font-bold text-slate-900">Khám phá theo danh mục</h2>
             <button
               type="button"
+              onClick={() => router.push('/map')}
               className="inline-flex items-center gap-1 text-[14px] font-semibold text-[#3b82f6] transition hover:text-[#2563eb]"
             >
               Xem tất cả <ChevronRight className="h-4 w-4" />
@@ -208,6 +225,7 @@ export default function HomePage() {
             </div>
             <button
               type="button"
+              onClick={() => router.push('/map')}
               className="hidden items-center gap-1 text-[14px] font-semibold text-[#3b82f6] transition hover:text-[#2563eb] sm:inline-flex"
             >
               Xem tất cả <ChevronRight className="h-4 w-4" />
@@ -265,7 +283,7 @@ export default function HomePage() {
             variants={containerVariants}
             className="grid gap-4 lg:grid-cols-3"
           >
-            {nearbyPlaces.map((item) => (
+            {filteredNearby.map((item) => (
               <motion.article
                 key={(item.id as string) || item.ten}
                 variants={cardVariants}
@@ -315,7 +333,7 @@ export default function HomePage() {
             <button
               type="button"
               onClick={() => router.push('/map')}
-              className="inline-flex items-center gap-2 rounded-xl bg-[#3b82f6] px-8 py-3.5 text-[14px] font-bold text-white shadow-[0_8px_20px_rgba(59,130,246,0.4)] transition hover:bg-[#2563eb] hover:shadow-[0_12px_28px_rgba(59,130,246,0.5)]"
+              className="inline-flex items-center gap-2 rounded-xl bg-[#3b82f6] px-6 py-3.5 text-[14px] font-bold text-white sm:px-8 shadow-[0_8px_20px_rgba(59,130,246,0.4)] transition hover:bg-[#2563eb] hover:shadow-[0_12px_28px_rgba(59,130,246,0.5)]"
             >
               <Map className="h-4 w-4" />
               Xem tất cả trên bản đồ
