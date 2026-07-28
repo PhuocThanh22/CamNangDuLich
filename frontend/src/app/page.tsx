@@ -124,16 +124,20 @@ export default function HomePage() {
   useEffect(() => {
     async function fetchData() {
       try {
-        const [featuredRes, nearbyRes, catRes] = await Promise.all([
-          placeService.getAll({ featured: true, limit: 4, sort_by: 'rating' }),
-          placeService.getNearby({ limit: 3 }),
+        const [allRes, catRes] = await Promise.all([
+          placeService.getAll({ limit: 50, sort_by: 'rating' }),
           placeService.getCategories(),
         ]);
-        if ((featuredRes.data as Record<string, unknown>[])?.length) {
-          setFeaturedPlaces((featuredRes.data as Record<string, unknown>[]).map(mapToFeatured));
-        }
-        if ((nearbyRes.data as Record<string, unknown>[])?.length) {
-          setNearbyPlaces((nearbyRes.data as Record<string, unknown>[]).map(mapToNearby));
+        const allData = allRes.data as Record<string, unknown>[];
+        if (allData?.length) {
+          const featured = allData
+            .filter((p) => p.noibat || p.danhgia)
+            .slice(0, 4)
+            .map(mapToFeatured);
+          if (featured.length) setFeaturedPlaces(featured);
+
+          const nearby = allData.slice(0, 9).map(mapToNearby);
+          if (nearby.length) setNearbyPlaces(nearby);
         }
         if ((catRes.data as Record<string, unknown>[])?.length) {
           const catIcons: Record<string, React.ComponentType<{ className?: string }>> = { 'Bánh mì': Sandwich, 'Phở': Soup, 'Bún': UtensilsCrossed, 'Cơm': Utensils, 'Hải sản': Fish, 'Đồ ngọt': CakeSlice, 'Cà phê': Coffee };
@@ -169,8 +173,8 @@ export default function HomePage() {
       result = result.sort((a, b) => parseFloat(b.danhgia) - parseFloat(a.danhgia));
     } else if (activeFilter === 'near') {
       result = result.sort((a, b) => {
-        const distA = parseFloat(a.khoangcach.replace(/[^0-9.]/g, ''));
-        const distB = parseFloat(b.khoangcach.replace(/[^0-9.]/g, ''));
+        const distA = parseFloat(a.khoangcach.replace(/,/g, '.').replace(/[^0-9.]/g, ''));
+        const distB = parseFloat(b.khoangcach.replace(/,/g, '.').replace(/[^0-9.]/g, ''));
         return distA - distB;
       });
     }
