@@ -301,6 +301,7 @@ export default function MapClient() {
   const globeContainerRef = useRef<HTMLDivElement>(null);
   const globeRef = useRef<ReturnType<typeof createGlobe> | null>(null);
   const [circleRadius, setCircleRadius] = useState(2);
+  const [committedRadius, setCommittedRadius] = useState(2);
   const [showRadius, setShowRadius] = useState(true);
   const [filters, setFilters] = useState({
     category: 'all',
@@ -583,7 +584,7 @@ export default function MapClient() {
             p.kinhdo
           ),
         }))
-        .filter((p) => p.distRaw <= circleRadius)
+        .filter((p) => p.distRaw <= committedRadius)
         .sort((a, b) => a.distRaw! - b.distRaw!);
     }
     if (filters.category !== 'all') {
@@ -601,7 +602,7 @@ export default function MapClient() {
       result = result.filter((p) => p.trangthai === 'Mở');
     }
     return result;
-  }, [filteredPlaces, userLocation, circleRadius, filters]);
+  }, [filteredPlaces, userLocation, committedRadius, filters]);
 
   const tileUrl = MAP_TILES.find((t) => t.id === activeTile)?.url || MAP_TILES[0].url;
   const tileAttr = MAP_TILES.find((t) => t.id === activeTile)?.attr || MAP_TILES[0].attr;
@@ -771,6 +772,9 @@ export default function MapClient() {
                       value={circleRadius}
                       disabled={!userLocation}
                       onChange={(e) => setCircleRadius(parseFloat(e.target.value))}
+                      onMouseUp={() => setCommittedRadius(circleRadius)}
+                      onTouchEnd={() => setCommittedRadius(circleRadius)}
+                      onKeyUp={() => setCommittedRadius(circleRadius)}
                       className="flex-1 accent-blue-500 disabled:opacity-40 disabled:cursor-not-allowed"
                     />
                     <button
@@ -947,7 +951,7 @@ export default function MapClient() {
                 {/* Bottom info */}
                 <div className="border-t border-slate-100 p-3 text-center text-[11px] text-slate-400">
                   {userLocation
-                    ? `${nearbyPlaces.length} quán ăn trong bán kính ${circleRadius}km`
+                    ? `${nearbyPlaces.length} quán ăn trong bán kính ${committedRadius}km`
                     : `${nearbyPlaces.length} địa điểm được tìm thấy`}
                 </div>
               </motion.aside>
@@ -990,7 +994,7 @@ export default function MapClient() {
               {userLocation && showRadius && (
                 <Circle
                   center={userLocation}
-                  radius={circleRadius * 1000}
+                  radius={committedRadius * 1000}
                   pathOptions={{
                     color: '#3b82f6',
                     fillColor: '#3b82f6',
