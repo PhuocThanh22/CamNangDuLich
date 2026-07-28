@@ -142,7 +142,7 @@ export default function LoginPage() {
         animate={{ opacity: 1, y: 0 }}
         className="w-full max-w-md"
       >
-        <div className="rounded-3xl bg-white p-8 shadow-[0_8px_40px_rgba(0,0,0,0.08)]">
+        <div className="rounded-3xl bg-white p-6 shadow-[0_8px_40px_rgba(0,0,0,0.08)] sm:p-8">
           {/* Logo + Title */}
           <div className="mb-8 text-center">
             <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-blue-600 shadow-[0_4px_16px_rgba(59,130,246,0.4)]">

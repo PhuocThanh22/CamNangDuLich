@@ -143,7 +143,7 @@ export default function Navbar() {
                   onClick={() => setMenuOpen(false)}
                   className="flex flex-1 items-center justify-center gap-1.5 rounded-lg border border-slate-200 py-2.5 text-center text-[14px] text-slate-700 hover:bg-slate-50"
                 >
-                  <Settings className="h-3.5 w-3.5" /> {user.ten}
+                  <Settings className="h-3.5 w-3.5 shrink-0" /> <span className="truncate">{user.ten}</span>
                 </Link>
               ) : (
                 <Link

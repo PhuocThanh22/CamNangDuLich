@@ -198,9 +198,9 @@ export default function AdminPage() {
                     )}
                   </div>
                   <div className="min-w-0 flex-1">
-                    <div className="flex items-start justify-between gap-3">
-                      <div>
-                        <h3 className="text-[15px] font-bold text-slate-900">{place.ten}</h3>
+                    <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between sm:gap-3">
+                      <div className="min-w-0">
+                        <h3 className="truncate text-[15px] font-bold text-slate-900">{place.ten}</h3>
                         <div className="mt-1 flex flex-wrap items-center gap-2">
                           <span className="rounded-md bg-blue-100 px-2 py-0.5 text-[11px] font-semibold text-blue-700">
                             {place.phanloai}
@@ -239,7 +239,7 @@ export default function AdminPage() {
                         </div>
                       )}
                       {place.daduyet && activeTab === 'all' && (
-                        <span className="flex items-center gap-1 rounded-xl bg-green-50 px-3 py-1.5 text-[12px] font-semibold text-green-700">
+                        <span className="flex shrink-0 items-center gap-1 rounded-xl bg-green-50 px-3 py-1.5 text-[12px] font-semibold text-green-700">
                           <Check className="h-3.5 w-3.5" /> Đã duyệt
                         </span>
                       )}

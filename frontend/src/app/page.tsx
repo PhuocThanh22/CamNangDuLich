@@ -184,7 +184,7 @@ export default function HomePage() {
           </div>
           <motion.div
             variants={containerVariants}
-            className="grid grid-cols-4 gap-3 sm:grid-cols-7"
+            className="grid grid-cols-3 gap-3 sm:grid-cols-4 lg:grid-cols-7"
           >
             {categoriesList.map((cat) => (
               <motion.div key={cat.title} variants={cardVariants}>
@@ -301,7 +301,7 @@ export default function HomePage() {
                       <span>{item.danhgia}</span>
                     </div>
                   </div>
-                  <div className="flex items-center gap-3 text-[12px] text-slate-400">
+                  <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-[12px] text-slate-400">
                     <span><MapPin className="h-3 w-3 inline" /> {item.khoangcach}</span>
                     <span className="font-semibold text-orange-500">{item.gia}</span>
                     <span><Clock3 className="h-3 w-3 inline" /> {item.giomocua}</span>

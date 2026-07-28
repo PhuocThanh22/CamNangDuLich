@@ -53,7 +53,7 @@ export default function Hero() {
           initial={{ opacity: 0, y: 24 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.1 }}
-          className="mb-5 text-[42px] font-black leading-[1.1] tracking-[-0.03em] text-white sm:text-[56px] lg:text-[68px]"
+          className="mb-5 text-[32px] font-black leading-[1.1] tracking-[-0.03em] text-white sm:text-[56px] lg:text-[68px]"
         >
           Khám phá ẩm thực
           <br />
@@ -130,13 +130,13 @@ export default function Hero() {
         transition={{ duration: 0.6, delay: 0.6 }}
         className="absolute bottom-0 left-0 right-0 z-10 border-t border-white/10 bg-[#0f172a]/80 backdrop-blur-md"
       >
-        <div className="mx-auto flex max-w-7xl items-center justify-center divide-x divide-white/15 py-4">
+        <div className="mx-auto flex max-w-7xl items-center justify-center divide-x divide-white/15 py-3 sm:py-4">
           {stats.map((stat) => (
-            <div key={stat.label} className="flex items-center gap-2.5 px-8 sm:px-14">
+            <div key={stat.label} className="flex items-center gap-2 px-3 sm:gap-2.5 sm:px-14">
               <span className="text-blue-300">{stat.icon}</span>
               <div>
-                <span className="text-[15px] font-bold text-white">{stat.value}</span>
-                <span className="ml-1.5 text-[13px] text-white/60">{stat.label}</span>
+                <span className="text-[13px] font-bold text-white sm:text-[15px]">{stat.value}</span>
+                <span className="ml-1 text-[11px] text-white/60 sm:ml-1.5 sm:text-[13px]">{stat.label}</span>
               </div>
             </div>
           ))}

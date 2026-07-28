@@ -17,9 +17,9 @@ export default function CategoryCard({ title, count, icon, bg }: CategoryCardPro
       whileHover={{ y: -4, scale: 1.03 }}
       whileTap={{ scale: 0.97 }}
       transition={{ type: 'spring', stiffness: 400, damping: 20 }}
-      className="flex w-full flex-col items-center gap-2.5 rounded-2xl border border-slate-100 bg-white p-4 shadow-[0_2px_10px_rgba(0,0,0,0.04)] transition hover:border-blue-100 hover:shadow-[0_8px_24px_rgba(59,130,246,0.1)]"
+      className="flex w-full flex-col items-center gap-2 rounded-2xl border border-slate-100 bg-white p-3 shadow-[0_2px_10px_rgba(0,0,0,0.04)] transition hover:border-blue-100 hover:shadow-[0_8px_24px_rgba(59,130,246,0.1)] sm:gap-2.5 sm:p-4"
     >
-      <div className={`flex h-14 w-14 items-center justify-center rounded-xl ${bg}`}>
+      <div className={`flex h-10 w-10 items-center justify-center rounded-xl ${bg} sm:h-14 sm:w-14`}>
         {icon}
       </div>
       <div className="text-center">

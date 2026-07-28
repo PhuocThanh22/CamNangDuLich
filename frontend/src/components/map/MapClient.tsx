@@ -628,7 +628,7 @@ export default function MapClient() {
                 initial={{ opacity: 0, y: 20, scale: 0.95 }}
                 animate={{ opacity: 1, y: 0, scale: 1 }}
                 exit={{ opacity: 0, y: 20, scale: 0.95 }}
-                className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-20 w-80 rounded-2xl border border-white/10 bg-black/70 backdrop-blur-xl shadow-2xl overflow-hidden"
+                className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-20 w-[90vw] max-w-[320px] rounded-2xl border border-white/10 bg-black/70 backdrop-blur-xl shadow-2xl overflow-hidden"
               >
                 <div className="flex gap-3 p-4">
                   <div className="h-20 w-20 shrink-0 overflow-hidden rounded-xl">
@@ -692,9 +692,9 @@ export default function MapClient() {
           <AnimatePresence>
             {showSidebar && (
               <motion.aside
-                initial={{ x: -320, opacity: 0 }}
+                initial={{ x: '-100%', opacity: 0 }}
                 animate={{ x: 0, opacity: 1 }}
-                exit={{ x: -320, opacity: 0 }}
+                exit={{ x: '-100%', opacity: 0 }}
                 transition={{ duration: 0.3, ease: 'easeInOut' }}
                 className="absolute left-0 top-0 z-[1000] flex h-full w-[85vw] max-w-[320px] flex-col bg-white shadow-xl"
               >
