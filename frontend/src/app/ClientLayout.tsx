@@ -18,8 +18,8 @@ export default function ClientLayout({ children }: ClientLayoutProps) {
       <Navbar />
 
       {isMapPage ? (
-        <div style={{ height: 'calc(100vh - 60px)', display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
-          <div style={{ flex: 1, position: 'relative', overflow: 'hidden' }}>
+        <div style={{ height: 'calc(100dvh - 60px)', display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
+          <div style={{ flex: 1, minHeight: 0, position: 'relative', overflow: 'hidden' }}>
             {children}
           </div>
         </div>

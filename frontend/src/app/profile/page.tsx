@@ -32,6 +32,7 @@ interface Place {
   diachi?: string;
   trangthai?: string;
   khoangcach?: string;
+  daduyet?: boolean;
 }
 
 export default function ProfilePage() {
@@ -509,9 +510,15 @@ export default function ProfilePage() {
                                 </div>
                               </div>
                               <div className="flex items-center justify-between">
-                                <div className="flex items-center gap-1.5 text-[12px] text-slate-400">
-                                  <Clock3 className="h-3 w-3" />
-                                  <span>{place.trangthai || 'Đang mở'}</span>
+                                <div className="flex items-center gap-1.5 text-[12px]">
+                                  {place.daduyet === false ? (
+                                    <span className="rounded-md bg-amber-100 px-2 py-0.5 font-semibold text-amber-700">Chờ duyệt</span>
+                                  ) : (
+                                    <>
+                                      <Clock3 className="h-3 w-3 text-slate-400" />
+                                      <span className="text-slate-400">{place.trangthai || 'Đang mở'}</span>
+                                    </>
+                                  )}
                                 </div>
                                 <span className="text-[12px] text-slate-400">{place.khoangcach || ''}</span>
                               </div>

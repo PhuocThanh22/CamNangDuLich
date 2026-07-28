@@ -308,6 +308,7 @@ export default function MapClient() {
     status: 'all',
   });
   const [globeSpotInfo, setGlobeSpotInfo] = useState<GlobeSpotInfo | null>(null);
+  const [locationError, setLocationError] = useState<string | null>(null);
 
   useEffect(() => {
     placeService.getAll({})
@@ -347,10 +348,18 @@ export default function MapClient() {
           setUserLocation([latitude, longitude]);
           initialCenterRef.current = [latitude, longitude];
           setMapCenter([latitude, longitude]);
+          setLocationError(null);
         },
-        () => {},
-        { enableHighAccuracy: true, timeout: 10000 }
+        (err) => {
+          if (err.code === 1) setLocationError('Vui lòng cho phép truy cập vị trí trong trình duyệt');
+          else if (err.code === 2) setLocationError('Không thể xác định vị trí. Vui lòng thử lại');
+          else if (err.code === 3) setLocationError('Yêu cầu định vị đã hết thời gian. Thử lại sau');
+          else setLocationError('Không thể định vị vị trí của bạn');
+        },
+        { enableHighAccuracy: true, timeout: 8000, maximumAge: 5000 }
       );
+    } else {
+      setLocationError('Trình duyệt không hỗ trợ định vị');
     }
   }, []);
 
@@ -498,6 +507,7 @@ export default function MapClient() {
 
   const handleLocate = useCallback(() => {
     setLocating(true);
+    setLocationError(null);
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         (pos) => {
@@ -507,17 +517,25 @@ export default function MapClient() {
           setMapCenter([latitude, longitude]);
           setFlyToPlace({ vido: latitude, kinhdo: longitude });
           setLocating(false);
+          setLocationError(null);
           setIsGlobeMode(false);
           const isDemo = places.length > 0 && places[0].id?.toString().startsWith('demo-');
           if (isDemo) {
             setPlaces(generateDemoPlaces([latitude, longitude]));
           }
         },
-        () => setLocating(false),
-        { enableHighAccuracy: true, timeout: 10000 }
+        (err) => {
+          setLocating(false);
+          if (err.code === 1) setLocationError('Vui lòng cho phép truy cập vị trí trong trình duyệt');
+          else if (err.code === 2) setLocationError('Không thể xác định vị trí. Vui lòng thử lại');
+          else if (err.code === 3) setLocationError('Yêu cầu định vị đã hết thời gian. Thử lại sau');
+          else setLocationError('Không thể định vị vị trí của bạn');
+        },
+        { enableHighAccuracy: true, timeout: 8000, maximumAge: 5000 }
       );
     } else {
       setLocating(false);
+      setLocationError('Trình duyệt không hỗ trợ định vị');
     }
   }, [places]);
 
@@ -589,7 +607,7 @@ export default function MapClient() {
   const tileAttr = MAP_TILES.find((t) => t.id === activeTile)?.attr || MAP_TILES[0].attr;
 
   return (
-    <div className="relative h-full w-full" style={{ height: '100%' }}>
+    <div className="absolute inset-0">
       {isGlobeMode ? (
         <div className="absolute inset-0 z-10" style={{ background: 'radial-gradient(ellipse at center, #0a0e27 0%, #050816 100%)' }}>
           <div ref={globeContainerRef} className="h-full w-full relative" style={{ zIndex: 2 }} />
@@ -670,7 +688,7 @@ export default function MapClient() {
           </AnimatePresence>
         </div>
       ) : (
-        <div className="relative h-full w-full flex">
+        <div className="relative h-full w-full">
           {/* Sidebar */}
           <AnimatePresence>
             {showSidebar && (
@@ -679,7 +697,7 @@ export default function MapClient() {
                 animate={{ x: 0, opacity: 1 }}
                 exit={{ x: -320, opacity: 0 }}
                 transition={{ duration: 0.3, ease: 'easeInOut' }}
-                className="absolute left-0 top-0 z-[1000] flex h-full w-[320px] flex-col bg-white shadow-xl"
+                className="absolute left-0 top-0 z-[1000] flex h-full w-[85vw] max-w-[320px] flex-col bg-white shadow-xl"
               >
                 {/* Search header */}
                 <div className="border-b border-slate-100 p-4">
@@ -732,6 +750,13 @@ export default function MapClient() {
                     </button>
                   </div>
 
+                  {/* Location error */}
+                  {locationError && (
+                    <div className="mt-2 rounded-lg bg-amber-50 px-3 py-2 text-[12px] text-amber-700">
+                      {locationError}
+                    </div>
+                  )}
+
                   {/* Radius control */}
                   <div className="mt-2 flex items-center gap-2">
                     <span className="shrink-0 text-[11px] font-medium text-slate-500">
@@ -744,15 +769,19 @@ export default function MapClient() {
                       max="10"
                       step="0.5"
                       value={circleRadius}
+                      disabled={!userLocation}
                       onChange={(e) => setCircleRadius(parseFloat(e.target.value))}
-                      className="flex-1 accent-blue-500"
+                      className="flex-1 accent-blue-500 disabled:opacity-40 disabled:cursor-not-allowed"
                     />
                     <button
                       onClick={() => setShowRadius(!showRadius)}
+                      disabled={!userLocation}
                       className={`flex h-6 w-6 items-center justify-center rounded text-[10px] font-bold transition ${
-                        showRadius
-                          ? 'bg-blue-100 text-blue-600'
-                          : 'bg-slate-100 text-slate-400'
+                        !userLocation
+                          ? 'bg-slate-50 text-slate-300 cursor-not-allowed'
+                          : showRadius
+                            ? 'bg-blue-100 text-blue-600'
+                            : 'bg-slate-100 text-slate-400'
                       }`}
                       title={showRadius ? 'Ẩn vùng bán kính' : 'Hiện vùng bán kính'}
                     >
@@ -926,7 +955,7 @@ export default function MapClient() {
           </AnimatePresence>
 
           {/* Map area */}
-          <div className="relative flex-1">
+          <div className="absolute inset-0">
             {/* Open sidebar button (only when hidden) */}
             {!showSidebar && (
               <button

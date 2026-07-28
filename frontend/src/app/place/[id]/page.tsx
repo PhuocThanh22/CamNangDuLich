@@ -60,6 +60,7 @@ interface PlaceItem {
   tienich?: string;
   trangweb?: string;
   giohoatdong?: string;
+  daduyet?: boolean;
 }
 
 interface MenuItem {
@@ -323,7 +324,7 @@ export default function PlacePage() {
               <div className="absolute inset-0 bg-black/0 transition group-hover:bg-black/15" />
             </div>
             <div className="grid grid-cols-2 gap-2">
-              {galleryImages.slice(1, 5).map((img, idx) => (
+              {galleryImages.slice(1, 6).map((img, idx) => (
                 <div
                   key={idx}
                   className="group relative cursor-pointer overflow-hidden"
@@ -335,9 +336,9 @@ export default function PlacePage() {
                     className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
                   />
                   <div className="absolute inset-0 bg-black/0 transition group-hover:bg-black/20" />
-                  {idx === 3 && (
+                  {idx === 4 && galleryImages.length > 6 && (
                     <div className="absolute inset-0 flex items-center justify-center bg-black/40">
-                      <span className="text-[13px] font-bold text-white">+{galleryImages.length - 4} ảnh</span>
+                      <span className="text-[13px] font-bold text-white">+{galleryImages.length - 6} ảnh</span>
                     </div>
                   )}
                 </div>
@@ -362,6 +363,11 @@ export default function PlacePage() {
                 }`}>
                   ● {item.trangthai === 'Mở' || item.trangthai === 'Đang mở cửa' ? 'Đang mở cửa' : item.trangthai || 'Đang mở cửa'}
                 </span>
+                {item.daduyet === false && (
+                  <span className="rounded-full bg-amber-100 px-3 py-1 text-[12px] font-semibold text-amber-700">
+                    ● Chờ duyệt
+                  </span>
+                )}
               </div>
 
               <h1 className="mb-2 text-[24px] font-black text-slate-900 sm:text-[28px]">{item.ten}</h1>
