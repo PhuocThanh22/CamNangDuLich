@@ -10,6 +10,7 @@ import CategoryCard from '@/components/ui/CategoryCard';
 import FoodCard from '@/components/ui/FoodCard';
 import { categories as fallbackCategories, featuredPlaces as fallbackFeatured, nearbyPlaces as fallbackNearby } from '@/utils/constants';
 import { placeService } from '@/services/placeService';
+import { getStatusFromHours } from '@/lib/utils';
 import type { Variants } from 'framer-motion';
 
 function useReveal() {
@@ -71,6 +72,8 @@ interface FeaturedItem {
   hinh: string;
   vido?: number;
   kinhdo?: number;
+  giomocua?: string;
+  giohoatdong?: string;
 }
 
 interface NearbyItem {
@@ -82,6 +85,7 @@ interface NearbyItem {
   khoangcach: string;
   gia: string;
   giomocua: string;
+  giohoatdong?: string;
   diachi: string;
   hinh: string;
   vido?: number;
@@ -98,6 +102,8 @@ const mapToFeatured = (item: Record<string, unknown>, index: number): FeaturedIt
   hinh: (item.hinh as string) || foodImages[index % foodImages.length],
   vido: item.vido as number | undefined,
   kinhdo: item.kinhdo as number | undefined,
+  giomocua: (item.giomocua as string) || undefined,
+  giohoatdong: (item.giohoatdong as string) || undefined,
 });
 
 const mapToNearby = (item: Record<string, unknown>, index: number): NearbyItem => ({
@@ -109,6 +115,7 @@ const mapToNearby = (item: Record<string, unknown>, index: number): NearbyItem =
   khoangcach: (item.khoangcach as string) || '0.5 km',
   gia: (item.gia as string) || '30k–100k đ',
   giomocua: (item.giomocua as string) || '06:00 – 22:00',
+  giohoatdong: (item.giohoatdong as string) || (item.giomocua as string) || undefined,
   diachi: (item.diachi as string) || '',
   hinh: (item.hinh as string) || nearbyImages[index % nearbyImages.length],
   vido: item.vido as number | undefined,
@@ -199,17 +206,21 @@ export default function HomePage() {
   ];
 
   const featuredWithDistance = useMemo(() => {
-    if (!userLocation) return featuredPlaces;
     return featuredPlaces.map((p) => {
-      if (p.vido != null && p.kinhdo != null) {
-        return { ...p, khoangcach: calcDistance(userLocation[0], userLocation[1], p.vido, p.kinhdo) };
+      let updated = { ...p };
+      if (userLocation && p.vido != null && p.kinhdo != null) {
+        updated.khoangcach = calcDistance(userLocation[0], userLocation[1], p.vido, p.kinhdo);
       }
-      return p;
+      updated.trangthai = getStatusFromHours(p.giomocua, p.giohoatdong);
+      return updated;
     });
   }, [featuredPlaces, userLocation]);
 
   const filteredNearby = useMemo(() => {
-    let result = [...nearbyPlaces];
+    let result = [...nearbyPlaces].map((p) => ({
+      ...p,
+      trangthai: getStatusFromHours(p.giomocua, p.giohoatdong),
+    }));
     if (userLocation) {
       result = result.map((p) => {
         if (p.vido != null && p.kinhdo != null) {

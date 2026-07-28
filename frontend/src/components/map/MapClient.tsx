@@ -13,6 +13,7 @@ import {
   Utensils, Coffee, Beer, Sandwich, Globe2,
 } from 'lucide-react';
 import { placeService } from '@/services/placeService';
+import { getStatusFromHours } from '@/lib/utils';
 
 interface MapTile {
   id: string;
@@ -92,6 +93,7 @@ interface Place {
   tienich?: string;
   monan: string;
   giohoatdong?: string;
+  giomocua?: string;
   dienthoai?: string;
   diachi: string;
   khoangcach?: string;
@@ -321,7 +323,8 @@ export default function MapClient() {
             kinhdo: p.kinhdo as number,
             tienich: (p.tienich as string) || 'an_uong',
             monan: (p.monan as string) || (p.phanloai as string) || 'Ẩm thực',
-            giohoatdong: (p.giohoatdong as string) || 'Mo-Su 06:00-22:00',
+            giomocua: (p.giomocua as string) || undefined,
+            giohoatdong: (p.giohoatdong as string) || (p.giomocua as string) || '',
             dienthoai: (p.dienthoai as string) || '',
             diachi: (p.diachi as string) || '',
             khoangcach: (p.khoangcach as string) || '',
@@ -597,7 +600,7 @@ export default function MapClient() {
       result = result.filter((p) => parseFloat(p.danhgia) >= 3);
     }
     if (filters.status === 'open') {
-      result = result.filter((p) => p.trangthai === 'Mở');
+      result = result.filter((p) => getStatusFromHours(p.giomocua, p.giohoatdong) === 'Mở');
     }
     return result;
   }, [filteredPlaces, userLocation, committedRadius, filters]);
