@@ -12,6 +12,7 @@ import {
 import { motion, AnimatePresence } from 'framer-motion';
 import { destinationGallery } from '@/utils/constants';
 import { placeService } from '@/services/placeService';
+import { getStatusFromHours } from '@/lib/utils';
 import { getToken, getUser } from '@/services/authService';
 import ReviewForm from '@/components/ReviewForm';
 
@@ -60,6 +61,7 @@ interface PlaceItem {
   tienich?: string;
   trangweb?: string;
   giohoatdong?: string;
+  giomocua?: string;
   daduyet?: boolean;
 }
 
@@ -357,11 +359,11 @@ export default function PlacePage() {
                   <Utensils className="h-3.5 w-3.5" /> {item.huyhieu || item.phanloai || 'Phở'}
                 </span>
                 <span className={`rounded-full px-3 py-1 text-[12px] font-semibold ${
-                  item.trangthai === 'Mở' || item.trangthai === 'Đang mở cửa'
+                  getStatusFromHours(item.giomocua) === 'Đang mở'
                     ? 'bg-green-100 text-green-700'
-                    : 'bg-slate-100 text-slate-600'
+                    : 'bg-red-50 text-red-500'
                 }`}>
-                  ● {item.trangthai === 'Mở' || item.trangthai === 'Đang mở cửa' ? 'Đang mở cửa' : item.trangthai || 'Đang mở cửa'}
+                  ● {getStatusFromHours(item.giomocua)}
                 </span>
                 {item.daduyet === false && (
                   <span className="rounded-full bg-amber-100 px-3 py-1 text-[12px] font-semibold text-amber-700">

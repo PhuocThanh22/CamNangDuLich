@@ -110,7 +110,7 @@ const mapToNearby = (item: Record<string, unknown>, index: number): NearbyItem =
   id: item.id as number | undefined,
   ten: item.ten as string,
   huyhieu: (item.huyhieu as string) || (item.phanloai as string) || 'Phở',
-  trangthai: (item.trangthai as string) || 'Mở',
+  trangthai: (item.trangthai as string) || 'Đang mở',
   danhgia: (item.danhgia as string) || '4.8',
   khoangcach: (item.khoangcach as string) || '0.5 km',
   gia: (item.gia as string) || '30k–100k đ',
@@ -231,7 +231,7 @@ export default function HomePage() {
       });
     }
     if (activeFilter === 'open') {
-      result = result.filter((p) => p.trangthai === 'Mở');
+      result = result.filter((p) => p.trangthai === 'Đang mở');
     } else if (activeFilter === 'top') {
       result = result.sort((a, b) => parseFloat(b.danhgia) - parseFloat(a.danhgia));
     } else if (activeFilter === 'near') {
@@ -379,9 +379,9 @@ export default function HomePage() {
                       <h3 className="text-[15px] font-bold leading-snug text-slate-900">{item.ten}</h3>
                       <span
                         className={`shrink-0 rounded-full px-2 py-0.5 text-[11px] font-semibold ${
-                          item.trangthai === 'Mở'
+                          item.trangthai === 'Đang mở'
                             ? 'bg-green-50 text-green-600'
-                            : 'bg-orange-50 text-orange-500'
+                            : 'bg-red-50 text-red-500'
                         }`}
                       >
                         {item.trangthai}

@@ -163,7 +163,7 @@ function generateDemoPlaces([lat, lng]: [number, number]): Place[] {
     const dist = Math.sqrt(d.dlat ** 2 + d.dlng ** 2) * 111;
     return {
       id: `demo-${i}`, ten: d.ten, vido: lat + d.dlat, kinhdo: lng + d.dlng,
-      tienich: d.tienich, monan: d.monan, giohoatdong: 'Mo-Su 06:00-22:00',
+      tienich: d.tienich, monan: d.monan, giomocua: '06:00 – 22:00',
       dienthoai: '', diachi: 'Gần vị trí của bạn',
       khoangcach: dist < 1 ? `${Math.round(dist * 1000)} m` : `${dist.toFixed(1)} km`,
       distRaw: dist,
@@ -600,7 +600,7 @@ export default function MapClient() {
       result = result.filter((p) => parseFloat(p.danhgia) >= 3);
     }
     if (filters.status === 'open') {
-      result = result.filter((p) => getStatusFromHours(p.giomocua) === 'Mở');
+      result = result.filter((p) => getStatusFromHours(p.giomocua) === 'Đang mở');
     }
     return result;
   }, [filteredPlaces, userLocation, committedRadius, filters]);

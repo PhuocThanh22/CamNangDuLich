@@ -41,7 +41,7 @@ export default function FoodCard({ item }: FoodCardProps) {
             className={`rounded-full px-2.5 py-1 text-[11px] font-semibold ${
               item.trangthai === 'Đang mở'
                 ? 'bg-green-500/90 text-white'
-                : 'bg-slate-700/80 text-white'
+                : 'bg-red-500/80 text-white'
             }`}
           >
             ● {item.trangthai}

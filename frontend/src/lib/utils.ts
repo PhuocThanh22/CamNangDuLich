@@ -11,7 +11,7 @@ function parseHours(hours: string): { open: number; close: number } | null {
 
 export function getStatusFromHours(giomocua?: string | null): string {
   const hoursStr = giomocua || '';
-  if (!hoursStr) return 'Mở';
+  if (!hoursStr) return 'Đang mở';
   const parsed = parseHours(hoursStr);
   if (!parsed) return 'Mở';
   const now = new Date();
@@ -19,7 +19,7 @@ export function getStatusFromHours(giomocua?: string | null): string {
   const localOffset = now.getTimezoneOffset();
   const vnHours = (now.getUTCHours() + 7) % 24;
   if (parsed.open <= parsed.close) {
-    return vnHours >= parsed.open && vnHours < parsed.close ? 'Mở' : 'Đóng cửa';
+    return vnHours >= parsed.open && vnHours < parsed.close ? 'Đang mở' : 'Đang đóng';
   }
-  return vnHours >= parsed.open || vnHours < parsed.close ? 'Mở' : 'Đóng cửa';
+  return vnHours >= parsed.open || vnHours < parsed.close ? 'Đang mở' : 'Đang đóng';
 }
