@@ -14,7 +14,7 @@ import { destinationGallery } from '@/utils/constants';
 import { placeService } from '@/services/placeService';
 import { getStatusFromHours } from '@/lib/utils';
 import { getToken, getUser } from '@/services/authService';
-import ReviewForm from '@/components/ReviewForm';
+import ReviewForm from '@/components/place/ReviewForm';
 
 const PlaceMiniMap = dynamic(
   () => import('@/components/place/PlaceMiniMap'),
