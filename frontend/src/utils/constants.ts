@@ -60,9 +60,9 @@ interface NearbyPlace {
 }
 
 export const nearbyPlaces: NearbyPlace[] = [
-  { ten: 'Phở Hà Nội Số 1', huyhieu: 'Phở', trangthai: 'Mở', danhgia: '4.8 · 1,024 đánh giá', khoangcach: '0.3 km', gia: '45k–80k đ', giomocua: '06:00 – 22:00', diachi: '123 Hàng Bồ, Hoàn Kiếm, Hà Nội', hinh: nearbyImages[0] },
-  { ten: 'Bún bò Huế Đặc Biệt', huyhieu: 'Bún', trangthai: 'Mở', danhgia: '4.9 · 2,345 đánh giá', khoangcach: '1.1 km', gia: '50k–90k đ', giomocua: '07:00 – 21:00', diachi: '45 Nguyễn Huệ, Q.1, TP.HCM', hinh: nearbyImages[1] },
-  { ten: 'Bánh mì Kim Sơn', huyhieu: 'Bánh mì', trangthai: 'Đóng', danhgia: '4.5 · 876 đánh giá', khoangcach: '0.7 km', gia: '20k–35k đ', giomocua: '06:00 – 20:00', diachi: '78 Trần Phú, Hội An, Quảng Nam', hinh: nearbyImages[2] },
+  { ten: 'Phở Hà Nội Số 1', huyhieu: 'Phở', trangthai: 'Đang mở', danhgia: '4.8 · 1,024 đánh giá', khoangcach: '0.3 km', gia: '45k–80k đ', giomocua: '06:00 – 22:00', diachi: '123 Hàng Bồ, Hoàn Kiếm, Hà Nội', hinh: nearbyImages[0] },
+  { ten: 'Bún bò Huế Đặc Biệt', huyhieu: 'Bún', trangthai: 'Đang mở', danhgia: '4.9 · 2,345 đánh giá', khoangcach: '1.1 km', gia: '50k–90k đ', giomocua: '07:00 – 21:00', diachi: '45 Nguyễn Huệ, Q.1, TP.HCM', hinh: nearbyImages[1] },
+  { ten: 'Bánh mì Kim Sơn', huyhieu: 'Bánh mì', trangthai: 'Đang đóng', danhgia: '4.5 · 876 đánh giá', khoangcach: '0.7 km', gia: '20k–35k đ', giomocua: '06:00 – 20:00', diachi: '78 Trần Phú, Hội An, Quảng Nam', hinh: nearbyImages[2] },
 ];
 
 export const mapPlaceImage = 'https://images.unsplash.com/photo-1569050467447-ce54b3bbc37d?w=400&q=80';

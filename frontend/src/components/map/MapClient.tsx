@@ -170,7 +170,7 @@ function generateDemoPlaces([lat, lng]: [number, number]): Place[] {
       hinh: FOOD_IMAGES[i % FOOD_IMAGES.length],
       danhgia: (4.0 + Math.random() * 0.9).toFixed(1),
       gia: d.tienich === 'cafe' ? '25k–80k đ' : d.tienich === 'fast_food' ? '20k–50k đ' : '30k–120k đ',
-      trangthai: 'Mở', ladulieu: true,
+      trangthai: 'Đang mở', ladulieu: true,
     };
   });
 }
@@ -331,7 +331,7 @@ export default function MapClient() {
             hinh: (p.hinh as string) || FOOD_IMAGES[i % FOOD_IMAGES.length],
             danhgia: (p.danhgia as string) || (4.0 + Math.random() * 0.9).toFixed(1),
             gia: (p.gia as string) || '30k–120k đ',
-            trangthai: (p.trangthai as string) || 'Mở',
+            trangthai: (p.trangthai as string) || 'Đang mở',
             ladulieu: (p.ladulieu as boolean) || false,
           })));
           return;

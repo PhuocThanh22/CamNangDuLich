@@ -13,7 +13,7 @@ export function getStatusFromHours(giomocua?: string | null): string {
   const hoursStr = giomocua || '';
   if (!hoursStr) return 'Đang mở';
   const parsed = parseHours(hoursStr);
-  if (!parsed) return 'Mở';
+  if (!parsed) return 'Đang mở';
   const now = new Date();
   const vnOffset = 7 * 60;
   const localOffset = now.getTimezoneOffset();
