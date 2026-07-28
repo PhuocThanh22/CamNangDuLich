@@ -69,6 +69,8 @@ interface FeaturedItem {
   khoangcach: string;
   gia: string;
   hinh: string;
+  vido?: number;
+  kinhdo?: number;
 }
 
 interface NearbyItem {
@@ -94,6 +96,8 @@ const mapToFeatured = (item: Record<string, unknown>, index: number): FeaturedIt
   khoangcach: (item.khoangcach as string) || '0.8 km',
   gia: (item.gia as string) || '30k–100k đ',
   hinh: (item.hinh as string) || foodImages[index % foodImages.length],
+  vido: item.vido as number | undefined,
+  kinhdo: item.kinhdo as number | undefined,
 });
 
 const mapToNearby = (item: Record<string, unknown>, index: number): NearbyItem => ({
@@ -194,6 +198,16 @@ export default function HomePage() {
     { key: 'top', label: 'Đánh giá cao', icon: <Star className="h-3.5 w-3.5" /> },
   ];
 
+  const featuredWithDistance = useMemo(() => {
+    if (!userLocation) return featuredPlaces;
+    return featuredPlaces.map((p) => {
+      if (p.vido != null && p.kinhdo != null) {
+        return { ...p, khoangcach: calcDistance(userLocation[0], userLocation[1], p.vido, p.kinhdo) };
+      }
+      return p;
+    });
+  }, [featuredPlaces, userLocation]);
+
   const filteredNearby = useMemo(() => {
     let result = [...nearbyPlaces];
     if (userLocation) {
@@ -277,7 +291,7 @@ export default function HomePage() {
             variants={containerVariants}
             className="grid gap-5 sm:grid-cols-2 xl:grid-cols-4"
           >
-            {featuredPlaces.map((item) => (
+            {featuredWithDistance.map((item) => (
               <motion.div key={(item.id as string) || item.ten} variants={cardVariants}>
                 <FoodCard item={item} />
               </motion.div>
