@@ -4,8 +4,6 @@ import { useState, useEffect, useMemo, useRef, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { MapContainer, TileLayer, Marker, Circle, useMap, useMapEvents, ZoomControl } from 'react-leaflet';
 import MarkerClusterGroup from '@changey/react-leaflet-markercluster';
-import 'leaflet/dist/leaflet.css';
-import '@changey/react-leaflet-markercluster/dist/styles.min.css';
 import L from 'leaflet';
 import { motion, AnimatePresence } from 'framer-motion';
 import createGlobe from 'cobe';
