@@ -926,7 +926,16 @@ export default function MapClient() {
                             <img src={place.hinh} alt={place.ten} className="h-full w-full object-cover" />
                           </div>
                           <div className="min-w-0 flex-1">
-                            <h3 className="truncate text-[14px] font-bold text-slate-900">{place.ten}</h3>
+                            <div className="flex items-center gap-2">
+                              <h3 className="truncate text-[14px] font-bold text-slate-900">{place.ten}</h3>
+                              <span className={`shrink-0 rounded-full px-1.5 py-0.5 text-[10px] font-semibold ${
+                                getStatusFromHours(place.giomocua) === 'Đang mở'
+                                  ? 'bg-green-50 text-green-600'
+                                  : 'bg-red-50 text-red-500'
+                              }`}>
+                                {getStatusFromHours(place.giomocua)}
+                              </span>
+                            </div>
                             <div className="mt-0.5 flex items-center gap-2 text-[12px] text-slate-500">
                               <span className="rounded bg-slate-100 px-1.5 py-0.5 text-[11px] font-medium text-slate-600">{place.monan}</span>
                               <span className="text-amber-400">★ {place.danhgia}</span>
