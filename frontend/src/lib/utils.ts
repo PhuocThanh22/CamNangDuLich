@@ -9,8 +9,8 @@ function parseHours(hours: string): { open: number; close: number } | null {
   return { open: parseInt(timeMatch[1]), close: parseInt(timeMatch[3]) };
 }
 
-export function getStatusFromHours(giomocua?: string | null, giohoatdong?: string | null): string {
-  const hoursStr = giomocua || giohoatdong || '';
+export function getStatusFromHours(giomocua?: string | null): string {
+  const hoursStr = giomocua || '';
   if (!hoursStr) return 'Mở';
   const parsed = parseHours(hoursStr);
   if (!parsed) return 'Mở';

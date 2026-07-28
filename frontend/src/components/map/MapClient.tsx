@@ -600,7 +600,7 @@ export default function MapClient() {
       result = result.filter((p) => parseFloat(p.danhgia) >= 3);
     }
     if (filters.status === 'open') {
-      result = result.filter((p) => getStatusFromHours(p.giomocua, p.giohoatdong) === 'Mở');
+      result = result.filter((p) => getStatusFromHours(p.giomocua) === 'Mở');
     }
     return result;
   }, [filteredPlaces, userLocation, committedRadius, filters]);
