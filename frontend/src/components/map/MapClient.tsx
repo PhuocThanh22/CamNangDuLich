@@ -327,7 +327,7 @@ export default function MapClient() {
             diachi: (p.diachi as string) || '',
             khoangcach: (p.khoangcach as string) || '',
             hinh: (p.hinh as string) || FOOD_IMAGES[i % FOOD_IMAGES.length],
-            danhgia: (p.danhgia as string) || (4.0 + Math.random() * 0.9).toFixed(1),
+            danhgia: (p.danhgia as string) || '',
             gia: (p.gia as string) || '30k–120k đ',
             trangthai: (p.trangthai as string) || 'Đang mở',
             ladulieu: (p.ladulieu as boolean) || false,
@@ -542,7 +542,7 @@ export default function MapClient() {
                           <img src={p.hinh} alt={p.ten} className="h-8 w-8 shrink-0 rounded-lg object-cover" />
                           <div className="min-w-0 flex-1">
                             <p className="truncate text-[13px] font-medium text-white">{p.ten}</p>
-                            <p className="text-[11px] text-white/40">{p.monan} · ★ {p.danhgia}</p>
+                            <p className="text-[11px] text-white/40">{p.monan}{p.danhgia ? ` · ★ ${p.danhgia}` : ''}</p>
                           </div>
                         </button>
                       ))}
@@ -919,7 +919,7 @@ export default function MapClient() {
                       </div>
                       <div className="mt-1 flex items-center gap-2 text-[12px] text-slate-500">
                         <span className="rounded bg-blue-50 px-1.5 py-0.5 text-[11px] font-medium text-blue-600">{selectedPlace.monan}</span>
-                        <span className="text-amber-400">★ {selectedPlace.danhgia}</span>
+                        {selectedPlace.danhgia && <span className="text-amber-400">★ {selectedPlace.danhgia}</span>}
                       </div>
                       <div className="mt-2 flex items-center gap-3 text-[12px] text-slate-400">
                         <span>
