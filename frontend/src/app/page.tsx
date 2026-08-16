@@ -211,7 +211,7 @@ export default function HomePage() {
       if (userLocation && p.vido != null && p.kinhdo != null) {
         updated.khoangcach = calcDistance(userLocation[0], userLocation[1], p.vido, p.kinhdo);
       }
-      updated.trangthai = getStatusFromHours(p.giomocua);
+      updated.trangthai = getStatusFromHours(p.giohoatdong || p.giomocua);
       return updated;
     });
   }, [featuredPlaces, userLocation]);
@@ -219,7 +219,7 @@ export default function HomePage() {
   const filteredNearby = useMemo(() => {
     let result = [...nearbyPlaces].map((p) => ({
       ...p,
-      trangthai: getStatusFromHours(p.giomocua),
+      trangthai: getStatusFromHours(p.giohoatdong || p.giomocua),
     }));
     if (userLocation) {
       result = result.map((p) => {

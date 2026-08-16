@@ -458,7 +458,7 @@ export default function MapClient() {
       result = result.filter((p) => parseFloat(p.danhgia) >= 3);
     }
     if (filters.status === 'open') {
-      result = result.filter((p) => getStatusFromHours(p.giomocua) === 'Đang mở');
+      result = result.filter((p) => getStatusFromHours(p.giohoatdong || p.giomocua) === 'Đang mở');
     }
     return result;
   }, [filteredPlaces, userLocation, committedRadius, filters]);
@@ -793,11 +793,11 @@ export default function MapClient() {
                             <div className="flex items-center gap-2">
                               <h3 className="truncate text-[14px] font-bold text-slate-900">{place.ten}</h3>
                               <span className={`shrink-0 rounded-full px-1.5 py-0.5 text-[10px] font-semibold ${
-                                getStatusFromHours(place.giomocua) === 'Đang mở'
+                                getStatusFromHours(place.giohoatdong || place.giomocua) === 'Đang mở'
                                   ? 'bg-green-50 text-green-600'
                                   : 'bg-red-50 text-red-500'
                               }`}>
-                                {getStatusFromHours(place.giomocua)}
+                                {getStatusFromHours(place.giohoatdong || place.giomocua)}
                               </span>
                             </div>
                             <div className="mt-0.5 flex items-center gap-2 text-[12px] text-slate-500">

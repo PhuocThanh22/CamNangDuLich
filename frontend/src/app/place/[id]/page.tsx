@@ -359,11 +359,11 @@ export default function PlacePage() {
                   <Utensils className="h-3.5 w-3.5" /> {item.huyhieu || item.phanloai || 'Phở'}
                 </span>
                 <span className={`rounded-full px-3 py-1 text-[12px] font-semibold ${
-                  getStatusFromHours(item.giomocua) === 'Đang mở'
+                  getStatusFromHours(item.giohoatdong || item.giomocua) === 'Đang mở'
                     ? 'bg-green-100 text-green-700'
                     : 'bg-red-50 text-red-500'
                 }`}>
-                  ● {getStatusFromHours(item.giomocua)}
+                  ● {getStatusFromHours(item.giohoatdong || item.giomocua)}
                 </span>
                 {item.daduyet === false && (
                   <span className="rounded-full bg-amber-100 px-3 py-1 text-[12px] font-semibold text-amber-700">
