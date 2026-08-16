@@ -246,21 +246,21 @@ function MapStyleSwitcher({ activeTile, onChangeTile }: { activeTile: string; on
     <div className="absolute right-4 top-4 z-[1000]">
       <button
         onClick={() => setOpen((o) => !o)}
-        className="flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-3.5 py-2 text-[13px] font-semibold text-slate-700 shadow-lg transition hover:bg-slate-50"
+        className="flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-3.5 py-2 text-[13px] font-semibold text-slate-700 shadow-lg transition hover:bg-slate-50 dark:border-slate-700 dark:bg-[#111a2e] dark:text-slate-300 dark:hover:bg-slate-800"
       >
-        <span className="text-slate-500">{active.icon}</span>
+        <span className="text-slate-500 dark:text-slate-400">{active.icon}</span>
         <span>{active.label}</span>
-        <ChevronDown className="h-3.5 w-3.5 text-slate-400" />
+        <ChevronDown className="h-3.5 w-3.5 text-slate-400 dark:text-slate-500" />
       </button>
       {open && (
-        <div className="absolute right-0 top-12 min-w-[170px] overflow-hidden rounded-xl border border-slate-100 bg-white shadow-xl">
+        <div className="absolute right-0 top-12 min-w-[170px] overflow-hidden rounded-xl border border-slate-100 bg-white shadow-xl dark:border-slate-700 dark:bg-[#111a2e]">
           {MAP_TILES.map((tile) => (
             <button
               key={tile.id}
               onClick={() => { onChangeTile(tile.id); setOpen(false); }}
-              className={`flex w-full items-center gap-3 px-4 py-2.5 text-left text-[13px] font-medium transition hover:bg-slate-50 ${activeTile === tile.id ? 'text-[#3b82f6]' : 'text-slate-600'}`}
+              className={`flex w-full items-center gap-3 px-4 py-2.5 text-left text-[13px] font-medium transition hover:bg-slate-50 dark:hover:bg-slate-800 ${activeTile === tile.id ? 'text-[#3b82f6]' : 'text-slate-600 dark:text-slate-300'}`}
             >
-              <span className="text-slate-400">{tile.icon}</span>
+              <span className="text-slate-400 dark:text-slate-500">{tile.icon}</span>
               {tile.label}
             </button>
           ))}
@@ -579,29 +579,29 @@ export default function MapClient() {
                 animate={{ x: 0, opacity: 1 }}
                 exit={{ x: '-100%', opacity: 0 }}
                 transition={{ duration: 0.3, ease: 'easeInOut' }}
-                className="absolute left-0 top-0 z-[1000] flex h-full w-[85vw] max-w-[320px] flex-col bg-white shadow-xl"
+                className="absolute left-0 top-0 z-[1000] flex h-full w-[85vw] max-w-[320px] flex-col bg-white shadow-xl dark:bg-[#111a2e]"
               >
                 {/* Search header */}
-                <div className="border-b border-slate-100 p-4">
+                <div className="border-b border-slate-100 p-4 dark:border-slate-700">
                   <div className="flex items-center gap-2">
-                    <div className="flex flex-1 items-center gap-2 rounded-xl bg-slate-50 px-3 py-2.5">
-                      <Search className="h-4 w-4 shrink-0 text-slate-400" />
+                    <div className="flex flex-1 items-center gap-2 rounded-xl bg-slate-50 px-3 py-2.5 dark:bg-slate-800/50">
+                      <Search className="h-4 w-4 shrink-0 text-slate-400 dark:text-slate-500" />
                       <input
                         type="text"
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
                         placeholder="Tìm địa điểm..."
-                        className="w-full bg-transparent text-[13px] text-slate-800 outline-none placeholder:text-slate-400"
+                        className="w-full bg-transparent text-[13px] text-slate-800 outline-none placeholder:text-slate-400 dark:text-slate-200 dark:placeholder:text-slate-500"
                       />
                       {searchQuery && (
                         <button onClick={() => setSearchQuery('')}>
-                          <X className="h-4 w-4 text-slate-400" />
+                          <X className="h-4 w-4 text-slate-400 dark:text-slate-500" />
                         </button>
                       )}
                     </div>
                     <button
                       onClick={() => setShowSidebar(false)}
-                      className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-slate-200 text-slate-500 hover:bg-slate-50"
+                      className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-slate-200 text-slate-500 hover:bg-slate-50 dark:border-slate-700 dark:text-slate-400 dark:hover:bg-slate-800"
                     >
                       <X className="h-4 w-4" />
                     </button>
@@ -618,14 +618,14 @@ export default function MapClient() {
                     </button>
                     <button
                       onClick={() => setShowFilters(!showFilters)}
-                      className={`flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-[12px] font-semibold transition ${showFilters ? 'bg-blue-100 text-blue-700' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'}`}
+                      className={`flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-[12px] font-semibold transition ${showFilters ? 'bg-blue-100 text-blue-700 dark:bg-blue-900/40 dark:text-blue-300' : 'bg-slate-100 text-slate-600 hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700'}`}
                     >
                       <Filter className="h-3.5 w-3.5" />
                       Bộ lọc
                     </button>
                     <button
                       onClick={() => setIsGlobeMode(true)}
-                      className="flex items-center gap-1.5 rounded-lg bg-slate-100 px-3 py-1.5 text-[12px] font-semibold text-slate-600 transition hover:bg-slate-200"
+                      className="flex items-center gap-1.5 rounded-lg bg-slate-100 px-3 py-1.5 text-[12px] font-semibold text-slate-600 transition hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700"
                     >
                       <Globe2 className="h-3.5 w-3.5" />
                       Globe
@@ -634,14 +634,14 @@ export default function MapClient() {
 
                   {/* Location error */}
                   {locationError && (
-                    <div className="mt-2 rounded-lg bg-amber-50 px-3 py-2 text-[12px] text-amber-700">
+                    <div className="mt-2 rounded-lg bg-amber-50 px-3 py-2 text-[12px] text-amber-700 dark:bg-amber-900/40 dark:text-amber-300">
                       {locationError}
                     </div>
                   )}
 
                   {/* Radius control */}
                   <div className="mt-2 flex items-center gap-2">
-                    <span className="shrink-0 text-[11px] font-medium text-slate-500">
+                    <span className="shrink-0 text-[11px] font-medium text-slate-500 dark:text-slate-400">
                       <MapPin className="mr-0.5 inline h-3 w-3" />
                       {circleRadius}km
                     </span>
@@ -663,10 +663,10 @@ export default function MapClient() {
                       disabled={!userLocation}
                       className={`flex h-6 w-6 items-center justify-center rounded text-[10px] font-bold transition ${
                         !userLocation
-                          ? 'bg-slate-50 text-slate-300 cursor-not-allowed'
+                          ? 'bg-slate-50 text-slate-300 cursor-not-allowed dark:bg-slate-800/50 dark:text-slate-500'
                           : showRadius
-                            ? 'bg-blue-100 text-blue-600'
-                            : 'bg-slate-100 text-slate-400'
+                            ? 'bg-blue-100 text-blue-600 dark:bg-blue-900/40 dark:text-blue-300'
+                            : 'bg-slate-100 text-slate-400 dark:bg-slate-800 dark:text-slate-500'
                       }`}
                       title={showRadius ? 'Ẩn vùng bán kính' : 'Hiện vùng bán kính'}
                     >
@@ -682,11 +682,11 @@ export default function MapClient() {
                       initial={{ height: 0, opacity: 0 }}
                       animate={{ height: 'auto', opacity: 1 }}
                       exit={{ height: 0, opacity: 0 }}
-                      className="overflow-hidden border-b border-slate-100"
+                      className="overflow-hidden border-b border-slate-100 dark:border-slate-700"
                     >
                       <div className="space-y-3 px-4 py-3">
                         <div>
-                          <label className="text-[11px] font-semibold uppercase text-slate-500">
+                          <label className="text-[11px] font-semibold uppercase text-slate-500 dark:text-slate-400">
                             Phân loại
                           </label>
                           <div className="mt-1 flex flex-wrap gap-1.5">
@@ -704,8 +704,8 @@ export default function MapClient() {
                                   (cat === 'Tất cả' &&
                                     filters.category === 'all') ||
                                   filters.category === cat
-                                    ? 'bg-blue-100 text-blue-700'
-                                    : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                                    ? 'bg-blue-100 text-blue-700 dark:bg-blue-900/40 dark:text-blue-300'
+                                    : 'bg-slate-100 text-slate-600 hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700'
                                 }`}
                               >
                                 {cat}
@@ -714,7 +714,7 @@ export default function MapClient() {
                           </div>
                         </div>
                         <div>
-                          <label className="text-[11px] font-semibold uppercase text-slate-500">
+                          <label className="text-[11px] font-semibold uppercase text-slate-500 dark:text-slate-400">
                             Đánh giá
                           </label>
                           <div className="mt-1 flex gap-1.5">
@@ -733,8 +733,8 @@ export default function MapClient() {
                                 }
                                 className={`rounded-lg px-2.5 py-1 text-[11px] font-medium transition ${
                                   filters.rating === r.value
-                                    ? 'bg-amber-100 text-amber-700'
-                                    : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                                    ? 'bg-amber-100 text-amber-700 dark:bg-amber-900/40 dark:text-amber-300'
+                                    : 'bg-slate-100 text-slate-600 hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700'
                                 }`}
                               >
                                 {r.label}
@@ -743,7 +743,7 @@ export default function MapClient() {
                           </div>
                         </div>
                         <div>
-                          <label className="text-[11px] font-semibold uppercase text-slate-500">
+                          <label className="text-[11px] font-semibold uppercase text-slate-500 dark:text-slate-400">
                             Trạng thái
                           </label>
                           <div className="mt-1 flex gap-1.5">
@@ -761,8 +761,8 @@ export default function MapClient() {
                                 }
                                 className={`rounded-lg px-2.5 py-1 text-[11px] font-medium transition ${
                                   filters.status === s.value
-                                    ? 'bg-green-100 text-green-700'
-                                    : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                                    ? 'bg-green-100 text-green-700 dark:bg-green-900/40 dark:text-green-300'
+                                    : 'bg-slate-100 text-slate-600 hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700'
                                 }`}
                               >
                                 {s.label}
@@ -779,13 +779,13 @@ export default function MapClient() {
                 <div className="flex-1 overflow-y-auto p-3 space-y-2">
                   {nearbyPlaces.length === 0 ? (
                     <div className="flex flex-col items-center justify-center py-12 text-center">
-                      <Search className="mb-3 h-10 w-10 text-slate-300" />
-                      <p className="text-[14px] font-medium text-slate-500">
+                      <Search className="mb-3 h-10 w-10 text-slate-300 dark:text-slate-500" />
+                      <p className="text-[14px] font-medium text-slate-500 dark:text-slate-400">
                         {userLocation
                           ? 'Không có quán ăn nào trong bán kính này'
                           : 'Hãy định vị vị trí của bạn'}
                       </p>
-                      <p className="text-[12px] text-slate-400">
+                      <p className="text-[12px] text-slate-400 dark:text-slate-500">
                         {userLocation
                           ? 'Thử tăng bán kính tìm kiếm'
                           : 'Nhấn "Định vị" để xem quán ăn gần bạn'}
@@ -799,7 +799,7 @@ export default function MapClient() {
                           setSelectedPlace(place);
                           setFlyToPlace(place);
                         }}
-                        className={`w-full rounded-xl p-3 text-left transition hover:bg-slate-50 ${selectedPlace?.id === place.id ? 'bg-blue-50 ring-1 ring-blue-200' : ''}`}
+                        className={`w-full rounded-xl p-3 text-left transition hover:bg-slate-50 dark:hover:bg-slate-800 ${selectedPlace?.id === place.id ? 'bg-blue-50 ring-1 ring-blue-200 dark:bg-blue-900/40 dark:ring-blue-900' : ''}`}
                       >
                         <div className="flex gap-3">
                           <div className="h-14 w-14 shrink-0 overflow-hidden rounded-lg">
@@ -807,20 +807,20 @@ export default function MapClient() {
                           </div>
                           <div className="min-w-0 flex-1">
                             <div className="flex items-center gap-2">
-                              <h3 className="truncate text-[14px] font-bold text-slate-900">{place.ten}</h3>
+                              <h3 className="truncate text-[14px] font-bold text-slate-900 dark:text-white">{place.ten}</h3>
                               <span className={`shrink-0 rounded-full px-1.5 py-0.5 text-[10px] font-semibold ${
                                 getStatusFromHours(place.giohoatdong || place.giomocua) === 'Đang mở'
-                                  ? 'bg-green-50 text-green-600'
-                                  : 'bg-red-50 text-red-500'
+                                  ? 'bg-green-50 text-green-600 dark:bg-green-900/40 dark:text-green-400'
+                                  : 'bg-red-50 text-red-500 dark:bg-red-900/40 dark:text-red-400'
                               }`}>
                                 {getStatusFromHours(place.giohoatdong || place.giomocua)}
                               </span>
                             </div>
-                            <div className="mt-0.5 flex items-center gap-2 text-[12px] text-slate-500">
-                              <span className="rounded bg-slate-100 px-1.5 py-0.5 text-[11px] font-medium text-slate-600">{place.monan}</span>
+                            <div className="mt-0.5 flex items-center gap-2 text-[12px] text-slate-500 dark:text-slate-400">
+                              <span className="rounded bg-slate-100 px-1.5 py-0.5 text-[11px] font-medium text-slate-600 dark:bg-slate-800 dark:text-slate-300">{place.monan}</span>
                               {place.danhgia && <span className="text-amber-400">★ {place.danhgia}</span>}
                             </div>
-                            <div className="mt-1 flex items-center gap-2 text-[11px] text-slate-400">
+                            <div className="mt-1 flex items-center gap-2 text-[11px] text-slate-400 dark:text-slate-500">
                               <MapPin className="h-3 w-3" />
                               <span>
                                 {place.distRaw != null
@@ -839,7 +839,7 @@ export default function MapClient() {
                 </div>
 
                 {/* Bottom info */}
-                <div className="border-t border-slate-100 p-3 text-center text-[11px] text-slate-400">
+                <div className="border-t border-slate-100 p-3 text-center text-[11px] text-slate-400 dark:border-slate-700 dark:text-slate-500">
                   {userLocation
                     ? `${nearbyPlaces.length} quán ăn trong bán kính ${committedRadius}km`
                     : `${nearbyPlaces.length} địa điểm được tìm thấy`}
@@ -854,7 +854,7 @@ export default function MapClient() {
             {!showSidebar && (
               <button
                 onClick={() => setShowSidebar(true)}
-                className="absolute left-4 top-4 z-[1000] flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-3 py-2 text-[13px] font-semibold text-slate-700 shadow-lg transition hover:bg-slate-50"
+                className="absolute left-4 top-4 z-[1000] flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-3 py-2 text-[13px] font-semibold text-slate-700 shadow-lg transition hover:bg-slate-50 dark:border-slate-700 dark:bg-[#111a2e] dark:text-slate-300 dark:hover:bg-slate-800"
               >
                 <Search className="h-4 w-4" />
                 Tìm kiếm
@@ -865,9 +865,9 @@ export default function MapClient() {
 
             {/* Active filter banner */}
             {(filters.category !== 'all' || urlFilter) && (
-              <div className="absolute left-1/2 top-4 z-[1000] flex max-w-[92vw] -translate-x-1/2 items-center gap-3 rounded-xl border border-blue-100 bg-white px-4 py-2.5 shadow-lg">
-                <div className="truncate text-[12px] text-slate-700">
-                  <span className="font-semibold text-blue-600">Đang lọc: {filters.category}</span>
+              <div className="absolute left-1/2 top-4 z-[1000] flex max-w-[92vw] -translate-x-1/2 items-center gap-3 rounded-xl border border-blue-100 bg-white px-4 py-2.5 shadow-lg dark:border-blue-900/40 dark:bg-[#111a2e]">
+                <div className="truncate text-[12px] text-slate-700 dark:text-slate-300">
+                  <span className="font-semibold text-blue-600 dark:text-blue-400">Đang lọc: {filters.category}</span>
                   {urlFilter && <span> · trong bán kính {committedRadius} km</span>}
                 </div>
                 <button
@@ -877,7 +877,7 @@ export default function MapClient() {
                     setCircleRadius(2);
                     setCommittedRadius(2);
                   }}
-                  className="flex shrink-0 items-center gap-1 rounded-lg bg-slate-100 px-2.5 py-1 text-[11px] font-semibold text-slate-600 transition hover:bg-slate-200"
+                  className="flex shrink-0 items-center gap-1 rounded-lg bg-slate-100 px-2.5 py-1 text-[11px] font-semibold text-slate-600 transition hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700"
                 >
                   <X className="h-3 w-3" /> Bỏ lọc
                 </button>
@@ -941,7 +941,7 @@ export default function MapClient() {
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: 20 }}
-                  className="absolute bottom-4 left-4 right-4 z-[1000] mx-auto max-w-md rounded-2xl bg-white p-4 shadow-2xl"
+                  className="absolute bottom-4 left-4 right-4 z-[1000] mx-auto max-w-md rounded-2xl bg-white p-4 shadow-2xl dark:bg-[#111a2e]"
                 >
                   <div className="flex gap-3">
                     <div className="h-16 w-16 shrink-0 overflow-hidden rounded-xl">
@@ -949,16 +949,16 @@ export default function MapClient() {
                     </div>
                     <div className="min-w-0 flex-1">
                       <div className="flex items-start justify-between gap-2">
-                        <h3 className="text-[15px] font-bold text-slate-900">{selectedPlace.ten}</h3>
+                        <h3 className="text-[15px] font-bold text-slate-900 dark:text-white">{selectedPlace.ten}</h3>
                         <button onClick={() => setSelectedPlace(null)}>
-                          <X className="h-4 w-4 text-slate-400" />
+                          <X className="h-4 w-4 text-slate-400 dark:text-slate-500" />
                         </button>
                       </div>
-                      <div className="mt-1 flex items-center gap-2 text-[12px] text-slate-500">
-                        <span className="rounded bg-blue-50 px-1.5 py-0.5 text-[11px] font-medium text-blue-600">{selectedPlace.monan}</span>
+                      <div className="mt-1 flex items-center gap-2 text-[12px] text-slate-500 dark:text-slate-400">
+                        <span className="rounded bg-blue-50 px-1.5 py-0.5 text-[11px] font-medium text-blue-600 dark:bg-blue-900/40 dark:text-blue-300">{selectedPlace.monan}</span>
                         {selectedPlace.danhgia && <span className="text-amber-400">★ {selectedPlace.danhgia}</span>}
                       </div>
-                      <div className="mt-2 flex items-center gap-3 text-[12px] text-slate-400">
+                      <div className="mt-2 flex items-center gap-3 text-[12px] text-slate-400 dark:text-slate-500">
                         <span>
                           <MapPin className="mr-0.5 inline h-3 w-3" />
                           {selectedPlace.distRaw != null
@@ -986,7 +986,7 @@ export default function MapClient() {
                         const id = selectedPlace.id?.toString().replace('demo-', '');
                         if (id) router.push(`/place/${id}`);
                       }}
-                      className="flex-1 rounded-xl border border-slate-200 py-2 text-[12px] font-semibold text-slate-600 transition hover:bg-slate-50"
+                      className="flex-1 rounded-xl border border-slate-200 py-2 text-[12px] font-semibold text-slate-600 transition hover:bg-slate-50 dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-800"
                     >
                       Xem chi tiết
                     </button>

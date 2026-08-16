@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { Search, MapPin, Navigation, Star, Map } from 'lucide-react';
-import { motion } from 'framer-motion';
+import { motion, useScroll, useTransform } from 'framer-motion';
 import { useRouter } from 'next/navigation';
 import { heroImage } from '@/utils/constants';
 import type { ReactNode } from 'react';
@@ -17,6 +17,12 @@ export default function Hero() {
   const router = useRouter();
   const [searchValue, setSearchValue] = useState('');
 
+  const { scrollY } = useScroll();
+  const bgScale = useTransform(scrollY, [0, 600], [1, 1.12]);
+  const bgOpacity = useTransform(scrollY, [0, 500], [1, 0.35]);
+  const contentY = useTransform(scrollY, [0, 500], [0, -60]);
+  const contentOpacity = useTransform(scrollY, [0, 400], [1, 0]);
+
   const stats: Stat[] = [
     { label: 'địa điểm', value: '2,400+', icon: <MapPin className="h-5 w-5" /> },
     { label: 'đánh giá', value: '18,000+', icon: <Star className="h-5 w-5 text-amber-400" /> },
@@ -25,7 +31,7 @@ export default function Hero() {
 
   return (
     <section className="relative flex min-h-[85vh] w-full flex-col items-center justify-center overflow-hidden">
-      <div className="absolute inset-0">
+      <motion.div className="absolute inset-0" style={{ scale: bgScale, opacity: bgOpacity }}>
         <img
           src={heroImage}
           alt="Ẩm thực đường phố Việt Nam"
@@ -33,9 +39,12 @@ export default function Hero() {
         />
         <div className="absolute inset-0 bg-gradient-to-b from-[#0f172a]/75 via-[#0f172a]/60 to-[#0f172a]/90" />
         <div className="absolute inset-0 bg-gradient-to-r from-[#1e40af]/20 via-transparent to-[#0ea5e9]/10" />
-      </div>
+      </motion.div>
 
-      <div className="relative z-10 flex w-full flex-col items-center justify-center px-5 text-center">
+      <motion.div
+        style={{ y: contentY, opacity: contentOpacity }}
+        className="relative z-10 flex w-full flex-col items-center justify-center px-5 text-center"
+      >
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -122,7 +131,7 @@ export default function Hero() {
             + Thêm địa điểm
           </button>
         </motion.div>
-      </div>
+      </motion.div>
 
       <motion.div
         initial={{ opacity: 0, y: 30 }}

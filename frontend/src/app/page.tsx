@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useEffect, useRef, useState, useMemo, createElement } from 'react';
-import { ChevronRight, ChevronDown, Sparkles, LocateFixed, Clock3, Star, Map, ArrowRight, List, Navigation, MapPin, Sandwich, Soup, UtensilsCrossed, Utensils, Fish, CakeSlice, Coffee } from 'lucide-react';
+import { ChevronDown, Sparkles, LocateFixed, Clock3, Star, Map, ArrowRight, List, Navigation, MapPin, Sandwich, Soup, UtensilsCrossed, Utensils, Fish, CakeSlice, Coffee } from 'lucide-react';
 import { motion, useInView } from 'framer-motion';
 import { useRouter } from 'next/navigation';
 import Hero from '@/components/home/Hero';
@@ -53,8 +53,8 @@ function HomeSection({ children, className = '' }: { children: React.ReactNode; 
   return (
     <motion.section
       ref={ref}
-      initial="visible"
-      animate={isInView ? 'visible' : 'visible'}
+      initial="hidden"
+      animate={isInView ? 'visible' : 'hidden'}
       variants={sectionVariants}
       className={className}
     >
@@ -187,7 +187,7 @@ export default function HomePage() {
         }
         if ((catRes.data as Record<string, unknown>[])?.length) {
           const catIcons: Record<string, React.ComponentType<{ className?: string }>> = { 'Bánh mì': Sandwich, 'Phở': Soup, 'Bún': UtensilsCrossed, 'Cơm': Utensils, 'Hải sản': Fish, 'Đồ ngọt': CakeSlice, 'Cà phê': Coffee };
-          const catBgs: Record<string, string> = { 'Bánh mì': 'bg-[#fff7ed]', 'Phở': 'bg-[#eff6ff]', 'Bún': 'bg-[#f0fdf4]', 'Cơm': 'bg-[#fdf4ff]', 'Hải sản': 'bg-[#ecfeff]', 'Đồ ngọt': 'bg-[#fff1f2]', 'Cà phê': 'bg-[#fefce8]' };
+          const catBgs: Record<string, string> = { 'Bánh mì': 'bg-[#fff7ed] dark:bg-[#431407]/60', 'Phở': 'bg-[#eff6ff] dark:bg-[#172554]/60', 'Bún': 'bg-[#f0fdf4] dark:bg-[#052e16]/60', 'Cơm': 'bg-[#fdf4ff] dark:bg-[#3b0764]/60', 'Hải sản': 'bg-[#ecfeff] dark:bg-[#083344]/60', 'Đồ ngọt': 'bg-[#fff1f2] dark:bg-[#4c0519]/60', 'Cà phê': 'bg-[#fefce8] dark:bg-[#422006]/60' };
           setCategoriesList((catRes.data as Record<string, unknown>[]).map((c) => ({
             title: (c.title || c.phanloai) as string,
             count: `${c.count} địa điểm`,
@@ -275,15 +275,15 @@ export default function HomePage() {
   }, [nearbyPlaces, activeFilter, userLocation]);
 
   return (
-    <div className="w-full bg-white">
+    <div className="w-full bg-white dark:bg-[#0b1120]">
       <Hero />
 
       <motion.section
-        initial="visible"
+        initial="hidden"
         whileInView="visible"
         viewport={{ once: true, amount: 0.1 }}
         variants={sectionVariants}
-        className="bg-[#f8fafc] px-5 py-14 sm:px-8 lg:px-10"
+        className="bg-[#f8fafc] px-5 py-14 sm:px-8 lg:px-10 dark:bg-[#0f172a]"
       >
         <div className="mx-auto max-w-7xl">
           <div className="mb-9 flex items-end justify-between">
@@ -291,20 +291,13 @@ export default function HomePage() {
               <p className="mb-1.5 text-[11px] font-bold uppercase tracking-[1.5px] text-[#3b82f6]">
                 DANH MỤC MÓN NGON
               </p>
-              <h2 className="text-[28px] font-black tracking-tight text-slate-900 sm:text-[32px]">
+              <h2 className="text-[28px] font-black tracking-tight text-slate-900 dark:text-white sm:text-[32px]">
                 Khám phá theo danh mục
               </h2>
-              <p className="mt-2 text-[14px] text-slate-500">
+              <p className="mt-2 text-[14px] text-slate-500 dark:text-slate-400">
                 Lựa chọn món yêu thích, tìm ngay quán ngon gần bạn
               </p>
             </div>
-            <button
-              type="button"
-              onClick={() => router.push('/map')}
-              className="inline-flex items-center gap-1 text-[14px] font-semibold text-[#3b82f6] transition hover:text-[#2563eb]"
-            >
-              Xem tất cả <ChevronRight className="h-4 w-4" />
-            </button>
           </div>
           <motion.div
             variants={containerVariants}
@@ -324,14 +317,14 @@ export default function HomePage() {
         </div>
       </motion.section>
 
-      <HomeSection className="bg-white px-5 py-14 sm:px-8 lg:px-10">
+      <HomeSection className="bg-white px-5 py-14 sm:px-8 lg:px-10 dark:bg-[#0b1120]">
         <div className="mx-auto max-w-7xl">
           <div className="mb-9 flex flex-wrap items-end justify-between gap-4">
             <div>
               <p className="mb-1.5 text-[11px] font-bold uppercase tracking-[1.5px] text-[#3b82f6]">
                 ĐẶC SẢN ĐỊA PHƯƠNG
               </p>
-              <h2 className="text-[32px] font-black tracking-tight text-slate-900 sm:text-[38px]">
+              <h2 className="text-[32px] font-black tracking-tight text-slate-900 dark:text-white sm:text-[38px]">
                 Những món không thể bỏ qua
               </h2>
             </div>
@@ -341,7 +334,7 @@ export default function HomePage() {
                 <select
                   value={selectedProvince}
                   onChange={(e) => setSelectedProvince(e.target.value)}
-                  className="cursor-pointer appearance-none rounded-xl border border-slate-200 bg-white py-2.5 pl-9 pr-9 text-[13px] font-semibold text-slate-700 shadow-sm outline-none transition hover:border-[#3b82f6] focus:border-[#3b82f6] focus:ring-2 focus:ring-[#3b82f6]/20"
+                  className="cursor-pointer appearance-none rounded-xl border border-slate-200 bg-white py-2.5 pl-9 pr-9 text-[13px] font-semibold text-slate-700 shadow-sm outline-none transition hover:border-[#3b82f6] focus:border-[#3b82f6] focus:ring-2 focus:ring-[#3b82f6]/20 dark:border-slate-700 dark:bg-[#0f172a] dark:text-slate-200 dark:hover:border-[#3b82f6]"
                 >
                   <option value="all">Tất cả tỉnh/thành</option>
                   {provinceOptions.map((p) => (
@@ -350,13 +343,6 @@ export default function HomePage() {
                 </select>
                 <ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
               </div>
-              <button
-                type="button"
-                onClick={() => router.push('/map')}
-                className="hidden items-center gap-1 text-[14px] font-semibold text-[#3b82f6] transition hover:text-[#2563eb] sm:inline-flex"
-              >
-                Xem tất cả <ChevronRight className="h-4 w-4" />
-              </button>
             </div>
           </div>
           {featuredWithDistance.length > 0 ? (
@@ -371,13 +357,13 @@ export default function HomePage() {
               ))}
             </motion.div>
           ) : (
-            <div className="rounded-2xl bg-slate-50 px-6 py-14 text-center">
-              <p className="text-[15px] font-semibold text-slate-600">
+            <div className="rounded-2xl bg-slate-50 px-6 py-14 text-center dark:bg-slate-800/50">
+              <p className="text-[15px] font-semibold text-slate-600 dark:text-slate-300">
                 {selectedProvince === 'all'
                   ? 'Chưa có dữ liệu địa điểm'
                   : `Chưa có món đặc sản nào ở ${selectedProvince}`}
               </p>
-              <p className="mt-1 text-[13px] text-slate-400">
+              <p className="mt-1 text-[13px] text-slate-400 dark:text-slate-500">
                 {selectedProvince === 'all'
                   ? 'Hãy quay lại sau khi có dữ liệu.'
                   : 'Hãy là người đầu tiên đóng góp địa điểm cho tỉnh này!'}
@@ -388,11 +374,11 @@ export default function HomePage() {
       </HomeSection>
 
       <motion.section
-        initial="visible"
+        initial="hidden"
         whileInView="visible"
         viewport={{ once: true, amount: 0.1 }}
         variants={sectionVariants}
-        className="bg-[#f8fafc] px-5 py-14 sm:px-8 lg:px-10"
+        className="bg-[#f8fafc] px-5 py-14 sm:px-8 lg:px-10 dark:bg-[#0f172a]"
       >
         <div className="mx-auto max-w-7xl">
           <div className="mb-7 flex items-end justify-between">
@@ -400,17 +386,10 @@ export default function HomePage() {
               <p className="mb-1.5 text-[11px] font-bold uppercase tracking-[1.5px] text-[#3b82f6]">
                 GẦN BẠN NHẤT
               </p>
-              <h2 className="text-[32px] font-black tracking-tight text-slate-900 sm:text-[38px]">
+              <h2 className="text-[32px] font-black tracking-tight text-slate-900 dark:text-white sm:text-[38px]">
                 Quán ăn đang được yêu thích
               </h2>
             </div>
-            <button
-              type="button"
-              onClick={() => router.push('/map')}
-              className="hidden items-center gap-1 text-[14px] font-semibold text-[#3b82f6] transition hover:text-[#2563eb] sm:inline-flex"
-            >
-              Xem tất cả <ChevronRight className="h-4 w-4" />
-            </button>
           </div>
 
           <div className="mb-7 flex flex-wrap gap-2">
@@ -422,7 +401,7 @@ export default function HomePage() {
                 className={`inline-flex items-center gap-1.5 rounded-full px-4 py-2 text-[13px] font-semibold transition-all ${
                   activeFilter === f.key
                     ? 'bg-[#3b82f6] text-white shadow-[0_4px_12px_rgba(59,130,246,0.35)]'
-                    : 'bg-white text-slate-600 shadow-sm hover:bg-slate-50'
+                    : 'bg-white text-slate-600 shadow-sm hover:bg-slate-50 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700'
                 }`}
               >
                 {f.icon}
@@ -440,7 +419,7 @@ export default function HomePage() {
                 key={(item.id as string) || item.ten}
                 variants={cardVariants}
                 whileHover={{ y: -4, transition: { duration: 0.2 } }}
-                className="flex cursor-pointer overflow-hidden rounded-2xl bg-white shadow-[0_2px_16px_rgba(0,0,0,0.06)] transition-shadow hover:shadow-[0_8px_32px_rgba(0,0,0,0.12)]"
+                className="flex cursor-pointer overflow-hidden rounded-2xl bg-white shadow-[0_2px_16px_rgba(0,0,0,0.06)] transition-shadow hover:shadow-[0_8px_32px_rgba(0,0,0,0.12)] dark:bg-[#111a2e] dark:shadow-[0_2px_16px_rgba(0,0,0,0.4)] dark:hover:shadow-[0_8px_32px_rgba(0,0,0,0.6)]"
               >
                 <div className="relative h-[140px] w-[120px] shrink-0 overflow-hidden">
                   <img
@@ -452,25 +431,25 @@ export default function HomePage() {
                 <div className="flex flex-1 flex-col justify-between p-4">
                   <div>
                     <div className="mb-1.5 flex items-start justify-between gap-2">
-                      <h3 className="text-[15px] font-bold leading-snug text-slate-900">{item.ten}</h3>
+                      <h3 className="text-[15px] font-bold leading-snug text-slate-900 dark:text-white">{item.ten}</h3>
                       <span
                         className={`shrink-0 rounded-full px-2 py-0.5 text-[11px] font-semibold ${
                           item.trangthai === 'Đang mở'
-                            ? 'bg-green-50 text-green-600'
-                            : 'bg-red-50 text-red-500'
+                            ? 'bg-green-50 text-green-600 dark:bg-green-900/40 dark:text-green-400'
+                            : 'bg-red-50 text-red-500 dark:bg-red-900/40 dark:text-red-400'
                         }`}
                       >
                         {item.trangthai}
                       </span>
                     </div>
-                    <span className="mb-2 inline-flex rounded-md bg-blue-50 px-2 py-0.5 text-[11px] font-medium text-blue-600">
+                    <span className="mb-2 inline-flex rounded-md bg-blue-50 px-2 py-0.5 text-[11px] font-medium text-blue-600 dark:bg-blue-900/40 dark:text-blue-300">
                       {item.huyhieu}
                     </span>
-                    <div className="mb-1.5 flex items-center gap-1.5 text-[12px] text-slate-500">
+                    <div className="mb-1.5 flex items-center gap-1.5 text-[12px] text-slate-500 dark:text-slate-400">
                       <StarRating value={item.diemdanhgia} label={item.danhgia} />
                     </div>
                   </div>
-                  <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-[12px] text-slate-400">
+                  <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-[12px] text-slate-400 dark:text-slate-500">
                     <span><MapPin className="h-3 w-3 inline" /> {item.khoangcach}</span>
                     <span className="font-semibold text-orange-500">{item.gia}</span>
                     <span><Clock3 className="h-3 w-3 inline" /> {item.giomocua}</span>
@@ -494,19 +473,19 @@ export default function HomePage() {
       </motion.section>
 
       <motion.section
-        initial="visible"
+        initial="hidden"
         whileInView="visible"
         viewport={{ once: true, amount: 0.1 }}
         variants={sectionVariants}
-        className="bg-[#f0f9ff] px-5 py-20 sm:px-8 lg:px-10"
+        className="bg-[#f0f9ff] px-5 py-20 sm:px-8 lg:px-10 dark:bg-[#0a1628]"
       >
         <div className="mx-auto max-w-5xl">
           <div className="mb-14 text-center">
             <p className="mb-2 text-[11px] font-bold uppercase tracking-[1.5px] text-[#3b82f6]">HƯỚNG DẪN</p>
-            <h2 className="text-[32px] font-black tracking-tight text-slate-900 sm:text-[40px]">
+            <h2 className="text-[32px] font-black tracking-tight text-slate-900 dark:text-white sm:text-[40px]">
               Khám phá ẩm thực dễ dàng chỉ với 3 bước
             </h2>
-            <p className="mx-auto mt-3 max-w-md text-[15px] leading-relaxed text-slate-500">
+            <p className="mx-auto mt-3 max-w-md text-[15px] leading-relaxed text-slate-500 dark:text-slate-400">
               Từ tìm kiếm đến thưởng thức — mọi thứ đều thật đơn giản.
             </p>
           </div>
@@ -539,18 +518,18 @@ export default function HomePage() {
               <motion.div
                 key={item.step}
                 variants={cardVariants}
-                className={`relative flex flex-col items-center rounded-[24px] bg-white px-6 py-10 text-center shadow-[0_4px_24px_rgba(0,0,0,0.02)] transition hover:shadow-[0_8px_32px_rgba(0,0,0,0.06)] ${
+                className={`relative flex flex-col items-center rounded-[24px] bg-white px-6 py-10 text-center shadow-[0_4px_24px_rgba(0,0,0,0.02)] transition hover:shadow-[0_8px_32px_rgba(0,0,0,0.06)] dark:bg-[#111a2e] dark:shadow-[0_4px_24px_rgba(0,0,0,0.3)] dark:hover:shadow-[0_8px_32px_rgba(0,0,0,0.5)] ${
                   (item as { active?: boolean }).active ? 'border border-[#3b82f6]' : 'border border-transparent'
                 }`}
               >
                 <div className="mb-5 flex h-9 w-9 items-center justify-center rounded-full bg-[#3b82f6] text-[15px] font-bold text-white shadow-sm">
                   {item.step}
                 </div>
-                <div className="mb-6 flex h-16 w-16 items-center justify-center rounded-[18px] bg-[#e0f2fe] text-[3rem]">
+                <div className="mb-6 flex h-16 w-16 items-center justify-center rounded-[18px] bg-[#e0f2fe] text-[3rem] dark:bg-[#1e3a8a]/50">
                   {item.icon}
                 </div>
-                <h3 className="mb-3 text-[18px] font-bold text-slate-900">{item.title}</h3>
-                <p className="text-[14px] leading-relaxed text-slate-500">{item.text}</p>
+                <h3 className="mb-3 text-[18px] font-bold text-slate-900 dark:text-white">{item.title}</h3>
+                <p className="text-[14px] leading-relaxed text-slate-500 dark:text-slate-400">{item.text}</p>
                 {(item as { huyhieu?: string }).huyhieu && (
                   <div className="absolute -bottom-3 rounded-full bg-[#3b82f6] px-4 py-1 text-[11px] font-bold text-white shadow-sm">
                     {(item as { huyhieu: string }).huyhieu}

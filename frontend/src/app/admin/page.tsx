@@ -77,7 +77,7 @@ export default function AdminPage() {
 
   if (loading) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-[#f8fafc]">
+      <div className="flex min-h-screen items-center justify-center bg-[#f8fafc] dark:bg-[#0b1120]">
         <Loader2 className="h-8 w-8 animate-spin text-[#3b82f6]" />
       </div>
     );
@@ -87,12 +87,12 @@ export default function AdminPage() {
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      className="min-h-screen bg-[#f8fafc] px-5 py-8 sm:px-8 lg:px-10"
+      className="min-h-screen bg-[#f8fafc] px-5 py-8 sm:px-8 lg:px-10 dark:bg-[#0b1120]"
     >
       <div className="mx-auto max-w-6xl">
         <button
           onClick={() => router.push('/')}
-          className="mb-6 inline-flex items-center gap-1.5 text-[13px] font-medium text-slate-500 transition hover:text-slate-800"
+          className="mb-6 inline-flex items-center gap-1.5 text-[13px] font-medium text-slate-500 transition hover:text-slate-800 dark:text-slate-400 dark:hover:text-white"
         >
           <ArrowLeft className="h-4 w-4" /> Trang chủ
         </button>
@@ -103,7 +103,7 @@ export default function AdminPage() {
           </div>
           <div>
             <p className="text-[11px] font-bold uppercase tracking-[1.5px] text-[#3b82f6]">Quản trị hệ thống</p>
-            <h1 className="text-[24px] font-black tracking-tight text-slate-900 sm:text-[30px]">Trang quản trị</h1>
+            <h1 className="text-[24px] font-black tracking-tight text-slate-900 sm:text-[30px] dark:text-white">Trang quản trị</h1>
           </div>
         </div>
 
@@ -114,24 +114,24 @@ export default function AdminPage() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: idx * 0.08 }}
-              className="rounded-2xl bg-white p-5 shadow-[0_2px_16px_rgba(0,0,0,0.06)]"
+              className="rounded-2xl bg-white p-5 shadow-[0_2px_16px_rgba(0,0,0,0.06)] dark:bg-[#111a2e]"
             >
               <div className="mb-3 flex items-center justify-between">
                 <div className={`flex h-10 w-10 items-center justify-center rounded-xl ${card.color} text-white shadow-lg`}>
                   {card.icon}
                 </div>
               </div>
-              <p className="text-[28px] font-black text-slate-900">{card.value}</p>
-              <p className="mt-1 text-[13px] font-medium text-slate-500">{card.label}</p>
+              <p className="text-[28px] font-black text-slate-900 dark:text-white">{card.value}</p>
+              <p className="mt-1 text-[13px] font-medium text-slate-500 dark:text-slate-400">{card.label}</p>
             </motion.div>
           ))}
         </div>
 
-        <div className="mb-6 flex items-center gap-1 border-b border-slate-200">
+        <div className="mb-6 flex items-center gap-1 border-b border-slate-200 dark:border-slate-700">
           <button
             onClick={() => setActiveTab('pending')}
             className={`relative px-5 py-3 text-[14px] font-semibold transition-colors ${
-              activeTab === 'pending' ? 'text-[#3b82f6]' : 'text-slate-500 hover:text-slate-800'
+              activeTab === 'pending' ? 'text-[#3b82f6]' : 'text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-white'
             }`}
           >
             Chờ duyệt
@@ -147,7 +147,7 @@ export default function AdminPage() {
           <button
             onClick={() => setActiveTab('all')}
             className={`relative px-5 py-3 text-[14px] font-semibold transition-colors ${
-              activeTab === 'all' ? 'text-[#3b82f6]' : 'text-slate-500 hover:text-slate-800'
+              activeTab === 'all' ? 'text-[#3b82f6]' : 'text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-white'
             }`}
           >
             Tất cả địa điểm
@@ -159,22 +159,22 @@ export default function AdminPage() {
 
         {activeTab === 'all' && (
           <div className="mb-4 relative">
-            <Search className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
+            <Search className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400 dark:text-slate-500" />
             <input
               type="text"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Tìm địa điểm..."
-              className="w-full rounded-xl border border-slate-200 bg-white py-3 pl-10 pr-4 text-[14px] outline-none transition focus:border-[#3b82f6] focus:ring-2 focus:ring-[#3b82f6]/20"
+              className="w-full rounded-xl border border-slate-200 bg-white py-3 pl-10 pr-4 text-[14px] outline-none transition focus:border-[#3b82f6] focus:ring-2 focus:ring-[#3b82f6]/20 dark:border-slate-700 dark:bg-[#0f172a] dark:text-slate-200"
             />
           </div>
         )}
 
         <div className="space-y-3">
           {filteredPlaces.length === 0 ? (
-            <div className="rounded-2xl bg-white p-12 text-center shadow-[0_2px_16px_rgba(0,0,0,0.06)]">
-              <Shield className="mx-auto mb-3 h-10 w-10 text-slate-300" />
-              <p className="text-[15px] font-semibold text-slate-600">
+            <div className="rounded-2xl bg-white p-12 text-center shadow-[0_2px_16px_rgba(0,0,0,0.06)] dark:bg-[#111a2e]">
+              <Shield className="mx-auto mb-3 h-10 w-10 text-slate-300 dark:text-slate-600" />
+              <p className="text-[15px] font-semibold text-slate-600 dark:text-slate-300">
                 {activeTab === 'pending' ? 'Không có địa điểm chờ duyệt' : 'Không tìm thấy địa điểm'}
               </p>
             </div>
@@ -185,30 +185,30 @@ export default function AdminPage() {
                 initial={{ opacity: 0, y: 12 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: idx * 0.04 }}
-                className="rounded-2xl bg-white p-4 shadow-[0_2px_16px_rgba(0,0,0,0.06)] transition hover:shadow-[0_4px_24px_rgba(0,0,0,0.1)] sm:p-5"
+                className="rounded-2xl bg-white p-4 shadow-[0_2px_16px_rgba(0,0,0,0.06)] transition hover:shadow-[0_4px_24px_rgba(0,0,0,0.1)] sm:p-5 dark:bg-[#111a2e]"
               >
                 <div className="flex items-start gap-4">
                   <div className="h-16 w-16 shrink-0 overflow-hidden rounded-xl sm:h-20 sm:w-20">
                     {place.hinh ? (
                       <img src={place.hinh} alt={place.ten} className="h-full w-full object-cover" />
                     ) : (
-                      <div className="flex h-full w-full items-center justify-center bg-slate-100">
-                        <ImageIcon className="h-6 w-6 text-slate-300" />
+                      <div className="flex h-full w-full items-center justify-center bg-slate-100 dark:bg-slate-800">
+                        <ImageIcon className="h-6 w-6 text-slate-300 dark:text-slate-500" />
                       </div>
                     )}
                   </div>
                   <div className="min-w-0 flex-1">
                     <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between sm:gap-3">
                       <div className="min-w-0">
-                        <h3 className="truncate text-[15px] font-bold text-slate-900">{place.ten}</h3>
+                        <h3 className="truncate text-[15px] font-bold text-slate-900 dark:text-white">{place.ten}</h3>
                         <div className="mt-1 flex flex-wrap items-center gap-2">
-                          <span className="rounded-md bg-blue-100 px-2 py-0.5 text-[11px] font-semibold text-blue-700">
+                          <span className="rounded-md bg-blue-100 px-2 py-0.5 text-[11px] font-semibold text-blue-700 dark:bg-blue-900/40 dark:text-blue-300">
                             {place.phanloai}
                           </span>
                           <span className={`rounded-md px-2 py-0.5 text-[11px] font-semibold ${
                             place.daduyet
-                              ? 'bg-green-100 text-green-700'
-                              : 'bg-amber-100 text-amber-700'
+                              ? 'bg-green-100 text-green-700 dark:bg-green-900/40 dark:text-green-300'
+                              : 'bg-amber-100 text-amber-700 dark:bg-amber-900/40 dark:text-amber-300'
                           }`}>
                             {place.daduyet ? 'Đã duyệt' : 'Chờ duyệt'}
                           </span>
@@ -239,13 +239,13 @@ export default function AdminPage() {
                         </div>
                       )}
                       {place.daduyet && activeTab === 'all' && (
-                        <span className="flex shrink-0 items-center gap-1 rounded-xl bg-green-50 px-3 py-1.5 text-[12px] font-semibold text-green-700">
+                        <span className="flex shrink-0 items-center gap-1 rounded-xl bg-green-50 px-3 py-1.5 text-[12px] font-semibold text-green-700 dark:bg-green-900/40 dark:text-green-300">
                           <Check className="h-3.5 w-3.5" /> Đã duyệt
                         </span>
                       )}
                     </div>
                     {place.diachi && (
-                      <p className="mt-1.5 text-[12px] text-slate-500 line-clamp-1">{place.diachi}</p>
+                      <p className="mt-1.5 text-[12px] text-slate-500 line-clamp-1 dark:text-slate-400">{place.diachi}</p>
                     )}
                   </div>
                 </div>

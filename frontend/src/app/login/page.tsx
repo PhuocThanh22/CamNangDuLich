@@ -133,25 +133,25 @@ export default function LoginPage() {
     setError('');
   }
 
-  const inputClass = 'w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-[14px] text-slate-900 outline-none placeholder:text-slate-400 transition focus:border-[#3b82f6] focus:bg-white focus:ring-2 focus:ring-[#3b82f6]/20';
+  const inputClass = 'w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-[14px] text-slate-900 outline-none placeholder:text-slate-400 transition focus:border-[#3b82f6] focus:bg-white focus:ring-2 focus:ring-[#3b82f6]/20 dark:border-slate-700 dark:bg-[#0f172a] dark:text-slate-200 dark:placeholder:text-slate-500 dark:focus:bg-[#0f172a]';
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-blue-50 to-slate-100 px-5 py-8">
+    <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-blue-50 to-slate-100 px-5 py-8 dark:from-[#0b1120] dark:to-[#0f172a]">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         className="w-full max-w-md"
       >
-        <div className="rounded-3xl bg-white p-6 shadow-[0_8px_40px_rgba(0,0,0,0.08)] sm:p-8">
+        <div className="rounded-3xl bg-white p-6 shadow-[0_8px_40px_rgba(0,0,0,0.08)] sm:p-8 dark:bg-[#111a2e]">
           {/* Logo + Title */}
           <div className="mb-8 text-center">
             <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-blue-600 shadow-[0_4px_16px_rgba(59,130,246,0.4)]">
               <Utensils className="h-7 w-7 text-white" />
             </div>
-            <h1 className="text-[24px] font-black text-slate-900">
+            <h1 className="text-[24px] font-black text-slate-900 dark:text-white">
               {mode === 'login' ? 'Đăng nhập' : 'Tạo tài khoản'}
             </h1>
-            <p className="mt-1 text-[14px] text-slate-500">
+            <p className="mt-1 text-[14px] text-slate-500 dark:text-slate-400">
               {mode === 'login' ? 'Chào mừng trở lại!' : 'Khám phá ẩm thực Việt Nam'}
             </p>
           </div>
@@ -160,7 +160,7 @@ export default function LoginPage() {
             <motion.div
               initial={{ opacity: 0, y: -8 }}
               animate={{ opacity: 1, y: 0 }}
-              className="mb-4 rounded-xl bg-red-50 p-3 text-[13px] font-medium text-red-600"
+              className="mb-4 rounded-xl bg-red-50 p-3 text-[13px] font-medium text-red-600 dark:bg-red-900/40 dark:text-red-400"
             >
               {error}
             </motion.div>
@@ -169,7 +169,7 @@ export default function LoginPage() {
             <motion.div
               initial={{ opacity: 0, y: -8 }}
               animate={{ opacity: 1, y: 0 }}
-              className="mb-4 rounded-xl bg-green-50 p-3 text-[13px] font-medium text-green-600"
+              className="mb-4 rounded-xl bg-green-50 p-3 text-[13px] font-medium text-green-600 dark:bg-green-900/40 dark:text-green-400"
             >
               {success}
             </motion.div>
@@ -181,7 +181,7 @@ export default function LoginPage() {
               <button
                 type="button"
                 onClick={() => handleSocialLogin('google')}
-                className="flex w-full items-center justify-center gap-3 rounded-xl border border-slate-200 bg-white px-4 py-3 text-[14px] font-semibold text-slate-700 transition hover:bg-slate-50"
+                className="flex w-full items-center justify-center gap-3 rounded-xl border border-slate-200 bg-white px-4 py-3 text-[14px] font-semibold text-slate-700 transition hover:bg-slate-50 dark:border-slate-700 dark:bg-[#111a2e] dark:text-slate-300 dark:hover:bg-[#0f172a]"
               >
                 <svg className="h-5 w-5" viewBox="0 0 24 24">
                   <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z"/>
@@ -207,9 +207,9 @@ export default function LoginPage() {
           {/* Divider */}
           {mode === 'login' && (
             <div className="mb-6 flex items-center gap-3">
-              <div className="flex-1 border-t border-slate-200" />
-              <span className="text-[12px] font-medium text-slate-400">hoặc</span>
-              <div className="flex-1 border-t border-slate-200" />
+              <div className="flex-1 border-t border-slate-200 dark:border-slate-700" />
+              <span className="text-[12px] font-medium text-slate-400 dark:text-slate-500">hoặc</span>
+              <div className="flex-1 border-t border-slate-200 dark:border-slate-700" />
             </div>
           )}
 
@@ -217,32 +217,32 @@ export default function LoginPage() {
           {mode === 'login' ? (
             <form onSubmit={handleLogin} className="space-y-4">
               <div>
-                <label className="mb-1.5 block text-[13px] font-semibold text-slate-700">Email</label>
-                <div className="flex items-center gap-2.5 rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 focus-within:border-blue-400 focus-within:bg-white">
+                <label className="mb-1.5 block text-[13px] font-semibold text-slate-700 dark:text-slate-300">Email</label>
+                <div className="flex items-center gap-2.5 rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 focus-within:border-blue-400 focus-within:bg-white dark:border-slate-700 dark:bg-[#0f172a] dark:focus-within:bg-[#0f172a]">
                   <Mail className="h-4 w-4 text-slate-400" />
                   <input
                     type="email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className="w-full bg-transparent text-[14px] text-slate-900 outline-none placeholder:text-slate-400"
+                    className="w-full bg-transparent text-[14px] text-slate-900 outline-none placeholder:text-slate-400 dark:text-slate-200 dark:placeholder:text-slate-500"
                     placeholder="email@example.com"
                     required
                   />
                 </div>
               </div>
               <div>
-                <label className="mb-1.5 block text-[13px] font-semibold text-slate-700">Mật khẩu</label>
-                <div className="flex items-center gap-2.5 rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 focus-within:border-blue-400 focus-within:bg-white">
+                <label className="mb-1.5 block text-[13px] font-semibold text-slate-700 dark:text-slate-300">Mật khẩu</label>
+                <div className="flex items-center gap-2.5 rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 focus-within:border-blue-400 focus-within:bg-white dark:border-slate-700 dark:bg-[#0f172a] dark:focus-within:bg-[#0f172a]">
                   <Lock className="h-4 w-4 text-slate-400" />
                   <input
                     type={showPassword ? 'text' : 'password'}
                     value={matkhau}
                     onChange={(e) => setMatkhau(e.target.value)}
-                    className="w-full bg-transparent text-[14px] text-slate-900 outline-none placeholder:text-slate-400"
+                    className="w-full bg-transparent text-[14px] text-slate-900 outline-none placeholder:text-slate-400 dark:text-slate-200 dark:placeholder:text-slate-500"
                     placeholder="••••••••"
                     required
                   />
-                  <button type="button" onClick={() => setShowPassword(!showPassword)} className="text-slate-400 hover:text-slate-600">
+                  <button type="button" onClick={() => setShowPassword(!showPassword)} className="text-slate-400 hover:text-slate-600 dark:text-slate-500 dark:hover:text-slate-300">
                     {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                   </button>
                 </div>
@@ -262,7 +262,7 @@ export default function LoginPage() {
                 <button
                   type="button"
                   onClick={resetRegister}
-                  className="mb-4 flex items-center gap-1.5 text-[13px] font-medium text-slate-500 transition hover:text-slate-800"
+                  className="mb-4 flex items-center gap-1.5 text-[13px] font-medium text-slate-500 transition hover:text-slate-800 dark:text-slate-400 dark:hover:text-white"
                 >
                   <ArrowLeft className="h-4 w-4" /> Quay lại
                 </button>
@@ -279,14 +279,14 @@ export default function LoginPage() {
                     className="space-y-4"
                   >
                     <div>
-                      <label className="mb-1.5 block text-[13px] font-semibold text-slate-700">Email</label>
-                      <div className="flex items-center gap-2.5 rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 focus-within:border-blue-400 focus-within:bg-white">
+<label className="mb-1.5 block text-[13px] font-semibold text-slate-700 dark:text-slate-300">Email</label>
+                      <div className="flex items-center gap-2.5 rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 focus-within:border-blue-400 focus-within:bg-white dark:border-slate-700 dark:bg-[#0f172a] dark:focus-within:bg-[#0f172a]">
                         <Mail className="h-4 w-4 text-slate-400" />
                         <input
                           type="email"
                           value={email}
                           onChange={(e) => setEmail(e.target.value)}
-                          className="w-full bg-transparent text-[14px] text-slate-900 outline-none placeholder:text-slate-400"
+                          className="w-full bg-transparent text-[14px] text-slate-900 outline-none placeholder:text-slate-400 dark:text-slate-200 dark:placeholder:text-slate-500"
                           placeholder="email@example.com"
                           required
                         />
@@ -305,7 +305,7 @@ export default function LoginPage() {
                       )}
                       Gửi mã xác thực
                     </button>
-                    <p className="text-center text-[12px] text-slate-400">
+                    <p className="text-center text-[12px] text-slate-400 dark:text-slate-500">
                       Mã xác thực sẽ được gửi đến email của bạn
                     </p>
                   </motion.div>
@@ -321,11 +321,11 @@ export default function LoginPage() {
                     className="space-y-4"
                   >
                     <div className="text-center">
-                      <div className="mx-auto mb-3 flex h-14 w-14 items-center justify-center rounded-2xl bg-green-100">
+                      <div className="mx-auto mb-3 flex h-14 w-14 items-center justify-center rounded-2xl bg-green-100 dark:bg-green-900/40">
                         <Mail className="h-7 w-7 text-green-600" />
                       </div>
-                      <p className="text-[14px] font-medium text-slate-700">Nhập mã xác thực</p>
-                      <p className="text-[12px] text-slate-400">Mã đã được gửi đến {email}</p>
+                      <p className="text-[14px] font-medium text-slate-700 dark:text-slate-300">Nhập mã xác thực</p>
+                      <p className="text-[12px] text-slate-400 dark:text-slate-500">Mã đã được gửi đến {email}</p>
                     </div>
                     <div>
                       <input
@@ -348,7 +348,7 @@ export default function LoginPage() {
                     </button>
                     <div className="text-center">
                       {countdown > 0 ? (
-                        <span className="text-[12px] text-slate-400">Gửi lại mã sau {countdown}s</span>
+                        <span className="text-[12px] text-slate-400 dark:text-slate-500">Gửi lại mã sau {countdown}s</span>
                       ) : (
                         <button
                           type="button"
@@ -373,32 +373,32 @@ export default function LoginPage() {
                     className="space-y-4"
                   >
                     <div>
-                      <label className="mb-1.5 block text-[13px] font-semibold text-slate-700">Tên của bạn</label>
-                      <div className="flex items-center gap-2.5 rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 focus-within:border-blue-400 focus-within:bg-white">
+                      <label className="mb-1.5 block text-[13px] font-semibold text-slate-700 dark:text-slate-300">Tên của bạn</label>
+                      <div className="flex items-center gap-2.5 rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 focus-within:border-blue-400 focus-within:bg-white dark:border-slate-700 dark:bg-[#0f172a] dark:focus-within:bg-[#0f172a]">
                         <User className="h-4 w-4 text-slate-400" />
                         <input
                           value={ten}
                           onChange={(e) => setTen(e.target.value)}
-                          className="w-full bg-transparent text-[14px] text-slate-900 outline-none placeholder:text-slate-400"
+                          className="w-full bg-transparent text-[14px] text-slate-900 outline-none placeholder:text-slate-400 dark:text-slate-200 dark:placeholder:text-slate-500"
                           placeholder="Nguyen Van A"
                           required
                         />
                       </div>
                     </div>
                     <div>
-                      <label className="mb-1.5 block text-[13px] font-semibold text-slate-700">Mật khẩu</label>
-                      <div className="flex items-center gap-2.5 rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 focus-within:border-blue-400 focus-within:bg-white">
+                      <label className="mb-1.5 block text-[13px] font-semibold text-slate-700 dark:text-slate-300">Mật khẩu</label>
+                      <div className="flex items-center gap-2.5 rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 focus-within:border-blue-400 focus-within:bg-white dark:border-slate-700 dark:bg-[#0f172a] dark:focus-within:bg-[#0f172a]">
                         <Lock className="h-4 w-4 text-slate-400" />
                         <input
                           type={showPassword ? 'text' : 'password'}
                           value={matkhau}
                           onChange={(e) => setMatkhau(e.target.value)}
-                          className="w-full bg-transparent text-[14px] text-slate-900 outline-none placeholder:text-slate-400"
+                          className="w-full bg-transparent text-[14px] text-slate-900 outline-none placeholder:text-slate-400 dark:text-slate-200 dark:placeholder:text-slate-500"
                           placeholder="Ít nhất 6 ký tự"
                           required
                           minLength={6}
                         />
-                        <button type="button" onClick={() => setShowPassword(!showPassword)} className="text-slate-400 hover:text-slate-600">
+                        <button type="button" onClick={() => setShowPassword(!showPassword)} className="text-slate-400 hover:text-slate-600 dark:text-slate-500 dark:hover:text-slate-300">
                           {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                         </button>
                       </div>
@@ -418,7 +418,7 @@ export default function LoginPage() {
           )}
 
           {/* Toggle mode */}
-          <div className="mt-6 text-center text-[13px] text-slate-500">
+          <div className="mt-6 text-center text-[13px] text-slate-500 dark:text-slate-400">
             {mode === 'login' ? (
               <>
                 Chưa có tài khoản?{' '}

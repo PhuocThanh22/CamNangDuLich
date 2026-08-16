@@ -118,11 +118,11 @@ export default function AddPlacePage() {
     }
   }
 
-  const fieldClassName = 'w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-[14px] text-slate-900 outline-none placeholder:text-slate-400 transition focus:border-[#3b82f6] focus:bg-white focus:ring-2 focus:ring-[#3b82f6]/20';
+  const fieldClassName = 'w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-[14px] text-slate-900 outline-none placeholder:text-slate-400 transition focus:border-[#3b82f6] focus:bg-white focus:ring-2 focus:ring-[#3b82f6]/20 dark:border-slate-700 dark:bg-[#0f172a] dark:text-slate-200 dark:placeholder:text-slate-500 dark:focus:bg-[#0f172a]';
 
   if (loading) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-[#f8fafc]">
+      <div className="flex min-h-screen items-center justify-center bg-[#f8fafc] dark:bg-[#0b1120]">
         <Loader2 className="h-8 w-8 animate-spin text-[#3b82f6]" />
       </div>
     );
@@ -133,13 +133,13 @@ export default function AddPlacePage() {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
-      className="min-h-screen bg-[#f8fafc] px-5 py-10 sm:px-8 lg:px-10"
+      className="min-h-screen bg-[#f8fafc] px-5 py-10 sm:px-8 lg:px-10 dark:bg-[#0b1120]"
     >
       <div className="mx-auto max-w-7xl">
-        <div className="rounded-2xl bg-[#eff6ff] px-6 py-8 sm:px-8 lg:px-10 lg:py-10">
+        <div className="rounded-2xl bg-[#eff6ff] px-6 py-8 sm:px-8 lg:px-10 lg:py-10 dark:bg-[#0f172a]">
           <button
             onClick={() => router.push('/')}
-            className="mb-6 inline-flex items-center gap-1.5 text-[13px] font-medium text-slate-500 transition hover:text-slate-800"
+            className="mb-6 inline-flex items-center gap-1.5 text-[13px] font-medium text-slate-500 transition hover:text-slate-800 dark:text-slate-400 dark:hover:text-white"
           >
             <ArrowLeft className="h-4 w-4" /> Trang chủ
           </button>
@@ -153,23 +153,23 @@ export default function AddPlacePage() {
                 <p className="text-[11px] font-bold uppercase tracking-[1.5px] text-[#3b82f6]">Đóng góp cộng đồng</p>
               </div>
 
-              <h1 className="mb-4 text-[30px] font-black tracking-tight text-slate-900 sm:text-[38px]">
+              <h1 className="mb-4 text-[30px] font-black tracking-tight text-slate-900 sm:text-[38px] dark:text-white">
                 Đóng góp địa điểm ẩm thực mới
               </h1>
-              <p className="max-w-[700px] text-[15px] leading-relaxed text-slate-500">
+              <p className="max-w-[700px] text-[15px] leading-relaxed text-slate-500 dark:text-slate-400">
                 Chia sẻ những quán ăn ngon bạn biết với cộng đồng. Thông tin sẽ được xét duyệt trước khi hiển thị công khai.
               </p>
 
               {error && (
-                <div className="mt-4 rounded-xl bg-red-50 p-3 text-[13px] font-medium text-red-600">{error}</div>
+                <div className="mt-4 rounded-xl bg-red-50 p-3 text-[13px] font-medium text-red-600 dark:bg-red-900/40 dark:text-red-400">{error}</div>
               )}
               {success && (
-                <div className="mt-4 rounded-xl bg-green-50 p-3 text-[13px] font-medium text-green-600">{success}</div>
+                <div className="mt-4 rounded-xl bg-green-50 p-3 text-[13px] font-medium text-green-600 dark:bg-green-900/40 dark:text-green-400">{success}</div>
               )}
 
-              <form onSubmit={handleSubmit} className="mt-8 rounded-2xl border border-slate-100 bg-white p-6 shadow-[0_4px_20px_rgba(0,0,0,0.06)] sm:p-8">
+              <form onSubmit={handleSubmit} className="mt-8 rounded-2xl border border-slate-100 bg-white p-6 shadow-[0_4px_20px_rgba(0,0,0,0.06)] sm:p-8 dark:border-slate-700 dark:bg-[#111a2e]">
                 <div className="grid gap-5 sm:grid-cols-2">
-                  <label className="block text-[13px] font-semibold text-slate-800">
+                  <label className="block text-[13px] font-semibold text-slate-800 dark:text-slate-300">
                     <span className="mb-2 block">Tên địa điểm *</span>
                     <input
                       value={ten}
@@ -179,7 +179,7 @@ export default function AddPlacePage() {
                       required
                     />
                   </label>
-                  <label className="block text-sm font-semibold text-[#1a202c]">
+                  <label className="block text-sm font-semibold text-[#1a202c] dark:text-slate-300">
                     <span className="mb-2 block">Loại món ăn *</span>
                     <select
                       value={phanloai}
@@ -199,7 +199,7 @@ export default function AddPlacePage() {
                 </div>
 
                 <div className="mt-5 grid gap-5 sm:grid-cols-2">
-                  <label className="block text-sm font-semibold text-[#1a202c]">
+                  <label className="block text-sm font-semibold text-[#1a202c] dark:text-slate-300">
                     <span className="mb-2 block">Khoảng giá</span>
                     <select
                       value={gia}
@@ -213,7 +213,7 @@ export default function AddPlacePage() {
                       <option value="Trên 100k">Trên 100k</option>
                     </select>
                   </label>
-                  <label className="block text-sm font-semibold text-[#1a202c]">
+                  <label className="block text-sm font-semibold text-[#1a202c] dark:text-slate-300">
                     <span className="mb-2 block">Tỉnh/Thành *</span>
                     <select
                       value={tinh}
@@ -230,7 +230,7 @@ export default function AddPlacePage() {
                 </div>
 
                 <div className="mt-5">
-                  <label className="block text-sm font-semibold text-[#1a202c]">
+                  <label className="block text-sm font-semibold text-[#1a202c] dark:text-slate-300">
                     <span className="mb-2 block">Địa chỉ *</span>
                     <input
                       value={diachi}
@@ -243,10 +243,10 @@ export default function AddPlacePage() {
                 </div>
 
                 <div className="mt-5">
-                  <label className="block text-[13px] font-semibold text-slate-800 mb-2">
-                    Vị trí trên bản đồ <span className="text-slate-400 font-normal">(nhấp để chọn)</span>
+                  <label className="block text-[13px] font-semibold text-slate-800 mb-2 dark:text-slate-300">
+                    Vị trí trên bản đồ <span className="text-slate-400 font-normal dark:text-slate-500">(nhấp để chọn)</span>
                   </label>
-                  <div className="h-[260px] overflow-hidden rounded-xl border border-slate-200" style={{ isolation: 'isolate', position: 'relative', zIndex: 0 }}>
+                  <div className="h-[260px] overflow-hidden rounded-xl border border-slate-200 dark:border-slate-700" style={{ isolation: 'isolate', position: 'relative', zIndex: 0 }}>
                     <MapPicker
                       vido={vido}
                       kinhdo={kinhdo}
@@ -254,7 +254,7 @@ export default function AddPlacePage() {
                     />
                   </div>
                   {vido && kinhdo && (
-                    <p className="mt-1.5 text-[12px] text-slate-500">
+                    <p className="mt-1.5 text-[12px] text-slate-500 dark:text-slate-400">
                       <Navigation className="inline h-3 w-3 mr-0.5" />
                       {vido.toFixed(6)}, {kinhdo.toFixed(6)}
                     </p>
@@ -272,27 +272,27 @@ export default function AddPlacePage() {
                 </label>
 
                 <div className="mt-5 grid gap-5 sm:grid-cols-2">
-                  <label className="block text-sm font-semibold text-[#1a202c]">
+                  <label className="block text-sm font-semibold text-[#1a202c] dark:text-slate-300">
                     <span className="mb-2 block">Giờ mở cửa</span>
-                    <div className="flex items-center gap-2 rounded-[10px] border border-[#e2ecf5] bg-[#f7fafc] px-4 py-3">
+                    <div className="flex items-center gap-2 rounded-[10px] border border-[#e2ecf5] bg-[#f7fafc] px-4 py-3 dark:border-slate-700 dark:bg-[#0f172a]">
                       <Clock3 className="h-4 w-4 text-[#a0aec0]" />
                       <select value={gioMo} onChange={(e) => setGioMo(e.target.value)} className="bg-transparent text-[14px] outline-none">
                         {Array.from({ length: 24 }, (_, i) => String(i).padStart(2, '0')).map((h) => <option key={h} value={h}>{h}</option>)}
                       </select>
-                      <span className="text-slate-400">:</span>
+                      <span className="text-slate-400 dark:text-slate-500">:</span>
                       <select value={phutMo} onChange={(e) => setPhutMo(e.target.value)} className="bg-transparent text-[14px] outline-none">
                         {['00', '15', '30', '45'].map((m) => <option key={m} value={m}>{m}</option>)}
                       </select>
                     </div>
                   </label>
-                  <label className="block text-sm font-semibold text-[#1a202c]">
+                  <label className="block text-sm font-semibold text-[#1a202c] dark:text-slate-300">
                     <span className="mb-2 block">Giờ đóng cửa</span>
-                    <div className="flex items-center gap-2 rounded-[10px] border border-[#e2ecf5] bg-[#f7fafc] px-4 py-3">
+                    <div className="flex items-center gap-2 rounded-[10px] border border-[#e2ecf5] bg-[#f7fafc] px-4 py-3 dark:border-slate-700 dark:bg-[#0f172a]">
                       <Clock3 className="h-4 w-4 text-[#a0aec0]" />
                       <select value={gioDong} onChange={(e) => setGioDong(e.target.value)} className="bg-transparent text-[14px] outline-none">
                         {Array.from({ length: 24 }, (_, i) => String(i).padStart(2, '0')).map((h) => <option key={h} value={h}>{h}</option>)}
                       </select>
-                      <span className="text-slate-400">:</span>
+                      <span className="text-slate-400 dark:text-slate-500">:</span>
                       <select value={phutDong} onChange={(e) => setPhutDong(e.target.value)} className="bg-transparent text-[14px] outline-none">
                         {['00', '15', '30', '45'].map((m) => <option key={m} value={m}>{m}</option>)}
                       </select>
@@ -304,7 +304,7 @@ export default function AddPlacePage() {
                   <div className="mb-2 flex items-center gap-2 text-[#3b82f6]">
                     <Camera className="h-4 w-4" />
                     <span className="text-sm font-semibold">Hình ảnh</span>
-                    <span className="text-[12px] text-slate-400">({hinhs.length}/10)</span>
+                    <span className="text-[12px] text-slate-400 dark:text-slate-500">({hinhs.length}/10)</span>
                   </div>
                   {hinhs.length > 0 && (
                     <div className="mb-3 flex flex-wrap gap-2">
@@ -325,9 +325,9 @@ export default function AddPlacePage() {
                   {hinhs.length < 10 && (
                     <div
                       onClick={() => fileInputRef.current?.click()}
-                      className="cursor-pointer rounded-[10px] border-2 border-dashed border-[#cbd5e1] bg-[#f7fafc] p-4 transition hover:border-[#3b82f6] hover:bg-blue-50"
+                      className="cursor-pointer rounded-[10px] border-2 border-dashed border-[#cbd5e1] bg-[#f7fafc] p-4 transition hover:border-[#3b82f6] hover:bg-blue-50 dark:border-slate-700 dark:bg-[#0f172a] dark:hover:bg-[#111a2e]"
                     >
-                      <p className="text-sm text-[#718096]">
+                      <p className="text-sm text-[#718096] dark:text-slate-400">
                         <Upload className="mr-1 inline h-4 w-4" />
                         Tải ảnh lên · PNG, JPG, WEBP (tối đa 10MB, còn {10 - hinhs.length} ảnh)
                       </p>
@@ -343,7 +343,7 @@ export default function AddPlacePage() {
                   />
                 </div>
 
-                <div className="mt-5 rounded-xl bg-blue-50 p-4 text-[13px] leading-relaxed text-blue-700">
+                <div className="mt-5 rounded-xl bg-blue-50 p-4 text-[13px] leading-relaxed text-blue-700 dark:bg-blue-900/40 dark:text-blue-300">
                   Địa điểm của bạn sẽ được đội ngũ FoodMap Vietnam xét duyệt trong 1–3 ngày làm việc trước khi hiển thị công khai.
                 </div>
 
@@ -367,8 +367,8 @@ export default function AddPlacePage() {
             </div>
 
             <div className="w-full max-w-[320px] space-y-5">
-              <div className="rounded-2xl bg-white p-6 shadow-[0_4px_20px_rgba(0,0,0,0.06)]">
-                <h2 className="text-[15px] font-bold text-slate-900">Quy trình đóng góp</h2>
+              <div className="rounded-2xl bg-white p-6 shadow-[0_4px_20px_rgba(0,0,0,0.06)] dark:bg-[#111a2e]">
+                <h2 className="text-[15px] font-bold text-slate-900 dark:text-white">Quy trình đóng góp</h2>
                 <div className="mt-5 space-y-4">
                   {[
                     { title: 'Điền thông tin', text: 'Nhập đầy đủ thông tin địa điểm và hình ảnh.' },
@@ -380,20 +380,20 @@ export default function AddPlacePage() {
                         {index + 1}
                       </div>
                       <div>
-                        <p className="text-[14px] font-semibold text-slate-800">{step.title}</p>
-                        <p className="mt-1 text-[12px] leading-relaxed text-slate-500">{step.text}</p>
+                        <p className="text-[14px] font-semibold text-slate-800 dark:text-slate-300">{step.title}</p>
+                        <p className="mt-1 text-[12px] leading-relaxed text-slate-500 dark:text-slate-400">{step.text}</p>
                       </div>
                     </div>
                   ))}
                 </div>
               </div>
 
-              <div className="rounded-2xl bg-blue-50 p-5">
+              <div className="rounded-2xl bg-blue-50 p-5 dark:bg-blue-900/40">
                 <div className="mb-3 flex items-center gap-2 text-[#3b82f6]">
                   <Info className="h-4 w-4" />
                   <h3 className="text-[15px] font-bold">Mẹo để được duyệt nhanh</h3>
                 </div>
-                <ul className="space-y-2 text-[13px] leading-relaxed text-slate-600">
+                <ul className="space-y-2 text-[13px] leading-relaxed text-slate-600 dark:text-slate-300">
                   {[
                     'Thêm ít nhất 3 hình ảnh rõ nét',
                     'Điền đầy đủ địa chỉ chi tiết',

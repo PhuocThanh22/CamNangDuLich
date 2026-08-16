@@ -1,5 +1,6 @@
 import './globals.css';
 import ClientLayout from './ClientLayout';
+import { ThemeProvider } from '@/components/theme/ThemeProvider';
 import type { ReactNode } from 'react';
 
 export const metadata = {
@@ -28,9 +29,16 @@ export default function RootLayout({ children }: RootLayoutProps) {
     <html lang="vi">
       <head>
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(){try{var t=localStorage.getItem('foodmap-theme');var d=t==='dark'||(!t&&window.matchMedia('(prefers-color-scheme: dark)').matches);if(d){document.documentElement.classList.add('dark');}}catch(e){}})();`,
+          }}
+        />
       </head>
       <body>
-        <ClientLayout>{children}</ClientLayout>
+        <ThemeProvider>
+          <ClientLayout>{children}</ClientLayout>
+        </ThemeProvider>
       </body>
     </html>
   );

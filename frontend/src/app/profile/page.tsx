@@ -167,7 +167,7 @@ export default function ProfilePage() {
     } catch {}
   }
 
-  const fieldClass = 'w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-[14px] text-slate-900 outline-none placeholder:text-slate-400 transition focus:border-[#3b82f6] focus:bg-white focus:ring-2 focus:ring-[#3b82f6]/20';
+  const fieldClass = 'w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-[14px] text-slate-900 outline-none placeholder:text-slate-400 transition focus:border-[#3b82f6] focus:bg-white focus:ring-2 focus:ring-[#3b82f6]/20 dark:border-slate-700 dark:bg-[#0f172a] dark:text-slate-200 dark:placeholder:text-slate-500 dark:focus:bg-[#0f172a]';
 
   if (loading) {
     return (
@@ -178,7 +178,7 @@ export default function ProfilePage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#f8fafc]">
+    <div className="min-h-screen bg-[#f8fafc] dark:bg-[#0b1120]">
       {/* Header */}
       <div className="bg-gradient-to-br from-[#1e40af] to-[#3b82f6] px-5 pb-16 pt-8 sm:px-8 lg:px-10">
         <div className="mx-auto max-w-6xl">
@@ -201,9 +201,9 @@ export default function ProfilePage() {
               </div>
               <button
                 onClick={() => fileInputRef.current?.click()}
-                className="absolute -bottom-1 -right-1 flex h-8 w-8 items-center justify-center rounded-full bg-white shadow-md transition hover:bg-slate-100"
+                className="absolute -bottom-1 -right-1 flex h-8 w-8 items-center justify-center rounded-full bg-white shadow-md transition hover:bg-slate-100 dark:bg-[#111a2e] dark:hover:bg-slate-700"
               >
-                <Camera className="h-4 w-4 text-slate-600" />
+                <Camera className="h-4 w-4 text-slate-600 dark:text-slate-300" />
               </button>
               <input
                 ref={fileInputRef}
@@ -228,7 +228,7 @@ export default function ProfilePage() {
         <div className="flex flex-col gap-6 lg:flex-row">
           {/* Sidebar tabs */}
           <div className="lg:w-64">
-            <div className="overflow-hidden rounded-2xl bg-white shadow-[0_2px_16px_rgba(0,0,0,0.06)]">
+            <div className="overflow-hidden rounded-2xl bg-white shadow-[0_2px_16px_rgba(0,0,0,0.06)] dark:bg-[#111a2e]">
               <div className="flex gap-1 overflow-x-auto p-2 lg:flex-col">
                 {[
                   { key: 'info', label: 'Thông tin tài khoản', icon: <User className="h-4 w-4" /> },
@@ -244,11 +244,11 @@ export default function ProfilePage() {
                     }}
                     className={`flex shrink-0 items-center gap-2.5 rounded-xl px-4 py-3 text-[13px] font-semibold transition lg:w-full ${
                       activeTab === tab.key
-                        ? 'bg-[#eff6ff] text-[#3b82f6]'
-                        : 'text-slate-600 hover:bg-slate-50'
+                        ? 'bg-[#eff6ff] text-[#3b82f6] dark:bg-blue-900/40'
+                        : 'text-slate-600 hover:bg-slate-50 dark:text-slate-300 dark:hover:bg-slate-800'
                     }`}
                   >
-                    <span className={activeTab === tab.key ? 'text-[#3b82f6]' : 'text-slate-400'}>{tab.icon}</span>
+                    <span className={activeTab === tab.key ? 'text-[#3b82f6]' : 'text-slate-400 dark:text-slate-500'}>{tab.icon}</span>
                     {tab.label}
                   </button>
                 ))}
@@ -257,7 +257,7 @@ export default function ProfilePage() {
 
             <button
               onClick={handleLogout}
-              className="mt-3 flex w-full items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-3 text-[13px] font-semibold text-red-500 transition hover:bg-red-50 lg:w-full"
+              className="mt-3 flex w-full items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-3 text-[13px] font-semibold text-red-500 transition hover:bg-red-50 lg:w-full dark:border-slate-700 dark:bg-[#111a2e] dark:hover:bg-red-900/40"
             >
               <LogOut className="h-4 w-4" /> Đăng xuất
             </button>
@@ -266,42 +266,42 @@ export default function ProfilePage() {
           {/* Main content */}
           <div className="flex-1">
             {error && (
-              <div className="mb-4 rounded-xl bg-red-50 p-3 text-[13px] font-medium text-red-600">{error}</div>
+              <div className="mb-4 rounded-xl bg-red-50 p-3 text-[13px] font-medium text-red-600 dark:bg-red-900/40 dark:text-red-300">{error}</div>
             )}
             {success && (
-              <div className="mb-4 rounded-xl bg-green-50 p-3 text-[13px] font-medium text-green-600">{success}</div>
+              <div className="mb-4 rounded-xl bg-green-50 p-3 text-[13px] font-medium text-green-600 dark:bg-green-900/40 dark:text-green-300">{success}</div>
             )}
 
             {/* Tab: Thông tin tài khoản */}
             {activeTab === 'info' && (
               <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-6">
-                <div className="rounded-2xl bg-white p-6 shadow-[0_2px_16px_rgba(0,0,0,0.06)] sm:p-8">
-                  <h2 className="text-[18px] font-bold text-slate-900">Thông tin cá nhân</h2>
-                  <p className="mb-6 text-[13px] text-slate-500">Cập nhật thông tin cơ bản của bạn</p>
+                <div className="rounded-2xl bg-white p-6 shadow-[0_2px_16px_rgba(0,0,0,0.06)] sm:p-8 dark:bg-[#111a2e]">
+                  <h2 className="text-[18px] font-bold text-slate-900 dark:text-white">Thông tin cá nhân</h2>
+                  <p className="mb-6 text-[13px] text-slate-500 dark:text-slate-400">Cập nhật thông tin cơ bản của bạn</p>
 
                   <form onSubmit={handleUpdateProfile} className="space-y-4">
                     <div>
-                      <label className="mb-1.5 block text-[13px] font-semibold text-slate-700">Tên</label>
-                      <div className="flex items-center gap-2.5 rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 focus-within:border-blue-400 focus-within:bg-white">
-                        <User className="h-4 w-4 text-slate-400" />
+                      <label className="mb-1.5 block text-[13px] font-semibold text-slate-700 dark:text-slate-300">Tên</label>
+                      <div className="flex items-center gap-2.5 rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 focus-within:border-blue-400 focus-within:bg-white dark:border-slate-700 dark:bg-[#0f172a] dark:focus-within:bg-[#0f172a]">
+                        <User className="h-4 w-4 text-slate-400 dark:text-slate-500" />
                         <input
                           value={ten}
                           onChange={(e) => setTen(e.target.value)}
-                          className="w-full bg-transparent text-[14px] text-slate-900 outline-none"
+                          className="w-full bg-transparent text-[14px] text-slate-900 outline-none dark:text-slate-200"
                           required
                         />
                       </div>
                     </div>
 
                     <div>
-                      <label className="mb-1.5 block text-[13px] font-semibold text-slate-700">Email</label>
-                      <div className="flex items-center gap-2.5 rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 focus-within:border-blue-400 focus-within:bg-white">
-                        <Mail className="h-4 w-4 text-slate-400" />
+                      <label className="mb-1.5 block text-[13px] font-semibold text-slate-700 dark:text-slate-300">Email</label>
+                      <div className="flex items-center gap-2.5 rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 focus-within:border-blue-400 focus-within:bg-white dark:border-slate-700 dark:bg-[#0f172a] dark:focus-within:bg-[#0f172a]">
+                        <Mail className="h-4 w-4 text-slate-400 dark:text-slate-500" />
                         <input
                           type="email"
                           value={email}
                           onChange={(e) => setEmail(e.target.value)}
-                          className="w-full bg-transparent text-[14px] text-slate-900 outline-none"
+                          className="w-full bg-transparent text-[14px] text-slate-900 outline-none dark:text-slate-200"
                           required
                         />
                       </div>
@@ -318,20 +318,20 @@ export default function ProfilePage() {
                   </form>
                 </div>
 
-                <div className="rounded-2xl bg-white p-6 shadow-[0_2px_16px_rgba(0,0,0,0.06)] sm:p-8">
-                  <h2 className="text-[18px] font-bold text-slate-900">Đổi mật khẩu</h2>
-                  <p className="mb-6 text-[13px] text-slate-500">Cập nhật mật khẩu đăng nhập của bạn</p>
+                <div className="rounded-2xl bg-white p-6 shadow-[0_2px_16px_rgba(0,0,0,0.06)] sm:p-8 dark:bg-[#111a2e]">
+                  <h2 className="text-[18px] font-bold text-slate-900 dark:text-white">Đổi mật khẩu</h2>
+                  <p className="mb-6 text-[13px] text-slate-500 dark:text-slate-400">Cập nhật mật khẩu đăng nhập của bạn</p>
 
                   <form onSubmit={handleChangePassword} className="space-y-4">
                     <div>
-                      <label className="mb-1.5 block text-[13px] font-semibold text-slate-700">Mật khẩu hiện tại</label>
-                      <div className="flex items-center gap-2.5 rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 focus-within:border-blue-400 focus-within:bg-white">
-                        <Lock className="h-4 w-4 text-slate-400" />
+                      <label className="mb-1.5 block text-[13px] font-semibold text-slate-700 dark:text-slate-300">Mật khẩu hiện tại</label>
+                      <div className="flex items-center gap-2.5 rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 focus-within:border-blue-400 focus-within:bg-white dark:border-slate-700 dark:bg-[#0f172a] dark:focus-within:bg-[#0f172a]">
+                        <Lock className="h-4 w-4 text-slate-400 dark:text-slate-500" />
                         <input
                           type="password"
                           value={matkhauCu}
                           onChange={(e) => setMatkhauCu(e.target.value)}
-                          className="w-full bg-transparent text-[14px] text-slate-900 outline-none"
+                          className="w-full bg-transparent text-[14px] text-slate-900 outline-none dark:text-slate-200"
                           placeholder="••••••••"
                           required
                         />
@@ -339,14 +339,14 @@ export default function ProfilePage() {
                     </div>
 
                     <div>
-                      <label className="mb-1.5 block text-[13px] font-semibold text-slate-700">Mật khẩu mới</label>
-                      <div className="flex items-center gap-2.5 rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 focus-within:border-blue-400 focus-within:bg-white">
-                        <Lock className="h-4 w-4 text-slate-400" />
+                      <label className="mb-1.5 block text-[13px] font-semibold text-slate-700 dark:text-slate-300">Mật khẩu mới</label>
+                      <div className="flex items-center gap-2.5 rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 focus-within:border-blue-400 focus-within:bg-white dark:border-slate-700 dark:bg-[#0f172a] dark:focus-within:bg-[#0f172a]">
+                        <Lock className="h-4 w-4 text-slate-400 dark:text-slate-500" />
                         <input
                           type="password"
                           value={matkhauMoi}
                           onChange={(e) => setMatkhauMoi(e.target.value)}
-                          className="w-full bg-transparent text-[14px] text-slate-900 outline-none"
+                          className="w-full bg-transparent text-[14px] text-slate-900 outline-none dark:text-slate-200"
                           placeholder="••••••••"
                           required
                           minLength={6}
@@ -355,14 +355,14 @@ export default function ProfilePage() {
                     </div>
 
                     <div>
-                      <label className="mb-1.5 block text-[13px] font-semibold text-slate-700">Xác nhận mật khẩu mới</label>
-                      <div className="flex items-center gap-2.5 rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 focus-within:border-blue-400 focus-within:bg-white">
-                        <Lock className="h-4 w-4 text-slate-400" />
+                      <label className="mb-1.5 block text-[13px] font-semibold text-slate-700 dark:text-slate-300">Xác nhận mật khẩu mới</label>
+                      <div className="flex items-center gap-2.5 rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 focus-within:border-blue-400 focus-within:bg-white dark:border-slate-700 dark:bg-[#0f172a] dark:focus-within:bg-[#0f172a]">
+                        <Lock className="h-4 w-4 text-slate-400 dark:text-slate-500" />
                         <input
                           type="password"
                           value={matkhauXacnhan}
                           onChange={(e) => setMatkhauXacnhan(e.target.value)}
-                          className="w-full bg-transparent text-[14px] text-slate-900 outline-none"
+                          className="w-full bg-transparent text-[14px] text-slate-900 outline-none dark:text-slate-200"
                           placeholder="••••••••"
                           required
                         />
@@ -385,9 +385,9 @@ export default function ProfilePage() {
             {/* Tab: Địa điểm yêu thích */}
             {activeTab === 'favorites' && (
               <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
-                <div className="rounded-2xl bg-white p-6 shadow-[0_2px_16px_rgba(0,0,0,0.06)] sm:p-8">
-                  <h2 className="text-[18px] font-bold text-slate-900">Địa điểm yêu thích</h2>
-                  <p className="mb-6 text-[13px] text-slate-500">Những địa điểm bạn đã lưu</p>
+                <div className="rounded-2xl bg-white p-6 shadow-[0_2px_16px_rgba(0,0,0,0.06)] sm:p-8 dark:bg-[#111a2e]">
+                  <h2 className="text-[18px] font-bold text-slate-900 dark:text-white">Địa điểm yêu thích</h2>
+                  <p className="mb-6 text-[13px] text-slate-500 dark:text-slate-400">Những địa điểm bạn đã lưu</p>
 
                   {loadingFavorites ? (
                     <div className="flex items-center justify-center py-12">
@@ -395,9 +395,9 @@ export default function ProfilePage() {
                     </div>
                   ) : favorites.length === 0 ? (
                     <div className="flex flex-col items-center py-12 text-center">
-                      <Heart className="mb-3 h-10 w-10 text-slate-300" />
-                      <p className="text-[14px] font-medium text-slate-500">Chưa có địa điểm yêu thích</p>
-                      <p className="mt-1 text-[12px] text-slate-400">Khám phá và lưu các địa điểm bạn yêu thích</p>
+                      <Heart className="mb-3 h-10 w-10 text-slate-300 dark:text-slate-600" />
+                      <p className="text-[14px] font-medium text-slate-500 dark:text-slate-400">Chưa có địa điểm yêu thích</p>
+                      <p className="mt-1 text-[12px] text-slate-400 dark:text-slate-500">Khám phá và lưu các địa điểm bạn yêu thích</p>
                       <button
                         onClick={() => router.push('/map')}
                         className="mt-4 inline-flex items-center gap-2 rounded-xl bg-[#3b82f6] px-5 py-2.5 text-[13px] font-semibold text-white transition hover:bg-[#2563eb]"
@@ -411,7 +411,7 @@ export default function ProfilePage() {
                         <motion.div
                           key={place.id}
                           whileHover={{ y: -3 }}
-                          className="group cursor-pointer overflow-hidden rounded-xl border border-slate-100 bg-white shadow-sm transition hover:shadow-md"
+                          className="group cursor-pointer overflow-hidden rounded-xl border border-slate-100 bg-white shadow-sm transition hover:shadow-md dark:border-slate-700 dark:bg-[#111a2e]"
                         >
                           <div
                             className="flex h-full"
@@ -427,11 +427,11 @@ export default function ProfilePage() {
                             </div>
                             <div className="flex flex-1 flex-col justify-between p-3">
                               <div>
-                                <h3 className="text-[14px] font-bold text-slate-900">{place.ten}</h3>
-                                <span className="mt-1 inline-flex rounded bg-blue-50 px-2 py-0.5 text-[11px] font-medium text-blue-600">
+                                <h3 className="text-[14px] font-bold text-slate-900 dark:text-white">{place.ten}</h3>
+                                <span className="mt-1 inline-flex rounded bg-blue-50 px-2 py-0.5 text-[11px] font-medium text-blue-600 dark:bg-blue-900/40 dark:text-blue-300">
                                   {place.monan || place.phanloai || 'Ẩm thực'}
                                 </span>
-                                <div className="mt-1.5 flex items-center gap-1 text-[12px] text-slate-500">
+                                <div className="mt-1.5 flex items-center gap-1 text-[12px] text-slate-500 dark:text-slate-400">
                                   <Star className="h-3 w-3 text-amber-400" />
                                   <span>{place.danhgia || '4.5'}</span>
                                 </div>
@@ -440,7 +440,7 @@ export default function ProfilePage() {
                                 <span className="text-[12px] font-medium text-orange-500">{place.gia || '30k–100k đ'}</span>
                                 <button
                                   onClick={(e) => { e.stopPropagation(); handleToggleFavorite(place.id); }}
-                                  className="rounded-lg p-1.5 text-red-400 transition hover:bg-red-50 hover:text-red-500"
+                                  className="rounded-lg p-1.5 text-red-400 transition hover:bg-red-50 hover:text-red-500 dark:hover:bg-red-900/40"
                                 >
                                   <Heart className="h-4 w-4 fill-current" />
                                 </button>
@@ -458,9 +458,9 @@ export default function ProfilePage() {
             {/* Tab: Địa điểm đã đóng góp */}
             {activeTab === 'contributions' && (
               <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
-                <div className="rounded-2xl bg-white p-6 shadow-[0_2px_16px_rgba(0,0,0,0.06)] sm:p-8">
-                  <h2 className="text-[18px] font-bold text-slate-900">Địa điểm đã đóng góp</h2>
-                  <p className="mb-6 text-[13px] text-slate-500">Những địa điểm bạn đã thêm vào hệ thống</p>
+                <div className="rounded-2xl bg-white p-6 shadow-[0_2px_16px_rgba(0,0,0,0.06)] sm:p-8 dark:bg-[#111a2e]">
+                  <h2 className="text-[18px] font-bold text-slate-900 dark:text-white">Địa điểm đã đóng góp</h2>
+                  <p className="mb-6 text-[13px] text-slate-500 dark:text-slate-400">Những địa điểm bạn đã thêm vào hệ thống</p>
 
                   {loadingContributions ? (
                     <div className="flex items-center justify-center py-12">
@@ -468,9 +468,9 @@ export default function ProfilePage() {
                     </div>
                   ) : contributions.length === 0 ? (
                     <div className="flex flex-col items-center py-12 text-center">
-                      <MapPin className="mb-3 h-10 w-10 text-slate-300" />
-                      <p className="text-[14px] font-medium text-slate-500">Chưa có địa điểm đóng góp</p>
-                      <p className="mt-1 text-[12px] text-slate-400">Chia sẻ địa điểm ẩm thực bạn biết với cộng đồng</p>
+                      <MapPin className="mb-3 h-10 w-10 text-slate-300 dark:text-slate-600" />
+                      <p className="text-[14px] font-medium text-slate-500 dark:text-slate-400">Chưa có địa điểm đóng góp</p>
+                      <p className="mt-1 text-[12px] text-slate-400 dark:text-slate-500">Chia sẻ địa điểm ẩm thực bạn biết với cộng đồng</p>
                       <button
                         onClick={() => router.push('/add')}
                         className="mt-4 inline-flex items-center gap-2 rounded-xl bg-[#3b82f6] px-5 py-2.5 text-[13px] font-semibold text-white transition hover:bg-[#2563eb]"
@@ -484,7 +484,7 @@ export default function ProfilePage() {
                         <motion.div
                           key={place.id}
                           whileHover={{ y: -3 }}
-                          className="group cursor-pointer overflow-hidden rounded-xl border border-slate-100 bg-white shadow-sm transition hover:shadow-md"
+                          className="group cursor-pointer overflow-hidden rounded-xl border border-slate-100 bg-white shadow-sm transition hover:shadow-md dark:border-slate-700 dark:bg-[#111a2e]"
                         >
                           <div
                             className="flex h-full"
@@ -500,11 +500,11 @@ export default function ProfilePage() {
                             </div>
                             <div className="flex flex-1 flex-col justify-between p-3">
                               <div>
-                                <h3 className="text-[14px] font-bold text-slate-900">{place.ten}</h3>
-                                <span className="mt-1 inline-flex rounded bg-blue-50 px-2 py-0.5 text-[11px] font-medium text-blue-600">
+                                <h3 className="text-[14px] font-bold text-slate-900 dark:text-white">{place.ten}</h3>
+                                <span className="mt-1 inline-flex rounded bg-blue-50 px-2 py-0.5 text-[11px] font-medium text-blue-600 dark:bg-blue-900/40 dark:text-blue-300">
                                   {place.monan || place.phanloai || 'Ẩm thực'}
                                 </span>
-                                <div className="mt-1.5 flex items-center gap-1 text-[12px] text-slate-500">
+                                <div className="mt-1.5 flex items-center gap-1 text-[12px] text-slate-500 dark:text-slate-400">
                                   <MapPin className="h-3 w-3" />
                                   <span>{place.diachi || 'Chưa có địa chỉ'}</span>
                                 </div>
@@ -512,15 +512,15 @@ export default function ProfilePage() {
                               <div className="flex items-center justify-between">
                                 <div className="flex items-center gap-1.5 text-[12px]">
                                   {place.daduyet === false ? (
-                                    <span className="rounded-md bg-amber-100 px-2 py-0.5 font-semibold text-amber-700">Chờ duyệt</span>
+                                    <span className="rounded-md bg-amber-100 px-2 py-0.5 font-semibold text-amber-700 dark:bg-amber-900/40 dark:text-amber-300">Chờ duyệt</span>
                                   ) : (
                                     <>
-                                      <Clock3 className="h-3 w-3 text-slate-400" />
-                                      <span className="text-slate-400">{place.trangthai || 'Đang mở'}</span>
+                                      <Clock3 className="h-3 w-3 text-slate-400 dark:text-slate-500" />
+                                      <span className="text-slate-400 dark:text-slate-500">{place.trangthai || 'Đang mở'}</span>
                                     </>
                                   )}
                                 </div>
-                                <span className="text-[12px] text-slate-400">{place.khoangcach || ''}</span>
+                                <span className="text-[12px] text-slate-400 dark:text-slate-500">{place.khoangcach || ''}</span>
                               </div>
                             </div>
                           </div>

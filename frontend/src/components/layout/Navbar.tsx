@@ -1,10 +1,11 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { MapPin, UserRound, Menu, X, Shield, Settings } from 'lucide-react';
+import { MapPin, UserRound, Menu, X, Shield, Settings, Sun, Moon } from 'lucide-react';
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
 import { getUser } from '@/services/authService';
+import { useTheme } from '@/components/theme/ThemeProvider';
 import type { User } from '@/services/authService';
 
 interface NavLink {
@@ -14,6 +15,7 @@ interface NavLink {
 
 export default function Navbar() {
   const pathname = usePathname();
+  const { theme, toggleTheme } = useTheme();
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [user, setUser] = useState<User | null>(null);
@@ -47,8 +49,8 @@ export default function Navbar() {
     <nav
       className={`sticky top-0 z-50 w-full transition-all duration-300 ${
         scrolled
-          ? 'bg-white/95 shadow-[0_2px_20px_rgba(0,0,0,0.08)] backdrop-blur-md'
-          : 'bg-white border-b border-slate-100'
+          ? 'bg-white/95 shadow-[0_2px_20px_rgba(0,0,0,0.08)] backdrop-blur-md dark:bg-[#0b1120]/95 dark:shadow-[0_2px_20px_rgba(0,0,0,0.5)]'
+          : 'bg-white border-b border-slate-100 dark:bg-[#0b1120] dark:border-slate-800'
       }`}
     >
       <div className="mx-auto flex h-[60px] max-w-7xl items-center justify-between px-5 sm:px-8">
@@ -59,7 +61,7 @@ export default function Navbar() {
           <div className="flex h-8 w-8 items-center justify-center rounded-[9px] bg-[#3b82f6] text-white shadow-[0_4px_12px_rgba(59,130,246,0.4)]">
             <MapPin className="h-4 w-4" />
           </div>
-          <span className="hidden text-[16px] font-bold tracking-tight text-slate-900 sm:block">
+          <span className="hidden text-[16px] font-bold tracking-tight text-slate-900 dark:text-white sm:block">
             FoodMap<span className="text-[#3b82f6]"> Vietnam</span>
           </span>
         </Link>
@@ -71,8 +73,8 @@ export default function Navbar() {
               href={link.path}
               className={`rounded-lg px-4 py-2 text-[14px] font-medium transition-colors ${
                 isActive(link.path)
-                  ? 'bg-[#eff6ff] text-[#3b82f6]'
-                  : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
+                  ? 'bg-[#eff6ff] text-[#3b82f6] dark:bg-[#1e3a8a]/40 dark:text-[#93c5fd]'
+                  : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900 dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-slate-100'
               }`}
             >
               {link.label}
@@ -81,20 +83,30 @@ export default function Navbar() {
         </div>
 
         <div className="flex items-center gap-2">
+          <button
+            type="button"
+            onClick={toggleTheme}
+            aria-label="Chuyển chế độ ngày/đêm"
+            title={theme === 'dark' ? 'Chuyển sang chế độ sáng' : 'Chuyển sang chế độ tối'}
+            className="flex h-9 w-9 items-center justify-center rounded-lg border border-slate-200 text-slate-600 transition hover:bg-slate-50 dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-800"
+          >
+            {theme === 'dark' ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
+          </button>
+
           {user ? (
             <div className="flex items-center gap-2">
               <Link
                 href="/profile"
-                className="hidden items-center gap-1.5 rounded-lg bg-slate-50 px-3 py-2 text-[13px] font-medium text-slate-700 transition hover:bg-slate-100 md:flex"
+                className="hidden items-center gap-1.5 rounded-lg bg-slate-50 px-3 py-2 text-[13px] font-medium text-slate-700 transition hover:bg-slate-100 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700 md:flex"
               >
-                {user.vaitro === 'admin' && <Shield className="h-3.5 w-3.5 text-blue-600" />}
+                {user.vaitro === 'admin' && <Shield className="h-3.5 w-3.5 text-blue-600 dark:text-blue-400" />}
                 {user.ten}
               </Link>
             </div>
           ) : (
             <Link
               href="/login"
-              className="flex items-center gap-1.5 rounded-lg px-4 py-2 text-[14px] font-medium text-slate-600 hover:bg-slate-50"
+              className="flex items-center gap-1.5 rounded-lg px-4 py-2 text-[14px] font-medium text-slate-600 hover:bg-slate-50 dark:text-slate-300 dark:hover:bg-slate-800"
             >
               <UserRound className="h-4 w-4" />
               Đăng nhập
@@ -111,7 +123,7 @@ export default function Navbar() {
           <button
             type="button"
             onClick={() => setMenuOpen(!menuOpen)}
-            className="flex h-9 w-9 items-center justify-center rounded-lg border border-slate-200 text-slate-600 hover:bg-slate-50 md:hidden"
+            className="flex h-9 w-9 items-center justify-center rounded-lg border border-slate-200 text-slate-600 hover:bg-slate-50 dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-800 md:hidden"
           >
             {menuOpen ? <X className="h-4 w-4" /> : <Menu className="h-4 w-4" />}
           </button>
@@ -119,7 +131,7 @@ export default function Navbar() {
       </div>
 
       {menuOpen && (
-        <div className="border-t border-slate-100 bg-white px-5 pb-4 md:hidden">
+        <div className="border-t border-slate-100 bg-white px-5 pb-4 dark:border-slate-800 dark:bg-[#0b1120] md:hidden">
           <div className="flex flex-col gap-1 pt-3">
             {links.map((link) => (
               <Link
@@ -128,8 +140,8 @@ export default function Navbar() {
                 onClick={() => setMenuOpen(false)}
                 className={`w-full rounded-lg px-4 py-3 text-left text-[14px] font-medium transition-colors ${
                   isActive(link.path)
-                    ? 'bg-[#eff6ff] text-[#3b82f6]'
-                    : 'text-slate-600 hover:bg-slate-50'
+                    ? 'bg-[#eff6ff] text-[#3b82f6] dark:bg-[#1e3a8a]/40 dark:text-[#93c5fd]'
+                    : 'text-slate-600 hover:bg-slate-50 dark:text-slate-400 dark:hover:bg-slate-800'
                 }`}
               >
                 {link.path === '/admin' && <Shield className="mr-1.5 inline h-3.5 w-3.5 text-blue-600" />}
@@ -141,7 +153,7 @@ export default function Navbar() {
                 <Link
                   href="/profile"
                   onClick={() => setMenuOpen(false)}
-                  className="flex flex-1 items-center justify-center gap-1.5 rounded-lg border border-slate-200 py-2.5 text-center text-[14px] text-slate-700 hover:bg-slate-50"
+                  className="flex flex-1 items-center justify-center gap-1.5 rounded-lg border border-slate-200 py-2.5 text-center text-[14px] text-slate-700 hover:bg-slate-50 dark:border-slate-700 dark:text-slate-200 dark:hover:bg-slate-800"
                 >
                   <Settings className="h-3.5 w-3.5 shrink-0" /> <span className="truncate">{user.ten}</span>
                 </Link>
@@ -149,7 +161,7 @@ export default function Navbar() {
                 <Link
                   href="/login"
                   onClick={() => setMenuOpen(false)}
-                  className="flex-1 rounded-lg border border-slate-200 py-2.5 text-center text-[14px] font-medium text-slate-700"
+                  className="flex-1 rounded-lg border border-slate-200 py-2.5 text-center text-[14px] font-medium text-slate-700 dark:border-slate-700 dark:text-slate-200"
                 >
                   Đăng nhập
                 </Link>

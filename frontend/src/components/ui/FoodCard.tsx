@@ -28,7 +28,7 @@ export default function FoodCard({ item }: FoodCardProps) {
       whileHover={{ y: -6 }}
       transition={{ duration: 0.25, ease: 'easeOut' }}
       onClick={() => router.push(`/place/${item.id || encodeURIComponent(item.ten)}`)}
-      className="group cursor-pointer overflow-hidden rounded-2xl bg-white shadow-[0_2px_16px_rgba(0,0,0,0.07)] transition-shadow hover:shadow-[0_16px_40px_rgba(0,0,0,0.13)]"
+      className="group cursor-pointer overflow-hidden rounded-2xl bg-white shadow-[0_2px_16px_rgba(0,0,0,0.07)] transition-shadow hover:shadow-[0_16px_40px_rgba(0,0,0,0.13)] dark:bg-[#111a2e] dark:shadow-[0_2px_16px_rgba(0,0,0,0.4)] dark:hover:shadow-[0_16px_40px_rgba(0,0,0,0.6)]"
     >
       <div className="relative h-[200px] overflow-hidden">
         <img
@@ -52,11 +52,11 @@ export default function FoodCard({ item }: FoodCardProps) {
       </div>
 
       <div className="p-4">
-        <h3 className="mb-1.5 text-[16px] font-bold leading-snug text-slate-900">{item.ten}</h3>
-        <div className="mb-2 flex items-center gap-1.5 text-[13px] text-slate-500">
+        <h3 className="mb-1.5 text-[16px] font-bold leading-snug text-slate-900 dark:text-white">{item.ten}</h3>
+        <div className="mb-2 flex items-center gap-1.5 text-[13px] text-slate-500 dark:text-slate-400">
           <StarRating value={item.diemdanhgia} label={item.danhgia} />
         </div>
-        <div className="mb-4 flex items-center gap-3 text-[12px] text-slate-400">
+        <div className="mb-4 flex items-center gap-3 text-[12px] text-slate-400 dark:text-slate-500">
           <span className="flex items-center gap-1">
             <MapPin className="h-3 w-3" /> {item.khoangcach}
           </span>
@@ -64,7 +64,7 @@ export default function FoodCard({ item }: FoodCardProps) {
         </div>
         <button
           type="button"
-          className="flex w-full items-center justify-center gap-1.5 rounded-xl bg-[#eff6ff] py-2.5 text-[13px] font-semibold text-[#3b82f6] transition group-hover:bg-[#3b82f6] group-hover:text-white"
+          className="flex w-full items-center justify-center gap-1.5 rounded-xl bg-[#eff6ff] py-2.5 text-[13px] font-semibold text-[#3b82f6] transition group-hover:bg-[#3b82f6] group-hover:text-white dark:bg-[#1e3a8a]/50 dark:text-[#93c5fd] dark:group-hover:bg-[#3b82f6] dark:group-hover:text-white"
         >
           Xem chi tiết <ArrowRight className="h-3.5 w-3.5" />
         </button>
