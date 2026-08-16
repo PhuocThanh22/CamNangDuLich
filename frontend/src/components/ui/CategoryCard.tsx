@@ -9,12 +9,14 @@ interface CategoryCardProps {
   count: string;
   icon: ReactNode;
   bg: string;
+  onClick?: () => void;
 }
 
-export default function CategoryCard({ title, count, icon, bg }: CategoryCardProps) {
+export default function CategoryCard({ title, count, icon, bg, onClick }: CategoryCardProps) {
   return (
     <motion.button
       type="button"
+      onClick={onClick}
       whileHover={{ y: -6 }}
       whileTap={{ scale: 0.96 }}
       transition={{ type: 'spring', stiffness: 350, damping: 20 }}

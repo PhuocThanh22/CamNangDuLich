@@ -287,7 +287,12 @@ export default function HomePage() {
           >
             {categoriesList.map((cat) => (
               <motion.div key={cat.title} variants={cardVariants} className="min-w-0">
-                <CategoryCard {...cat} />
+                <CategoryCard
+                  {...cat}
+                  onClick={() =>
+                    router.push(`/map?cat=${encodeURIComponent(cat.title)}&radius=10`)
+                  }
+                />
               </motion.div>
             ))}
           </motion.div>

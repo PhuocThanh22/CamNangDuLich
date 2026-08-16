@@ -308,6 +308,22 @@ export default function MapClient() {
   });
   const [globeSpotInfo, setGlobeSpotInfo] = useState<GlobeSpotInfo | null>(null);
   const [locationError, setLocationError] = useState<string | null>(null);
+  const [urlFilter, setUrlFilter] = useState(false);
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const cat = params.get('cat');
+    const radius = params.get('radius');
+    if (cat) {
+      setFilters((f) => ({ ...f, category: cat }));
+      setUrlFilter(true);
+    }
+    const r = radius ? parseFloat(radius) : NaN;
+    if (!Number.isNaN(r) && r > 0) {
+      setCircleRadius(r);
+      setCommittedRadius(r);
+    }
+  }, []);
 
   useEffect(() => {
     placeService.getAll({})
@@ -846,6 +862,27 @@ export default function MapClient() {
             )}
 
             <MapStyleSwitcher activeTile={activeTile} onChangeTile={setActiveTile} />
+
+            {/* Active filter banner */}
+            {(filters.category !== 'all' || urlFilter) && (
+              <div className="absolute left-1/2 top-4 z-[1000] flex max-w-[92vw] -translate-x-1/2 items-center gap-3 rounded-xl border border-blue-100 bg-white px-4 py-2.5 shadow-lg">
+                <div className="truncate text-[12px] text-slate-700">
+                  <span className="font-semibold text-blue-600">Đang lọc: {filters.category}</span>
+                  {urlFilter && <span> · trong bán kính {committedRadius} km</span>}
+                </div>
+                <button
+                  onClick={() => {
+                    setFilters((f) => ({ ...f, category: 'all' }));
+                    setUrlFilter(false);
+                    setCircleRadius(2);
+                    setCommittedRadius(2);
+                  }}
+                  className="flex shrink-0 items-center gap-1 rounded-lg bg-slate-100 px-2.5 py-1 text-[11px] font-semibold text-slate-600 transition hover:bg-slate-200"
+                >
+                  <X className="h-3 w-3" /> Bỏ lọc
+                </button>
+              </div>
+            )}
 
             {/* Leaflet Map */}
               <MapContainer
