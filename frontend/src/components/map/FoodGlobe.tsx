@@ -404,12 +404,13 @@ export default function FoodGlobe({ spots, onSelect }: FoodGlobeProps) {
     });
     ro.observe(container);
 
-    const clock = new THREE.Clock();
+    const timer = new THREE.Timer();
     let elapsed = 0;
     const animate = () => {
       if (!running) return;
       raf = requestAnimationFrame(animate);
-      elapsed += Math.min(clock.getDelta(), 0.05);
+      timer.update();
+      elapsed += Math.min(timer.getDelta(), 0.05);
 
       globeGroup.rotation.y += 0.0035;
       wire.rotation.y -= 0.0012;
