@@ -7,6 +7,7 @@ import { Camera, Clock3, Send, Info, MapPin, Check, Loader2, ArrowLeft, Upload, 
 import { motion } from 'framer-motion';
 import { getUser } from '@/services/authService';
 import { placeService } from '@/services/placeService';
+import { provinces } from '@/utils/constants';
 import type { User } from '@/services/authService';
 
 import 'leaflet/dist/leaflet.css';
@@ -24,6 +25,7 @@ export default function AddPlacePage() {
   const [ten, setTen] = useState('');
   const [phanloai, setPhanloai] = useState('');
   const [gia, setGia] = useState('');
+  const [tinh, setTinh] = useState('');
   const [diachi, setDiachi] = useState('');
   const [mota, setMota] = useState('');
   const [gioMo, setGioMo] = useState('06');
@@ -79,6 +81,7 @@ export default function AddPlacePage() {
         phanloai,
         gia: gia || null,
         diachi: diachi || null,
+        tinh: tinh || null,
         mota: mota || null,
         giohoatdong: giohoatdong || null,
         giomocua: gioMoStr || null,
@@ -96,6 +99,7 @@ export default function AddPlacePage() {
       setTen('');
       setPhanloai('');
       setGia('');
+      setTinh('');
       setDiachi('');
       setMota('');
       setGioMo('06');
@@ -210,12 +214,29 @@ export default function AddPlacePage() {
                     </select>
                   </label>
                   <label className="block text-sm font-semibold text-[#1a202c]">
+                    <span className="mb-2 block">Tỉnh/Thành *</span>
+                    <select
+                      value={tinh}
+                      onChange={(e) => setTinh(e.target.value)}
+                      className={fieldClassName}
+                      required
+                    >
+                      <option value="">Chọn tỉnh/thành…</option>
+                      {provinces.map((p) => (
+                        <option key={p} value={p}>{p}</option>
+                      ))}
+                    </select>
+                  </label>
+                </div>
+
+                <div className="mt-5">
+                  <label className="block text-sm font-semibold text-[#1a202c]">
                     <span className="mb-2 block">Địa chỉ *</span>
                     <input
                       value={diachi}
                       onChange={(e) => setDiachi(e.target.value)}
                       className={fieldClassName}
-                      placeholder="Số nhà, tên đường, phường/xã, quận/huyện, tỉnh/thành"
+                      placeholder="Số nhà, tên đường, phường/xã, quận/huyện"
                       required
                     />
                   </label>

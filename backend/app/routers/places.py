@@ -21,6 +21,7 @@ def read_places(
     limit: int = 10000,
     search: Optional[str] = Query(None),
     category: Optional[str] = Query(None),
+    tinh: Optional[str] = Query(None),
     featured: Optional[bool] = Query(None),
     sort_by: Optional[str] = Query(None),
     db: Session = Depends(get_db),
@@ -39,6 +40,9 @@ def read_places(
 
     if category and category != "all":
         query = query.filter(PlaceModel.phanloai == category)
+
+    if tinh and tinh != "all":
+        query = query.filter(PlaceModel.tinh == tinh)
 
     if featured is not None:
         query = query.filter(PlaceModel.noibat == featured)
@@ -68,6 +72,21 @@ def read_categories(db: Session = Depends(get_db)):
     return [{"title": r.phanloai, "count": r.count} for r in results]
 
 
+@router.get("/tinh", response_model=List[dict])
+def read_provinces(db: Session = Depends(get_db)):
+    results = (
+        db.query(
+            PlaceModel.tinh,
+            func.count(PlaceModel.id).label("count"),
+        )
+        .filter(PlaceModel.tinh.isnot(None), PlaceModel.daduyet == True)
+        .group_by(PlaceModel.tinh)
+        .order_by(func.count(PlaceModel.id).desc())
+        .all()
+    )
+    return [{"title": r.tinh, "count": r.count} for r in results]
+
+
 @router.get("/nearby", response_model=List[PlaceResponse])
 def read_nearby(
     lat: float = Query(21.028),
@@ -75,6 +94,7 @@ def read_nearby(
     radius_km: float = 2.0,
     limit: int = 50,
     category: Optional[str] = Query(None),
+    tinh: Optional[str] = Query(None),
     db: Session = Depends(get_db),
 ):
     haversine = (
@@ -95,6 +115,8 @@ def read_nearby(
         query = query.filter(
             or_(PlaceModel.phanloai == category, PlaceModel.monan == category)
         )
+    if tinh and tinh != "all":
+        query = query.filter(PlaceModel.tinh == tinh)
     places = query.order_by(haversine).limit(limit).all()
     return places
 

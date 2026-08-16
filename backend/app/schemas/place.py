@@ -20,6 +20,7 @@ class PlaceBase(BaseModel):
     hinh: Optional[str] = None
     danhsachhinh: Optional[str] = None
     diachi: Optional[str] = None
+    tinh: Optional[str] = None
     dienthoai: Optional[str] = None
     mota: Optional[str] = None
     monan: Optional[str] = None
@@ -51,6 +52,7 @@ class PlaceUpdate(BaseModel):
     hinh: Optional[str] = None
     danhsachhinh: Optional[str] = None
     diachi: Optional[str] = None
+    tinh: Optional[str] = None
     dienthoai: Optional[str] = None
     mota: Optional[str] = None
     monan: Optional[str] = None

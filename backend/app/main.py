@@ -19,6 +19,8 @@ def migrate_schema():
             conn.execute(text("ALTER TABLE places ADD COLUMN nguoidung_id INTEGER REFERENCES users(id)"))
         if "daduyet" not in [c["name"] for c in inspector.get_columns("places")]:
             conn.execute(text("ALTER TABLE places ADD COLUMN daduyet BOOLEAN DEFAULT TRUE"))
+        if "tinh" not in [c["name"] for c in inspector.get_columns("places")]:
+            conn.execute(text("ALTER TABLE places ADD COLUMN tinh VARCHAR(100)"))
         conn.commit()
 
 migrate_schema()
@@ -32,6 +34,8 @@ app = FastAPI(
 origins = [
     "http://localhost:3000",
     "http://127.0.0.1:3000",
+    "http://localhost:3001",
+    "http://127.0.0.1:3001",
     "http://localhost:8000",
     "https://cam-nang-du-lich.vercel.app",
 ]

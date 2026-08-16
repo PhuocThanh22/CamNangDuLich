@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useEffect, useRef, useState, useMemo, createElement } from 'react';
-import { ChevronRight, Sparkles, LocateFixed, Clock3, Star, Map, ArrowRight, List, Navigation, MapPin, Sandwich, Soup, UtensilsCrossed, Utensils, Fish, CakeSlice, Coffee } from 'lucide-react';
+import { ChevronRight, ChevronDown, Sparkles, LocateFixed, Clock3, Star, Map, ArrowRight, List, Navigation, MapPin, Sandwich, Soup, UtensilsCrossed, Utensils, Fish, CakeSlice, Coffee } from 'lucide-react';
 import { motion, useInView } from 'framer-motion';
 import { useRouter } from 'next/navigation';
 import Hero from '@/components/home/Hero';
@@ -44,7 +44,7 @@ const cardVariants: Variants = {
   visible: { opacity: 1, y: 0, transition: { duration: 0.4, ease: 'easeOut' } },
 };
 
-import { foodImages, nearbyImages } from '@/utils/constants';
+import { foodImages, nearbyImages, provinces as fallbackProvinces } from '@/utils/constants';
 
 function HomeSection({ children, className = '' }: { children: React.ReactNode; className?: string }) {
   const ref = useRef<HTMLDivElement>(null);
@@ -76,6 +76,7 @@ interface FeaturedItem {
   kinhdo?: number;
   giomocua?: string;
   giohoatdong?: string;
+  tinh?: string;
 }
 
 interface NearbyItem {
@@ -108,6 +109,7 @@ const mapToFeatured = (item: Record<string, unknown>, index: number): FeaturedIt
   kinhdo: item.kinhdo as number | undefined,
   giomocua: (item.giomocua as string) || undefined,
   giohoatdong: (item.giohoatdong as string) || undefined,
+  tinh: (item.tinh as string) || undefined,
 });
 
 const mapToNearby = (item: Record<string, unknown>, index: number): NearbyItem => ({
@@ -141,6 +143,8 @@ export default function HomePage() {
   const [categoriesList, setCategoriesList] = useState<{ title: string; count: string; icon: React.ReactNode; bg: string }[]>(fallbackCategories);
   const [userLocation, setUserLocation] = useState<[number, number] | null>(null);
   const [loading, setLoading] = useState(true);
+  const [selectedProvince, setSelectedProvince] = useState('all');
+  const [availableProvinces, setAvailableProvinces] = useState<string[]>([]);
 
   useEffect(() => {
     if (navigator.geolocation) {
@@ -170,19 +174,16 @@ export default function HomePage() {
     async function fetchData() {
       try {
         const [allRes, catRes] = await Promise.all([
-          placeService.getAll({ limit: 50, sort_by: 'rating' }),
+          placeService.getAll({ limit: 1000, sort_by: 'rating' }),
           placeService.getCategories(),
         ]);
         const allData = allRes.data as Record<string, unknown>[];
         if (allData?.length) {
-          const featured = allData
-            .filter((p) => p.noibat || p.danhgia)
-            .slice(0, 4)
-            .map(mapToFeatured);
-          if (featured.length) setFeaturedPlaces(featured);
-
           const nearby = allData.slice(0, 6).map(mapToNearby);
           if (nearby.length) setNearbyPlaces(nearby);
+
+          const provs = Array.from(new Set(allData.map((p) => (p.tinh as string) || '').filter(Boolean)));
+          if (provs.length) setAvailableProvinces(provs);
         }
         if ((catRes.data as Record<string, unknown>[])?.length) {
           const catIcons: Record<string, React.ComponentType<{ className?: string }>> = { 'Bánh mì': Sandwich, 'Phở': Soup, 'Bún': UtensilsCrossed, 'Cơm': Utensils, 'Hải sản': Fish, 'Đồ ngọt': CakeSlice, 'Cà phê': Coffee };
@@ -202,6 +203,30 @@ export default function HomePage() {
     }
     fetchData();
   }, []);
+
+  const provinceOptions = availableProvinces.length > 0 ? availableProvinces : fallbackProvinces;
+
+  useEffect(() => {
+    let cancelled = false;
+    async function fetchFeaturedByProvince() {
+      try {
+        const params: { limit: number; sort_by: string; tinh?: string } = { limit: 50, sort_by: 'rating' };
+        if (selectedProvince !== 'all') params.tinh = selectedProvince;
+        const res = await placeService.getAll(params);
+        const data = res.data as Record<string, unknown>[];
+        if (cancelled) return;
+        const featured = (data || [])
+          .filter((p) => p.noibat || p.danhgia)
+          .slice(0, 4)
+          .map(mapToFeatured);
+        setFeaturedPlaces(featured);
+      } catch {
+        // keep current featured on error
+      }
+    }
+    fetchFeaturedByProvince();
+    return () => { cancelled = true; };
+  }, [selectedProvince]);
 
   const filters: Filter[] = [
     { key: 'all', label: 'Tất cả', icon: <Sparkles className="h-3.5 w-3.5" /> },
@@ -301,7 +326,7 @@ export default function HomePage() {
 
       <HomeSection className="bg-white px-5 py-14 sm:px-8 lg:px-10">
         <div className="mx-auto max-w-7xl">
-          <div className="mb-9 flex items-end justify-between">
+          <div className="mb-9 flex flex-wrap items-end justify-between gap-4">
             <div>
               <p className="mb-1.5 text-[11px] font-bold uppercase tracking-[1.5px] text-[#3b82f6]">
                 ĐẶC SẢN ĐỊA PHƯƠNG
@@ -310,24 +335,55 @@ export default function HomePage() {
                 Những món không thể bỏ qua
               </h2>
             </div>
-            <button
-              type="button"
-              onClick={() => router.push('/map')}
-              className="hidden items-center gap-1 text-[14px] font-semibold text-[#3b82f6] transition hover:text-[#2563eb] sm:inline-flex"
-            >
-              Xem tất cả <ChevronRight className="h-4 w-4" />
-            </button>
+            <div className="flex flex-wrap items-center gap-3">
+              <div className="relative">
+                <MapPin className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#3b82f6]" />
+                <select
+                  value={selectedProvince}
+                  onChange={(e) => setSelectedProvince(e.target.value)}
+                  className="cursor-pointer appearance-none rounded-xl border border-slate-200 bg-white py-2.5 pl-9 pr-9 text-[13px] font-semibold text-slate-700 shadow-sm outline-none transition hover:border-[#3b82f6] focus:border-[#3b82f6] focus:ring-2 focus:ring-[#3b82f6]/20"
+                >
+                  <option value="all">Tất cả tỉnh/thành</option>
+                  {provinceOptions.map((p) => (
+                    <option key={p} value={p}>{p}</option>
+                  ))}
+                </select>
+                <ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
+              </div>
+              <button
+                type="button"
+                onClick={() => router.push('/map')}
+                className="hidden items-center gap-1 text-[14px] font-semibold text-[#3b82f6] transition hover:text-[#2563eb] sm:inline-flex"
+              >
+                Xem tất cả <ChevronRight className="h-4 w-4" />
+              </button>
+            </div>
           </div>
-          <motion.div
-            variants={containerVariants}
-            className="grid gap-5 sm:grid-cols-2 xl:grid-cols-4"
-          >
-            {featuredWithDistance.map((item) => (
-              <motion.div key={(item.id as string) || item.ten} variants={cardVariants}>
-                <FoodCard item={item} />
-              </motion.div>
-            ))}
-          </motion.div>
+          {featuredWithDistance.length > 0 ? (
+            <motion.div
+              variants={containerVariants}
+              className="grid gap-5 sm:grid-cols-2 xl:grid-cols-4"
+            >
+              {featuredWithDistance.map((item) => (
+                <motion.div key={(item.id as string) || item.ten} variants={cardVariants}>
+                  <FoodCard item={item} />
+                </motion.div>
+              ))}
+            </motion.div>
+          ) : (
+            <div className="rounded-2xl bg-slate-50 px-6 py-14 text-center">
+              <p className="text-[15px] font-semibold text-slate-600">
+                {selectedProvince === 'all'
+                  ? 'Chưa có dữ liệu địa điểm'
+                  : `Chưa có món đặc sản nào ở ${selectedProvince}`}
+              </p>
+              <p className="mt-1 text-[13px] text-slate-400">
+                {selectedProvince === 'all'
+                  ? 'Hãy quay lại sau khi có dữ liệu.'
+                  : 'Hãy là người đầu tiên đóng góp địa điểm cho tỉnh này!'}
+              </p>
+            </div>
+          )}
         </div>
       </HomeSection>
 

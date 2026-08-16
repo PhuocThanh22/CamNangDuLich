@@ -35,6 +35,7 @@ CREATE TABLE IF NOT EXISTS places (
   hinh TEXT,
   danhsachhinh TEXT,
   diachi TEXT,
+  tinh VARCHAR(100),
   dienthoai VARCHAR(50),
   mota TEXT,
   monan VARCHAR(100),

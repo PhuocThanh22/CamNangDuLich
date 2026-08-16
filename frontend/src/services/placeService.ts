@@ -4,6 +4,8 @@ interface PlaceQueryParams {
   featured?: boolean;
   limit?: number;
   sort_by?: string;
+  tinh?: string;
+  category?: string;
 }
 
 interface PlaceData {
@@ -11,6 +13,7 @@ interface PlaceData {
   phanloai?: string;
   gia?: string | null;
   diachi?: string | null;
+  tinh?: string | null;
   mota?: string | null;
   giohoatdong?: string | null;
   giomocua?: string | null;
@@ -23,6 +26,7 @@ export const placeService = {
   getAll: (params?: PlaceQueryParams) => api.get('/api/places', { params }),
   getById: (id: number) => api.get(`/api/places/${id}`),
   getCategories: () => api.get('/api/places/categories'),
+  getProvinces: () => api.get('/api/places/tinh'),
   getNearby: (params?: Record<string, unknown>) => api.get('/api/places/nearby', { params }),
   create: (data: PlaceData) => api.post('/api/places', data),
   update: (id: number, data: PlaceData) => api.put(`/api/places/${id}`, data),

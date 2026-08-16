@@ -13,14 +13,14 @@ from app.models.place import Place
 API_KEY = "AIzaSyCZFINWyVOKoZi0VboTAkZxp_bhR309oi4"
 
 SEARCH_CONFIGS = [
-    # (kinhdo, vido, radius_m, keyword)
-    (105.854, 21.028, 2000, "phở Hà Nội"),
-    (105.854, 21.028, 2000, "bún Hà Nội"),
-    (105.854, 21.028, 2000, "bánh mì Hà Nội"),
-    (105.854, 21.028, 2000, "cơm Hà Nội"),
-    (106.695, 10.778, 2000, "phở Sài Gòn"),
-    (106.695, 10.778, 2000, "cơm tấm Sài Gòn"),
-    (106.695, 10.778, 2000, "bánh mì Sài Gòn"),
+    # (kinhdo, vido, radius_m, keyword, tinh)
+    (105.854, 21.028, 2000, "phở Hà Nội", "Hà Nội"),
+    (105.854, 21.028, 2000, "bún Hà Nội", "Hà Nội"),
+    (105.854, 21.028, 2000, "bánh mì Hà Nội", "Hà Nội"),
+    (105.854, 21.028, 2000, "cơm Hà Nội", "Hà Nội"),
+    (106.695, 10.778, 2000, "phở Sài Gòn", "TP. Hồ Chí Minh"),
+    (106.695, 10.778, 2000, "cơm tấm Sài Gòn", "TP. Hồ Chí Minh"),
+    (106.695, 10.778, 2000, "bánh mì Sài Gòn", "TP. Hồ Chí Minh"),
 ]
 
 
@@ -55,7 +55,7 @@ def place_type_to_icon(types):
     return "an_uong"
 
 
-def fetch_places_nearby(lat, lng, radius, keyword, api_key, max_results=20):
+def fetch_places_nearby(lat, lng, radius, keyword, api_key, tinh=None, max_results=20):
     url = "https://maps.googleapis.com/maps/api/place/nearbysearch/json"
     params = {
         "location": f"{lat},{lng}",
@@ -106,6 +106,7 @@ def fetch_places_nearby(lat, lng, radius, keyword, api_key, max_results=20):
                 "gia": gia_text,
                 "hinh": photo_url or None,
                 "diachi": result.get("vicinity", ""),
+                "tinh": tinh,
                 "dienthoai": None,
                 "mota": None,
                 "monan": phanloai_from_keyword(keyword),
@@ -158,9 +159,9 @@ def fetch_all():
     db = SessionLocal()
     total = 0
 
-    for lng, lat, radius, keyword in SEARCH_CONFIGS:
+    for lng, lat, radius, keyword, tinh in SEARCH_CONFIGS:
         print(f"\nDang tim: '{keyword}' tai ({lat}, {lng})...")
-        places = fetch_places_nearby(lat, lng, radius, keyword, API_KEY)
+        places = fetch_places_nearby(lat, lng, radius, keyword, API_KEY, tinh=tinh)
         print(f"  Tim thay {len(places)} quan")
 
         for p in places:

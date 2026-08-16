@@ -24,6 +24,7 @@ class Place(Base):
     hinh = Column(Text, nullable=True)
     danhsachhinh = Column(Text, nullable=True)
     diachi = Column(Text, nullable=True)
+    tinh = Column(String(100), nullable=True, index=True)
     dienthoai = Column(String(50), nullable=True)
     mota = Column(Text, nullable=True)
     monan = Column(String(100), nullable=True)
