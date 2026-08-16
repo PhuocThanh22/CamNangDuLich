@@ -802,7 +802,7 @@ export default function MapClient() {
                             </div>
                             <div className="mt-0.5 flex items-center gap-2 text-[12px] text-slate-500">
                               <span className="rounded bg-slate-100 px-1.5 py-0.5 text-[11px] font-medium text-slate-600">{place.monan}</span>
-                              <span className="text-amber-400">★ {place.danhgia}</span>
+                              {place.danhgia && <span className="text-amber-400">★ {place.danhgia}</span>}
                             </div>
                             <div className="mt-1 flex items-center gap-2 text-[11px] text-slate-400">
                               <MapPin className="h-3 w-3" />

@@ -8,6 +8,7 @@ import Hero from '@/components/home/Hero';
 import ContributionSection from '@/components/home/ContributionSection';
 import CategoryCard from '@/components/ui/CategoryCard';
 import FoodCard from '@/components/ui/FoodCard';
+import StarRating from '@/components/ui/StarRating';
 import { categories as fallbackCategories, featuredPlaces as fallbackFeatured, nearbyPlaces as fallbackNearby } from '@/utils/constants';
 import { placeService } from '@/services/placeService';
 import { getStatusFromHours } from '@/lib/utils';
@@ -66,7 +67,8 @@ interface FeaturedItem {
   id?: number | string;
   ten: string;
   trangthai: string;
-  danhgia: string;
+  danhgia?: string;
+  diemdanhgia?: number | null;
   khoangcach: string;
   gia: string;
   hinh: string;
@@ -81,7 +83,8 @@ interface NearbyItem {
   ten: string;
   huyhieu: string;
   trangthai: string;
-  danhgia: string;
+  danhgia?: string;
+  diemdanhgia?: number | null;
   khoangcach: string;
   gia: string;
   giomocua: string;
@@ -96,7 +99,8 @@ const mapToFeatured = (item: Record<string, unknown>, index: number): FeaturedIt
   id: item.id as number | undefined,
   ten: item.ten as string,
   trangthai: (item.trangthai as string) || 'Đang mở',
-  danhgia: (item.danhgia as string) || '4.8',
+  danhgia: (item.danhgia as string) || '',
+  diemdanhgia: item.diemdanhgia as number | null,
   khoangcach: (item.khoangcach as string) || '0.8 km',
   gia: (item.gia as string) || '30k–100k đ',
   hinh: (item.hinh as string) || foodImages[index % foodImages.length],
@@ -111,7 +115,8 @@ const mapToNearby = (item: Record<string, unknown>, index: number): NearbyItem =
   ten: item.ten as string,
   huyhieu: (item.huyhieu as string) || (item.phanloai as string) || 'Phở',
   trangthai: (item.trangthai as string) || 'Đang mở',
-  danhgia: (item.danhgia as string) || '4.8',
+  danhgia: (item.danhgia as string) || '',
+  diemdanhgia: item.diemdanhgia as number | null,
   khoangcach: (item.khoangcach as string) || '0.5 km',
   gia: (item.gia as string) || '30k–100k đ',
   giomocua: (item.giomocua as string) || '06:00 – 22:00',
@@ -233,7 +238,7 @@ export default function HomePage() {
     if (activeFilter === 'open') {
       result = result.filter((p) => p.trangthai === 'Đang mở');
     } else if (activeFilter === 'top') {
-      result = result.sort((a, b) => parseFloat(b.danhgia) - parseFloat(a.danhgia));
+      result = result.sort((a, b) => (parseFloat(b.danhgia as string) || 0) - (parseFloat(a.danhgia as string) || 0));
     } else if (activeFilter === 'near') {
       result = result.sort((a, b) => {
         const distA = parseFloat(a.khoangcach.replace(/,/g, '.').replace(/[^0-9.]/g, ''));
@@ -256,8 +261,18 @@ export default function HomePage() {
         className="bg-[#f8fafc] px-5 py-14 sm:px-8 lg:px-10"
       >
         <div className="mx-auto max-w-7xl">
-          <div className="mb-8 flex items-center justify-between">
-            <h2 className="text-[22px] font-bold text-slate-900">Khám phá theo danh mục</h2>
+          <div className="mb-9 flex items-end justify-between">
+            <div>
+              <p className="mb-1.5 text-[11px] font-bold uppercase tracking-[1.5px] text-[#3b82f6]">
+                DANH MỤC MÓN NGON
+              </p>
+              <h2 className="text-[28px] font-black tracking-tight text-slate-900 sm:text-[32px]">
+                Khám phá theo danh mục
+              </h2>
+              <p className="mt-2 text-[14px] text-slate-500">
+                Lựa chọn món yêu thích, tìm ngay quán ngon gần bạn
+              </p>
+            </div>
             <button
               type="button"
               onClick={() => router.push('/map')}
@@ -268,10 +283,10 @@ export default function HomePage() {
           </div>
           <motion.div
             variants={containerVariants}
-            className="grid grid-cols-3 gap-3 sm:grid-cols-4 lg:grid-cols-7"
+            className="grid grid-cols-2 gap-3 sm:grid-cols-4 lg:grid-cols-7 sm:gap-4"
           >
             {categoriesList.map((cat) => (
-              <motion.div key={cat.title} variants={cardVariants}>
+              <motion.div key={cat.title} variants={cardVariants} className="min-w-0">
                 <CategoryCard {...cat} />
               </motion.div>
             ))}
@@ -391,8 +406,7 @@ export default function HomePage() {
                       {item.huyhieu}
                     </span>
                     <div className="mb-1.5 flex items-center gap-1.5 text-[12px] text-slate-500">
-                      <span className="text-amber-400">★★★★★</span>
-                      <span>{item.danhgia}</span>
+                      <StarRating value={item.diemdanhgia} label={item.danhgia} />
                     </div>
                   </div>
                   <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-[12px] text-slate-400">

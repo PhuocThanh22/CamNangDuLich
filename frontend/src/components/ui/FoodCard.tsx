@@ -3,13 +3,15 @@
 import { ArrowRight, MapPin } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useRouter } from 'next/navigation';
+import StarRating from './StarRating';
 
 interface FoodCardItem {
   id?: number | string;
   ten: string;
   hinh: string;
   trangthai: string;
-  danhgia: string;
+  danhgia?: string;
+  diemdanhgia?: number | null;
   khoangcach: string;
   gia: string;
 }
@@ -52,8 +54,7 @@ export default function FoodCard({ item }: FoodCardProps) {
       <div className="p-4">
         <h3 className="mb-1.5 text-[16px] font-bold leading-snug text-slate-900">{item.ten}</h3>
         <div className="mb-2 flex items-center gap-1.5 text-[13px] text-slate-500">
-          <span className="text-amber-400">★★★★★</span>
-          <span>{item.danhgia}</span>
+          <StarRating value={item.diemdanhgia} label={item.danhgia} />
         </div>
         <div className="mb-4 flex items-center gap-3 text-[12px] text-slate-400">
           <span className="flex items-center gap-1">
