@@ -6,7 +6,7 @@ import { MapContainer, TileLayer, Marker, Circle, useMap, useMapEvents, ZoomCont
 import MarkerClusterGroup from '@changey/react-leaflet-markercluster';
 import L from 'leaflet';
 import { motion, AnimatePresence } from 'framer-motion';
-import createGlobe from 'cobe';
+import FoodGlobe from './FoodGlobe';
 import {
   Search, X, MapPin, Clock, Star, Navigation, Loader2,
   LocateFixed, Map, Filter, ChevronDown, Moon, Satellite, Leaf,
@@ -298,8 +298,6 @@ export default function MapClient() {
   const [locating, setLocating] = useState(false);
   const [places, setPlaces] = useState<Place[]>([]);
   const [mapLoading, setMapLoading] = useState(true);
-  const globeContainerRef = useRef<HTMLDivElement>(null);
-  const globeRef = useRef<ReturnType<typeof createGlobe> | null>(null);
   const [circleRadius, setCircleRadius] = useState(2);
   const [committedRadius, setCommittedRadius] = useState(2);
   const [showRadius, setShowRadius] = useState(true);
@@ -366,146 +364,6 @@ export default function MapClient() {
   }, []);
 
   const cityMarkers = useMemo(() => computeCityMarkers(places), [places]);
-
-  useEffect(() => {
-    if (!globeContainerRef.current || !isGlobeMode) return;
-    const rawContainer = globeContainerRef.current;
-    const cw = rawContainer.clientWidth || window.innerWidth;
-    const ch = rawContainer.clientHeight || window.innerHeight;
-
-    rawContainer.innerHTML = '';
-    const canvas = document.createElement('canvas');
-    canvas.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;display:block;z-index:2;';
-    rawContainer.appendChild(canvas);
-
-    const starCanvas = document.createElement('canvas');
-    starCanvas.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:1;';
-    starCanvas.width = cw;
-    starCanvas.height = ch;
-    rawContainer.appendChild(starCanvas);
-    const sCtx = starCanvas.getContext('2d')!;
-    const stars = Array.from({ length: 300 }, () => ({
-      x: Math.random() * cw, y: Math.random() * ch,
-      r: Math.random() * 1.5 + 0.3, a: Math.random() * 0.7 + 0.3,
-      s: Math.random() * 0.02 + 0.005, phase: Math.random() * Math.PI * 2,
-    }));
-    stars.forEach((s) => {
-      sCtx.beginPath();
-      sCtx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
-      sCtx.fillStyle = `rgba(255,255,255,${s.a})`;
-      sCtx.fill();
-    });
-
-    const globe = createGlobe(canvas, {
-      devicePixelRatio: Math.min(window.devicePixelRatio, 2),
-      width: cw, height: ch,
-      phi: 0, theta: -0.15,
-      dark: 1, diffuse: 0.5,
-      mapSamples: 60000, mapBrightness: 12,
-      baseColor: [0.12, 0.22, 0.5],
-      markerColor: [1, 0.55, 0.1],
-      glowColor: [0.08, 0.2, 0.6],
-      markers: cityMarkers.map((s) => ({
-        location: [s.vido, s.kinhdo],
-        size: 0.12, color: [1, 0.7, 0.15],
-      })),
-    });
-    const wrapper = canvas.parentElement!;
-    globeRef.current = globe;
-
-    const foodOverlay = document.createElement('div');
-    foodOverlay.style.cssText = 'position:absolute;inset:0;pointer-events:none;overflow:hidden;z-index:3;';
-    wrapper.appendChild(foodOverlay);
-
-    const cardEls = cityMarkers.map((spot) => {
-      const el = document.createElement('div');
-      el.style.cssText = 'position:absolute;pointer-events:auto;cursor:pointer;opacity:0;transition:opacity 0.35s ease;will-change:transform,opacity;';
-      el.innerHTML = `
-        <div style="display:flex;flex-direction:column;align-items:center;gap:6px;filter:drop-shadow(0 6px 24px rgba(0,0,0,0.6));">
-          <div style="width:72px;height:54px;border-radius:12px;overflow:hidden;border:2.5px solid rgba(255,255,255,0.85);background:#fff;">
-            <img src="${spot.img}" alt="${spot.label}" style="width:100%;height:100%;object-fit:cover;" />
-          </div>
-          <div style="background:linear-gradient(135deg,rgba(0,0,0,0.7),rgba(10,10,30,0.8));backdrop-filter:blur(8px);border-radius:8px;padding:3px 10px;font-size:11px;font-weight:600;color:#fff;white-space:nowrap;letter-spacing:0.3px;border:1px solid rgba(255,255,255,0.1);">
-            ${spot.label} · ${spot.monan}
-          </div>
-          <div style="width:2px;height:14px;background:linear-gradient(to bottom,rgba(255,255,255,0.4),transparent);"></div>
-        </div>`;
-      el.addEventListener('click', () => {
-        setGlobeSpotInfo({ ...spot, index: cityMarkers.indexOf(spot), nearby: spot.places });
-      });
-      foodOverlay.appendChild(el);
-      return el;
-    });
-
-    globe.update({ phi: 0, theta: -0.15 });
-
-    let phi = 0, dragPhi = 0, dragTheta = 0;
-    let isDragging = false, lastX = 0, lastY = 0;
-    let autoRotate = true, running = true;
-    let starTime = 0, animId: number;
-
-    function animate() {
-      if (!running) return;
-      starTime++;
-      if (autoRotate && !isDragging) phi += 0.003;
-
-      globe.update({ phi: phi + dragPhi, theta: Math.max(-0.5, Math.min(0.5, -0.15 + dragTheta)) });
-
-      if (starTime % 3 === 0) {
-        sCtx.clearRect(0, 0, cw, ch);
-        stars.forEach((s) => {
-          const bright = 0.3 + 0.7 * (0.5 + 0.5 * Math.sin(starTime * s.s + s.phase));
-          sCtx.beginPath();
-          sCtx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
-          sCtx.fillStyle = `rgba(255,255,255,${bright})`;
-          sCtx.fill();
-        });
-      }
-
-      cardEls.forEach((el) => {
-        const vis = getComputedStyle(document.documentElement)
-          .getPropertyValue('--cobe-visible') !== '';
-        el.style.opacity = vis ? '1' : '0';
-        el.style.pointerEvents = vis ? 'auto' : 'none';
-      });
-      animId = requestAnimationFrame(animate);
-    }
-    animId = requestAnimationFrame(animate);
-
-    function onDown(e: MouseEvent) { isDragging = true; autoRotate = false; lastX = e.clientX; lastY = e.clientY; }
-    function onMove(e: MouseEvent) {
-      if (!isDragging) return;
-      const dx = e.clientX - lastX, dy = e.clientY - lastY;
-      dragPhi += dx * 0.005;
-      dragTheta = Math.max(-0.5, Math.min(0.5, dragTheta + dy * 0.003));
-      lastX = e.clientX; lastY = e.clientY;
-    }
-    function onUp() { isDragging = false; setTimeout(() => { autoRotate = true; }, 3000); }
-    function onTouchStart(e: TouchEvent) { const t = e.touches[0]; onDown({ clientX: t.clientX, clientY: t.clientY } as MouseEvent); }
-    function onTouchMove(e: TouchEvent) { if (!isDragging) return; const t = e.touches[0]; onMove({ clientX: t.clientX, clientY: t.clientY } as MouseEvent); }
-
-    wrapper.addEventListener('mousedown', onDown);
-    window.addEventListener('mousemove', onMove);
-    window.addEventListener('mouseup', onUp);
-    wrapper.addEventListener('touchstart', onTouchStart, { passive: true });
-    window.addEventListener('touchmove', onTouchMove, { passive: true });
-    window.addEventListener('touchend', onUp);
-
-    const ro = new ResizeObserver(([entry]) => {
-      const { width, height } = entry.contentRect;
-      starCanvas.width = width; starCanvas.height = height;
-      globe.update({ width, height });
-    });
-    ro.observe(rawContainer);
-
-    return () => {
-      running = false;
-      cancelAnimationFrame(animId);
-      globe.destroy();
-      ro.disconnect();
-      rawContainer.innerHTML = '';
-    };
-  }, [isGlobeMode, cityMarkers]);
 
   const handleLocate = useCallback(() => {
     setLocating(true);
@@ -611,8 +469,14 @@ export default function MapClient() {
   return (
     <div className="absolute inset-0">
       {isGlobeMode ? (
-        <div className="absolute inset-0 z-10" style={{ background: 'radial-gradient(ellipse at center, #0a0e27 0%, #050816 100%)' }}>
-          <div ref={globeContainerRef} className="h-full w-full relative" style={{ zIndex: 2 }} />
+        <div className="absolute inset-0 z-10" style={{ background: 'radial-gradient(ellipse at center, #0b1f24 0%, #05070d 100%)' }}>
+          <FoodGlobe
+            spots={cityMarkers}
+            onSelect={(spot) => {
+              const s = spot as CityMarker;
+              setGlobeSpotInfo({ ...s, index: cityMarkers.findIndex((c) => c.label === s.label), nearby: s.places });
+            }}
+          />
           <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10 pointer-events-none">
             <p className="text-[11px] text-white/30 tracking-widest uppercase">Kéo để xoay · Nhấp vào ảnh để xem</p>
           </div>
