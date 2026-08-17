@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useEffect, useRef, useState, useMemo, createElement } from 'react';
-import { ChevronDown, Sparkles, LocateFixed, Clock3, Star, Map, ArrowRight, List, Navigation, MapPin, Sandwich, Soup, UtensilsCrossed, Utensils, Fish, CakeSlice, Coffee } from 'lucide-react';
+import { ChevronDown, Sparkles, LocateFixed, Clock3, Star, Map, ArrowRight, List, Navigation, MapPin, Sandwich, Soup, UtensilsCrossed, Utensils, Fish, CakeSlice, Coffee, CookingPot, CupSoda, EggFried } from 'lucide-react';
 import { motion, useInView } from 'framer-motion';
 import { useRouter } from 'next/navigation';
 import Hero from '@/components/home/Hero';
@@ -186,12 +186,13 @@ export default function HomePage() {
           if (provs.length) setAvailableProvinces(provs);
         }
         if ((catRes.data as Record<string, unknown>[])?.length) {
-          const catIcons: Record<string, React.ComponentType<{ className?: string }>> = { 'Bánh mì': Sandwich, 'Phở': Soup, 'Bún': UtensilsCrossed, 'Cơm': Utensils, 'Hải sản': Fish, 'Đồ ngọt': CakeSlice, 'Cà phê': Coffee };
-          const catBgs: Record<string, string> = { 'Bánh mì': 'bg-[#fed7aa] dark:bg-[#431407]/60', 'Phở': 'bg-[#bfdbfe] dark:bg-[#172554]/60', 'Bún': 'bg-[#bbf7d0] dark:bg-[#052e16]/60', 'Cơm': 'bg-[#f5d0fe] dark:bg-[#3b0764]/60', 'Hải sản': 'bg-[#a5f3fc] dark:bg-[#083344]/60', 'Đồ ngọt': 'bg-[#fecdd3] dark:bg-[#4c0519]/60', 'Cà phê': 'bg-[#fde68a] dark:bg-[#422006]/60' };
+          const catIcons: Record<string, React.ComponentType<{ className?: string }>> = { 'Bánh mì': Sandwich, 'Phở': Soup, 'Bún': UtensilsCrossed, 'Cơm': Utensils, 'Hải sản': Fish, 'Đồ ngọt': CakeSlice, 'Cà phê': Coffee, 'Lẩu': CookingPot, 'Chè': CupSoda, 'Bánh xèo': EggFried };
+          const catBgs: Record<string, string> = { 'Bánh mì': 'bg-[#fed7aa] dark:bg-[#431407]/60', 'Phở': 'bg-[#bfdbfe] dark:bg-[#172554]/60', 'Bún': 'bg-[#bbf7d0] dark:bg-[#052e16]/60', 'Cơm': 'bg-[#f5d0fe] dark:bg-[#3b0764]/60', 'Hải sản': 'bg-[#a5f3fc] dark:bg-[#083344]/60', 'Đồ ngọt': 'bg-[#fecdd3] dark:bg-[#4c0519]/60', 'Cà phê': 'bg-[#fde68a] dark:bg-[#422006]/60', 'Lẩu': 'bg-[#fca5a5] dark:bg-[#7f1d1d]/60', 'Chè': 'bg-[#99f6e4] dark:bg-[#134e4a]/60', 'Bánh xèo': 'bg-[#fdba74] dark:bg-[#7c2d12]/60' };
+          const catIconColors: Record<string, string> = { 'Lẩu': 'text-red-500', 'Chè': 'text-teal-600', 'Bánh xèo': 'text-orange-600' };
           setCategoriesList((catRes.data as Record<string, unknown>[]).map((c) => ({
             title: (c.title || c.phanloai) as string,
             count: `${c.count} địa điểm`,
-            icon: createElement(catIcons[c.title as string] || MapPin, { className: 'h-6 w-6 text-blue-500' }),
+            icon: createElement(catIcons[c.title as string] || MapPin, { className: `h-6 w-6 ${catIconColors[c.title as string] || 'text-blue-500'}` }),
             bg: catBgs[c.title as string] || 'bg-[#f0f0f0]',
           })));
         }
@@ -301,7 +302,17 @@ export default function HomePage() {
           </div>
           <motion.div
             variants={containerVariants}
-            className="grid grid-cols-2 gap-3 sm:grid-cols-4 lg:grid-cols-7 sm:gap-4"
+            className={
+              categoriesList.length <= 4
+                ? 'grid grid-cols-2 gap-3 sm:grid-cols-2 lg:grid-cols-4 sm:gap-4'
+                : categoriesList.length <= 6
+                  ? 'grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6 sm:gap-4'
+                  : categoriesList.length === 7
+                    ? 'grid grid-cols-2 gap-3 sm:grid-cols-4 lg:grid-cols-7 sm:gap-4'
+                    : categoriesList.length === 8
+                      ? 'grid grid-cols-2 gap-3 sm:grid-cols-4 lg:grid-cols-4 sm:gap-4'
+                      : 'grid grid-cols-2 gap-3 sm:grid-cols-5 lg:grid-cols-5 sm:gap-4'
+            }
           >
             {categoriesList.map((cat) => (
               <motion.div key={cat.title} variants={cardVariants} className="min-w-0">
