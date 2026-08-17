@@ -88,13 +88,13 @@ interface Category {
 }
 
 export const categories: Category[] = [
-  { title: 'Bánh mì', count: '342 địa điểm', icon: createElement(Sandwich, { className: "h-6 w-6 text-orange-500" }), bg: 'bg-[#fff7ed] dark:bg-[#431407]/60' },
-  { title: 'Phở', count: '218 địa điểm', icon: createElement(Soup, { className: "h-6 w-6 text-blue-500" }), bg: 'bg-[#eff6ff] dark:bg-[#172554]/60' },
-  { title: 'Bún', count: '189 địa điểm', icon: createElement(UtensilsCrossed, { className: "h-6 w-6 text-green-500" }), bg: 'bg-[#f0fdf4] dark:bg-[#052e16]/60' },
-  { title: 'Cơm', count: '276 địa điểm', icon: createElement(Utensils, { className: "h-6 w-6 text-fuchsia-500" }), bg: 'bg-[#fdf4ff] dark:bg-[#3b0764]/60' },
-  { title: 'Hải sản', count: '157 địa điểm', icon: createElement(Fish, { className: "h-6 w-6 text-cyan-500" }), bg: 'bg-[#ecfeff] dark:bg-[#083344]/60' },
-  { title: 'Đồ ngọt', count: '203 địa điểm', icon: createElement(CakeSlice, { className: "h-6 w-6 text-rose-500" }), bg: 'bg-[#fff1f2] dark:bg-[#4c0519]/60' },
-  { title: 'Cà phê', count: '421 địa điểm', icon: createElement(Coffee, { className: "h-6 w-6 text-yellow-600" }), bg: 'bg-[#fefce8] dark:bg-[#422006]/60' },
+  { title: 'Bánh mì', count: '342 địa điểm', icon: createElement(Sandwich, { className: "h-6 w-6 text-orange-500" }), bg: 'bg-[#fed7aa] dark:bg-[#431407]/60' },
+  { title: 'Phở', count: '218 địa điểm', icon: createElement(Soup, { className: "h-6 w-6 text-blue-500" }), bg: 'bg-[#bfdbfe] dark:bg-[#172554]/60' },
+  { title: 'Bún', count: '189 địa điểm', icon: createElement(UtensilsCrossed, { className: "h-6 w-6 text-green-500" }), bg: 'bg-[#bbf7d0] dark:bg-[#052e16]/60' },
+  { title: 'Cơm', count: '276 địa điểm', icon: createElement(Utensils, { className: "h-6 w-6 text-fuchsia-500" }), bg: 'bg-[#f5d0fe] dark:bg-[#3b0764]/60' },
+  { title: 'Hải sản', count: '157 địa điểm', icon: createElement(Fish, { className: "h-6 w-6 text-cyan-500" }), bg: 'bg-[#a5f3fc] dark:bg-[#083344]/60' },
+  { title: 'Đồ ngọt', count: '203 địa điểm', icon: createElement(CakeSlice, { className: "h-6 w-6 text-rose-500" }), bg: 'bg-[#fecdd3] dark:bg-[#4c0519]/60' },
+  { title: 'Cà phê', count: '421 địa điểm', icon: createElement(Coffee, { className: "h-6 w-6 text-yellow-600" }), bg: 'bg-[#fde68a] dark:bg-[#422006]/60' },
 ];
 
 interface FeaturedPlace {

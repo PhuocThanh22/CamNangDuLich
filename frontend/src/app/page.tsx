@@ -187,7 +187,7 @@ export default function HomePage() {
         }
         if ((catRes.data as Record<string, unknown>[])?.length) {
           const catIcons: Record<string, React.ComponentType<{ className?: string }>> = { 'Bánh mì': Sandwich, 'Phở': Soup, 'Bún': UtensilsCrossed, 'Cơm': Utensils, 'Hải sản': Fish, 'Đồ ngọt': CakeSlice, 'Cà phê': Coffee };
-          const catBgs: Record<string, string> = { 'Bánh mì': 'bg-[#fff7ed] dark:bg-[#431407]/60', 'Phở': 'bg-[#eff6ff] dark:bg-[#172554]/60', 'Bún': 'bg-[#f0fdf4] dark:bg-[#052e16]/60', 'Cơm': 'bg-[#fdf4ff] dark:bg-[#3b0764]/60', 'Hải sản': 'bg-[#ecfeff] dark:bg-[#083344]/60', 'Đồ ngọt': 'bg-[#fff1f2] dark:bg-[#4c0519]/60', 'Cà phê': 'bg-[#fefce8] dark:bg-[#422006]/60' };
+          const catBgs: Record<string, string> = { 'Bánh mì': 'bg-[#fed7aa] dark:bg-[#431407]/60', 'Phở': 'bg-[#bfdbfe] dark:bg-[#172554]/60', 'Bún': 'bg-[#bbf7d0] dark:bg-[#052e16]/60', 'Cơm': 'bg-[#f5d0fe] dark:bg-[#3b0764]/60', 'Hải sản': 'bg-[#a5f3fc] dark:bg-[#083344]/60', 'Đồ ngọt': 'bg-[#fecdd3] dark:bg-[#4c0519]/60', 'Cà phê': 'bg-[#fde68a] dark:bg-[#422006]/60' };
           setCategoriesList((catRes.data as Record<string, unknown>[]).map((c) => ({
             title: (c.title || c.phanloai) as string,
             count: `${c.count} địa điểm`,
