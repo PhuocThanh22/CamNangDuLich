@@ -140,6 +140,7 @@ export default function HomePage() {
   const [activeFilter, setActiveFilter] = useState('all');
   const [featuredPlaces, setFeaturedPlaces] = useState<FeaturedItem[]>(fallbackFeatured);
   const [nearbyPlaces, setNearbyPlaces] = useState<NearbyItem[]>(fallbackNearby);
+  const [nearbyResults, setNearbyResults] = useState<NearbyItem[] | null>(null);
   const [categoriesList, setCategoriesList] = useState<{ title: string; count: string; icon: React.ReactNode; bg: string }[]>(fallbackCategories);
   const [userLocation, setUserLocation] = useState<[number, number] | null>(null);
   const [loading, setLoading] = useState(true);
@@ -156,6 +157,15 @@ export default function HomePage() {
     }
   }, []);
 
+  function requestLocation() {
+    if (!navigator.geolocation) return;
+    navigator.geolocation.getCurrentPosition(
+      (pos) => setUserLocation([pos.coords.latitude, pos.coords.longitude]),
+      () => {},
+      { enableHighAccuracy: true, timeout: 8000, maximumAge: 60000 }
+    );
+  }
+
   function calcDistance(lat1: number, lng1: number, lat2: number, lng2: number): string {
     const R = 6371;
     const dLat = ((lat2 - lat1) * Math.PI) / 180;
@@ -168,6 +178,14 @@ export default function HomePage() {
     const d = R * c;
     if (d < 1) return `${Math.round(d * 1000)} m`;
     return `${d.toFixed(1)} km`;
+  }
+
+  function parseKm(dist: string): number {
+    const cleaned = dist.replace(/,/g, '.');
+    const m = cleaned.match(/([\d.]+)\s*m$/);
+    if (m) return parseFloat(m[1]) / 1000;
+    const km = cleaned.match(/([\d.]+)\s*km/);
+    return km ? parseFloat(km[1]) : Infinity;
   }
 
   useEffect(() => {
@@ -217,6 +235,31 @@ export default function HomePage() {
     fetchData();
   }, []);
 
+  useEffect(() => {
+    if (activeFilter !== 'near' || !userLocation) {
+      setNearbyResults(null);
+      return;
+    }
+    let cancelled = false;
+    (async () => {
+      try {
+        const res = await placeService.getNearby({
+          lat: userLocation[0],
+          lng: userLocation[1],
+          radius_km: 10,
+          limit: 50,
+        });
+        const data = res.data as Record<string, unknown>[];
+        if (!cancelled) setNearbyResults((data || []).slice(0, 6).map(mapToNearby));
+      } catch {
+        if (!cancelled) setNearbyResults([]);
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [activeFilter, userLocation]);
+
   const provinceOptions = availableProvinces.length > 0 ? availableProvinces : fallbackProvinces;
 
   useEffect(() => {
@@ -260,7 +303,7 @@ export default function HomePage() {
   }, [featuredPlaces, userLocation]);
 
   const filteredNearby = useMemo(() => {
-    let result = [...nearbyPlaces];
+    let result = [...(activeFilter === 'near' && nearbyResults ? nearbyResults : nearbyPlaces)];
     if (userLocation) {
       result = result.map((p) => {
         if (p.vido != null && p.kinhdo != null) {
@@ -275,14 +318,16 @@ export default function HomePage() {
     } else if (activeFilter === 'top') {
       result = result.sort((a, b) => (parseFloat(b.danhgia as string) || 0) - (parseFloat(a.danhgia as string) || 0));
     } else if (activeFilter === 'near') {
-      result = result.sort((a, b) => {
-        const distA = parseFloat(a.khoangcach.replace(/,/g, '.').replace(/[^0-9.]/g, ''));
-        const distB = parseFloat(b.khoangcach.replace(/,/g, '.').replace(/[^0-9.]/g, ''));
-        return distA - distB;
-      });
+      if (!userLocation) {
+        result = [];
+      } else {
+        result = result
+          .filter((p) => parseKm(p.khoangcach) <= 10)
+          .sort((a, b) => parseKm(a.khoangcach) - parseKm(b.khoangcach));
+      }
     }
     return result;
-  }, [nearbyPlaces, activeFilter, userLocation]);
+  }, [nearbyPlaces, nearbyResults, activeFilter, userLocation]);
 
   return (
     <div className="w-full bg-white dark:bg-[#0b1120]">
@@ -474,16 +519,29 @@ export default function HomePage() {
           {filteredNearby.length === 0 && (
             <div className="rounded-2xl bg-white px-6 py-12 text-center shadow-sm dark:bg-[#111a2e]">
               <p className="text-[15px] font-semibold text-slate-600 dark:text-slate-300">
-                Không có quán ăn nào phù hợp với bộ lọc hiện tại
+                {activeFilter === 'near' && !userLocation
+                  ? 'Bạn cần bật định vị (GPS) để xem quán gần bạn trong bán kính 10 km'
+                  : 'Không có quán ăn nào phù hợp với bộ lọc hiện tại'}
               </p>
-              <button
-                type="button"
-                onClick={() => setActiveFilter('all')}
-                className="mt-4 inline-flex items-center gap-1.5 rounded-full bg-[#3b82f6] px-5 py-2 text-[13px] font-semibold text-white transition hover:bg-[#2563eb]"
-              >
-                <Sparkles className="h-3.5 w-3.5" />
-                Xem tất cả quán
-              </button>
+              {activeFilter === 'near' && !userLocation ? (
+                <button
+                  type="button"
+                  onClick={requestLocation}
+                  className="mt-4 inline-flex items-center gap-1.5 rounded-full bg-[#3b82f6] px-5 py-2 text-[13px] font-semibold text-white transition hover:bg-[#2563eb]"
+                >
+                  <LocateFixed className="h-3.5 w-3.5" />
+                  Bật định vị
+                </button>
+              ) : (
+                <button
+                  type="button"
+                  onClick={() => setActiveFilter('all')}
+                  className="mt-4 inline-flex items-center gap-1.5 rounded-full bg-[#3b82f6] px-5 py-2 text-[13px] font-semibold text-white transition hover:bg-[#2563eb]"
+                >
+                  <Sparkles className="h-3.5 w-3.5" />
+                  Xem tất cả quán
+                </button>
+              )}
             </div>
           )}
 
