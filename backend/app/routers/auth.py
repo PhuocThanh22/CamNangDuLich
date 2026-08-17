@@ -227,7 +227,59 @@ if (window.opener) {{
 # ─── Email Verification ───────────────────────────────────────────
 
 
-def send_email_brevo(api_key, from_email, to_email, subject, body):
+def build_email_html(title: str, message: str, code: str, note: str) -> str:
+    return f"""<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body style="margin:0;padding:0;background-color:#f1f5f9;font-family:'Segoe UI',Arial,Helvetica,sans-serif;">
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color:#f1f5f9;padding:32px 16px;">
+    <tr>
+      <td align="center">
+        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:520px;background-color:#ffffff;border-radius:16px;overflow:hidden;box-shadow:0 8px 30px rgba(0,0,0,0.08);">
+          <tr>
+            <td align="center" style="background:linear-gradient(135deg,#2563eb,#1d4ed8);padding:32px 24px 24px;">
+              <div style="width:56px;height:56px;border-radius:16px;background-color:#ffffff;margin:0 auto 14px;display:flex;align-items:center;justify-content:center;font-size:28px;">🍜</div>
+              <div style="color:#ffffff;font-size:20px;font-weight:700;letter-spacing:0.5px;">Cẩm nang du lịch</div>
+              <div style="color:#bfdbfe;font-size:13px;margin-top:4px;">Khám phá ẩm thực Việt Nam</div>
+            </td>
+          </tr>
+          <tr>
+            <td style="padding:32px 32px 8px;">
+              <h1 style="margin:0 0 8px;font-size:18px;color:#0f172a;">{title}</h1>
+              <p style="margin:0 0 20px;font-size:14px;line-height:1.6;color:#475569;">{message}</p>
+            </td>
+          </tr>
+          <tr>
+            <td align="center" style="padding:0 32px;">
+              <div style="display:inline-block;background-color:#eff6ff;border:2px dashed #60a5fa;border-radius:12px;padding:20px 40px;">
+                <div style="font-size:12px;color:#64748b;letter-spacing:1px;text-transform:uppercase;margin-bottom:8px;">Mã xác thực của bạn</div>
+                <div style="font-size:34px;font-weight:800;letter-spacing:12px;color:#1d4ed8;">{code}</div>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td align="center" style="padding:24px 32px 32px;">
+              <p style="margin:0;font-size:13px;color:#94a3b8;">{note}</p>
+              <p style="margin:16px 0 0;font-size:12px;color:#cbd5e1;">Nếu bạn không thực hiện thao tác này, vui lòng bỏ qua email này.</p>
+            </td>
+          </tr>
+          <tr>
+            <td style="background-color:#f8fafc;padding:20px 32px;text-align:center;">
+              <div style="font-size:12px;color:#94a3b8;">© {datetime.now().year} Cẩm nang du lịch — Cam Nang Du Lich</div>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>"""
+
+
+def send_email_brevo(api_key, from_email, to_email, subject, body, html):
     requests.post(
         "https://api.brevo.com/v3/smtp/email",
         headers={
@@ -239,6 +291,7 @@ def send_email_brevo(api_key, from_email, to_email, subject, body):
             "to": [{"email": to_email}],
             "subject": subject,
             "textContent": body,
+            "htmlContent": html,
         },
         timeout=15,
     )
@@ -260,15 +313,21 @@ def send_verification_code(data: dict, db: Session = Depends(get_db)):
         "expires_at": (datetime.now(timezone.utc) + timedelta(minutes=5)).isoformat(),
     }
 
-    subject = "Xac thuc email - Cam Nang Du Lich"
+    subject = "Xác thực email - Cẩm nang du lịch"
     body = f"Ma xac thuc cua ban la: {code}\nMa co hieu luc trong 5 phut."
+    html = build_email_html(
+        title="Xác thực email",
+        message=f"Chào bạn,<br><br>Cảm ơn bạn đã đăng ký tài khoản tại <strong>Cẩm nang du lịch</strong>. Vui lòng dùng mã dưới đây để xác thực email của bạn.",
+        code=code,
+        note="Mã có hiệu lực trong 5 phút.",
+    )
 
     brevo_key = os.getenv("BREVO_API_KEY", "")
     from_email = os.getenv("EMAIL_FROM", "")
 
     if brevo_key and from_email:
         try:
-            send_email_brevo(brevo_key, from_email, email, subject, body)
+            send_email_brevo(brevo_key, from_email, email, subject, body, html)
             return {"message": f"Ma xac thuc da duoc gui den {email}"}
         except Exception as e:
             verification_codes.pop(email, None)
@@ -323,15 +382,21 @@ def forgot_password(data: dict, db: Session = Depends(get_db)):
         "expires_at": (datetime.now(timezone.utc) + timedelta(minutes=5)).isoformat(),
     }
 
-    subject = "Dat lai mat khau - Cam Nang Du Lich"
+    subject = "Đặt lại mật khẩu - Cẩm nang du lịch"
     body = f"Ma dat lai mat khau cua ban la: {code}\nMa co hieu luc trong 5 phut."
+    html = build_email_html(
+        title="Đặt lại mật khẩu",
+        message=f"Chào bạn,<br><br>Chúng tôi nhận được yêu cầu đặt lại mật khẩu cho tài khoản <strong>{email}</strong> tại <strong>Cẩm nang du lịch</strong>. Vui lòng dùng mã dưới đây để đặt lại mật khẩu của bạn.",
+        code=code,
+        note="Mã có hiệu lực trong 5 phút. Nếu bạn không yêu cầu đặt lại mật khẩu, hãy bỏ qua email này.",
+    )
 
     brevo_key = os.getenv("BREVO_API_KEY", "")
     from_email = os.getenv("EMAIL_FROM", "")
 
     if brevo_key and from_email:
         try:
-            send_email_brevo(brevo_key, from_email, email, subject, body)
+            send_email_brevo(brevo_key, from_email, email, subject, body, html)
             return {"message": f"Ma dat lai mat khau da duoc gui den {email}"}
         except Exception as e:
             reset_codes.pop(email, None)
