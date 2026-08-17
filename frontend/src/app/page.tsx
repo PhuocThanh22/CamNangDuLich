@@ -302,20 +302,14 @@ export default function HomePage() {
           </div>
           <motion.div
             variants={containerVariants}
-            className={
-              categoriesList.length <= 4
-                ? 'grid grid-cols-2 gap-3 sm:grid-cols-2 lg:grid-cols-4 sm:gap-4'
-                : categoriesList.length <= 6
-                  ? 'grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6 sm:gap-4'
-                  : categoriesList.length === 7
-                    ? 'grid grid-cols-2 gap-3 sm:grid-cols-4 lg:grid-cols-7 sm:gap-4'
-                    : categoriesList.length === 8
-                      ? 'grid grid-cols-2 gap-3 sm:grid-cols-4 lg:grid-cols-4 sm:gap-4'
-                      : 'grid grid-cols-2 gap-3 sm:grid-cols-5 lg:grid-cols-5 sm:gap-4'
-            }
+            className="flex flex-wrap justify-center gap-3 sm:gap-4"
           >
             {categoriesList.map((cat) => (
-              <motion.div key={cat.title} variants={cardVariants} className="min-w-0">
+              <motion.div
+                key={cat.title}
+                variants={cardVariants}
+                className="w-[calc(50%-6px)] sm:w-[calc(25%-12px)] lg:w-[200px]"
+              >
                 <CategoryCard
                   {...cat}
                   onClick={() =>
