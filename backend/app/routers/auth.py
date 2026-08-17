@@ -35,6 +35,7 @@ security = HTTPBearer()
 
 # In-memory verification codes (use Redis/DB in production)
 verification_codes: dict[str, dict] = {}
+reset_codes: dict[str, dict] = {}
 
 
 def hash_password(password: str) -> str:
@@ -301,6 +302,78 @@ def verify_code(data: dict):
 
     verification_codes.pop(email, None)
     return {"message": "Xac thuc email thanh cong"}
+
+
+# ─── Forgot Password ──────────────────────────────────────────────
+
+
+@router.post("/forgot-password")
+def forgot_password(data: dict, db: Session = Depends(get_db)):
+    email = data.get("email")
+    if not email:
+        raise HTTPException(status_code=400, detail="Thieu email")
+
+    user = db.query(User).filter(User.email == email).first()
+    if not user:
+        raise HTTPException(status_code=400, detail="Email khong ton tai trong he thong")
+
+    code = f"{random.randint(100000, 999999)}"
+    reset_codes[email] = {
+        "code": code,
+        "expires_at": (datetime.now(timezone.utc) + timedelta(minutes=5)).isoformat(),
+    }
+
+    subject = "Dat lai mat khau - Cam Nang Du Lich"
+    body = f"Ma dat lai mat khau cua ban la: {code}\nMa co hieu luc trong 5 phut."
+
+    brevo_key = os.getenv("BREVO_API_KEY", "")
+    from_email = os.getenv("EMAIL_FROM", "")
+
+    if brevo_key and from_email:
+        try:
+            send_email_brevo(brevo_key, from_email, email, subject, body)
+            return {"message": f"Ma dat lai mat khau da duoc gui den {email}"}
+        except Exception as e:
+            reset_codes.pop(email, None)
+            raise HTTPException(status_code=500, detail=f"Gui email that bai: {str(e)}")
+
+    reset_codes.pop(email, None)
+    raise HTTPException(
+        status_code=500,
+        detail="Email chua duoc cau hinh. Vui long thu lai sau.",
+    )
+
+
+@router.post("/reset-password")
+def reset_password(data: dict, db: Session = Depends(get_db)):
+    email = data.get("email")
+    code = data.get("code")
+    matkhau_moi = data.get("matkhau_moi")
+    if not email or not code or not matkhau_moi:
+        raise HTTPException(status_code=400, detail="Thieu email, ma xac thuc hoac mat khau moi")
+    if len(matkhau_moi) < 6:
+        raise HTTPException(status_code=400, detail="Mat khau phai co it nhat 6 ky tu")
+
+    stored = reset_codes.get(email)
+    if not stored:
+        raise HTTPException(status_code=400, detail="Khong tim thay ma dat lai mat khau cho email nay")
+
+    expires_at = datetime.fromisoformat(stored["expires_at"])
+    if datetime.now(timezone.utc) > expires_at:
+        reset_codes.pop(email, None)
+        raise HTTPException(status_code=400, detail="Ma xac thuc da het han")
+
+    if stored["code"] != code:
+        raise HTTPException(status_code=400, detail="Ma xac thuc khong dung")
+
+    user = db.query(User).filter(User.email == email).first()
+    if not user:
+        raise HTTPException(status_code=404, detail="Nguoi dung khong ton tai")
+
+    user.matkhau = hash_password(matkhau_moi)
+    reset_codes.pop(email, None)
+    db.commit()
+    return {"message": "Mat khau da duoc dat lai thanh cong"}
 
 
 # ─── Existing routes ──────────────────────────────────────────────

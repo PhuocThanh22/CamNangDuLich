@@ -33,6 +33,9 @@ export const authService = {
   socialLogin: (provider: 'google' | 'facebook') => api.get<{ url: string }>(`/api/auth/${provider}/url`),
   socialCallback: (provider: 'google' | 'facebook', code: string) => api.post<AuthResponse>(`/api/auth/${provider}/callback`, { code }),
 
+  forgotPassword: (email: string) => api.post<MessageResponse>('/api/auth/forgot-password', { email }),
+  resetPassword: (data: { email: string; code: string; matkhau_moi: string }) => api.post<MessageResponse>('/api/auth/reset-password', data),
+
   sendVerificationCode: (email: string) => api.post<MessageResponse>('/api/auth/send-verification-code', { email }),
   verifyCode: (email: string, code: string) => api.post<MessageResponse>('/api/auth/verify-code', { email, code }),
   registerWithEmail: (data: { ten: string; email: string; matkhau: string }) => api.post<AuthResponse>('/api/auth/register', data),

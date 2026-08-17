@@ -6,13 +6,15 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Utensils, Mail, Lock, User, Loader2, Eye, EyeOff, ArrowLeft, Check, Send } from 'lucide-react';
 import { authService, setToken, setUser } from '@/services/authService';
 
-type AuthMode = 'login' | 'register';
+type AuthMode = 'login' | 'register' | 'forgot';
 type RegisterStep = 'form' | 'verify' | 'password';
+type ForgotStep = 'email' | 'code' | 'password' | 'done';
 
 export default function LoginPage() {
   const router = useRouter();
   const [mode, setMode] = useState<AuthMode>('login');
   const [registerStep, setRegisterStep] = useState<RegisterStep>('form');
+  const [forgotStep, setForgotStep] = useState<ForgotStep>('email');
   const [showPassword, setShowPassword] = useState(false);
 
   const [email, setEmail] = useState('');
@@ -124,6 +126,55 @@ export default function LoginPage() {
     );
   }
 
+  async function handleForgotSendCode() {
+    if (!email) { setError('Vui lòng nhập email'); return; }
+    setLoading(true);
+    setError('');
+    try {
+      await authService.forgotPassword(email);
+      setSuccess('Mã đặt lại mật khẩu đã được gửi đến email của bạn');
+      setForgotStep('code');
+      let sec = 60;
+      setCountdown(sec);
+      const timer = setInterval(() => {
+        sec--;
+        setCountdown(sec);
+        if (sec <= 0) clearInterval(timer);
+      }, 1000);
+    } catch (err: unknown) {
+      const axiosErr = err as { response?: { data?: { detail?: string } } };
+      setError(axiosErr.response?.data?.detail || 'Gửi mã thất bại');
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  async function handleResetPassword(e: React.FormEvent) {
+    e.preventDefault();
+    if (code.length < 6) { setError('Vui lòng nhập đủ mã xác thực'); return; }
+    if (matkhau.length < 6) { setError('Mật khẩu phải có ít nhất 6 ký tự'); return; }
+    setLoading(true);
+    setError('');
+    try {
+      await authService.resetPassword({ email, code, matkhau_moi: matkhau });
+      setSuccess('Đặt lại mật khẩu thành công');
+      setForgotStep('done');
+    } catch (err: unknown) {
+      const axiosErr = err as { response?: { data?: { detail?: string } } };
+      setError(axiosErr.response?.data?.detail || 'Đặt lại mật khẩu thất bại');
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  function resetForgot() {
+    setForgotStep('email');
+    setCode('');
+    setMatkhau('');
+    setSuccess('');
+    setError('');
+  }
+
   function resetRegister() {
     setRegisterStep('form');
     setCode('');
@@ -149,10 +200,10 @@ export default function LoginPage() {
               <Utensils className="h-7 w-7 text-white" />
             </div>
             <h1 className="text-[24px] font-black text-slate-900 dark:text-white">
-              {mode === 'login' ? 'Đăng nhập' : 'Tạo tài khoản'}
+              {mode === 'login' ? 'Đăng nhập' : mode === 'forgot' ? 'Lấy lại mật khẩu' : 'Tạo tài khoản'}
             </h1>
             <p className="mt-1 text-[14px] text-slate-500 dark:text-slate-400">
-              {mode === 'login' ? 'Chào mừng trở lại!' : 'Khám phá ẩm thực Việt Nam'}
+              {mode === 'login' ? 'Chào mừng trở lại!' : mode === 'forgot' ? 'Nhập email để nhận mã xác thực' : 'Khám phá ẩm thực Việt Nam'}
             </p>
           </div>
 
@@ -230,8 +281,16 @@ export default function LoginPage() {
                   />
                 </div>
               </div>
-              <div>
-                <label className="mb-1.5 block text-[13px] font-semibold text-slate-700 dark:text-slate-300">Mật khẩu</label>
+                <div className="mb-1.5 flex items-center justify-between">
+                  <label className="text-[13px] font-semibold text-slate-700 dark:text-slate-300">Mật khẩu</label>
+                  <button
+                    type="button"
+                    onClick={() => { setMode('forgot'); resetForgot(); }}
+                    className="text-[12px] font-medium text-blue-600 hover:underline"
+                  >
+                    Quên mật khẩu?
+                  </button>
+                </div>
                 <div className="flex items-center gap-2.5 rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 focus-within:border-blue-400 focus-within:bg-white dark:border-slate-700 dark:bg-[#0f172a] dark:focus-within:bg-[#0f172a]">
                   <Lock className="h-4 w-4 text-slate-400" />
                   <input
@@ -246,7 +305,6 @@ export default function LoginPage() {
                     {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                   </button>
                 </div>
-              </div>
               <button
                 type="submit"
                 disabled={loading}
@@ -255,6 +313,180 @@ export default function LoginPage() {
                 {loading ? <Loader2 className="mx-auto h-5 w-5 animate-spin" /> : 'Đăng nhập'}
               </button>
             </form>
+          ) : mode === 'forgot' ? (
+            <>
+              {/* Back button (not on first step) */}
+              {forgotStep !== 'email' && forgotStep !== 'done' && (
+                <button
+                  type="button"
+                  onClick={resetForgot}
+                  className="mb-4 flex items-center gap-1.5 text-[13px] font-medium text-slate-500 transition hover:text-slate-800 dark:text-slate-400 dark:hover:text-white"
+                >
+                  <ArrowLeft className="h-4 w-4" /> Quay lại
+                </button>
+              )}
+
+              <AnimatePresence mode="wait">
+                {/* Step 1: Enter email */}
+                {forgotStep === 'email' && (
+                  <motion.div
+                    key="forgot-email"
+                    initial={{ opacity: 0, x: 20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: -20 }}
+                    className="space-y-4"
+                  >
+                    <div className="text-center">
+                      <div className="mx-auto mb-3 flex h-14 w-14 items-center justify-center rounded-2xl bg-blue-100 dark:bg-blue-900/40">
+                        <Lock className="h-7 w-7 text-blue-600" />
+                      </div>
+                      <p className="text-[14px] font-medium text-slate-700 dark:text-slate-300">Nhập email đã đăng ký</p>
+                      <p className="text-[12px] text-slate-400 dark:text-slate-500">Chúng tôi sẽ gửi mã xác thực để đặt lại mật khẩu</p>
+                    </div>
+                    <div>
+                      <label className="mb-1.5 block text-[13px] font-semibold text-slate-700 dark:text-slate-300">Email</label>
+                      <div className="flex items-center gap-2.5 rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 focus-within:border-blue-400 focus-within:bg-white dark:border-slate-700 dark:bg-[#0f172a] dark:focus-within:bg-[#0f172a]">
+                        <Mail className="h-4 w-4 text-slate-400" />
+                        <input
+                          type="email"
+                          value={email}
+                          onChange={(e) => setEmail(e.target.value)}
+                          className="w-full bg-transparent text-[14px] text-slate-900 outline-none placeholder:text-slate-400 dark:text-slate-200 dark:placeholder:text-slate-500"
+                          placeholder="email@example.com"
+                          required
+                        />
+                      </div>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={handleForgotSendCode}
+                      disabled={loading || !email}
+                      className="flex w-full items-center justify-center gap-2 rounded-xl bg-blue-600 py-3 text-[14px] font-bold text-white shadow-[0_4px_14px_rgba(59,130,246,0.4)] transition hover:bg-blue-700 disabled:opacity-60"
+                    >
+                      {loading ? (
+                        <Loader2 className="h-5 w-5 animate-spin" />
+                      ) : (
+                        <Send className="h-4 w-4" />
+                      )}
+                      Gửi mã xác thực
+                    </button>
+                  </motion.div>
+                )}
+
+                {/* Step 2: Verify code */}
+                {forgotStep === 'code' && (
+                  <motion.div
+                    key="forgot-code"
+                    initial={{ opacity: 0, x: 20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: -20 }}
+                    className="space-y-4"
+                  >
+                    <div className="text-center">
+                      <div className="mx-auto mb-3 flex h-14 w-14 items-center justify-center rounded-2xl bg-green-100 dark:bg-green-900/40">
+                        <Mail className="h-7 w-7 text-green-600" />
+                      </div>
+                      <p className="text-[14px] font-medium text-slate-700 dark:text-slate-300">Nhập mã xác thực</p>
+                      <p className="text-[12px] text-slate-400 dark:text-slate-500">Mã đã được gửi đến {email}</p>
+                    </div>
+                    <div>
+                      <input
+                        value={code}
+                        onChange={(e) => setCode(e.target.value)}
+                        className={`${inputClass} text-center text-[20px] tracking-[8px] font-bold`}
+                        placeholder="000000"
+                        maxLength={6}
+                        autoFocus
+                      />
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => { setForgotStep('password'); setError(''); }}
+                      disabled={code.length < 6}
+                      className="flex w-full items-center justify-center gap-2 rounded-xl bg-blue-600 py-3 text-[14px] font-bold text-white shadow-[0_4px_14px_rgba(59,130,246,0.4)] transition hover:bg-blue-700 disabled:opacity-60"
+                    >
+                      <Check className="h-4 w-4" />
+                      Tiếp tục
+                    </button>
+                    <div className="text-center">
+                      {countdown > 0 ? (
+                        <span className="text-[12px] text-slate-400 dark:text-slate-500">Gửi lại mã sau {countdown}s</span>
+                      ) : (
+                        <button
+                          type="button"
+                          onClick={handleForgotSendCode}
+                          className="text-[13px] font-medium text-blue-600 hover:underline"
+                        >
+                          Gửi lại mã
+                        </button>
+                      )}
+                    </div>
+                  </motion.div>
+                )}
+
+                {/* Step 3: New password */}
+                {forgotStep === 'password' && (
+                  <motion.form
+                    key="forgot-password"
+                    initial={{ opacity: 0, x: 20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: -20 }}
+                    onSubmit={handleResetPassword}
+                    className="space-y-4"
+                  >
+                    <div>
+                      <label className="mb-1.5 block text-[13px] font-semibold text-slate-700 dark:text-slate-300">Mật khẩu mới</label>
+                      <div className="flex items-center gap-2.5 rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 focus-within:border-blue-400 focus-within:bg-white dark:border-slate-700 dark:bg-[#0f172a] dark:focus-within:bg-[#0f172a]">
+                        <Lock className="h-4 w-4 text-slate-400" />
+                        <input
+                          type={showPassword ? 'text' : 'password'}
+                          value={matkhau}
+                          onChange={(e) => setMatkhau(e.target.value)}
+                          className="w-full bg-transparent text-[14px] text-slate-900 outline-none placeholder:text-slate-400 dark:text-slate-200 dark:placeholder:text-slate-500"
+                          placeholder="Ít nhất 6 ký tự"
+                          required
+                          minLength={6}
+                        />
+                        <button type="button" onClick={() => setShowPassword(!showPassword)} className="text-slate-400 hover:text-slate-600 dark:text-slate-500 dark:hover:text-slate-300">
+                          {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                        </button>
+                      </div>
+                    </div>
+                    <button
+                      type="submit"
+                      disabled={loading}
+                      className="flex w-full items-center justify-center gap-2 rounded-xl bg-blue-600 py-3 text-[14px] font-bold text-white shadow-[0_4px_14px_rgba(59,130,246,0.4)] transition hover:bg-blue-700 disabled:opacity-60"
+                    >
+                      {loading ? <Loader2 className="h-5 w-5 animate-spin" /> : null}
+                      Đặt lại mật khẩu
+                    </button>
+                  </motion.form>
+                )}
+
+                {/* Step 4: Done */}
+                {forgotStep === 'done' && (
+                  <motion.div
+                    key="forgot-done"
+                    initial={{ opacity: 0, scale: 0.95 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    className="space-y-4 text-center"
+                  >
+                    <div className="mx-auto mb-3 flex h-14 w-14 items-center justify-center rounded-2xl bg-green-100 dark:bg-green-900/40">
+                      <Check className="h-7 w-7 text-green-600" />
+                    </div>
+                    <p className="text-[15px] font-semibold text-slate-800 dark:text-slate-100">Đặt lại mật khẩu thành công!</p>
+                    <p className="text-[13px] text-slate-500 dark:text-slate-400">Bạn có thể đăng nhập với mật khẩu mới.</p>
+                    <button
+                      type="button"
+                      onClick={() => { setMode('login'); resetForgot(); }}
+                      className="flex w-full items-center justify-center gap-2 rounded-xl bg-blue-600 py-3 text-[14px] font-bold text-white shadow-[0_4px_14px_rgba(59,130,246,0.4)] transition hover:bg-blue-700"
+                    >
+                      Quay lại đăng nhập
+                    </button>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </>
           ) : (
             <>
               {/* Back button (not on first step) */}
@@ -424,6 +656,13 @@ export default function LoginPage() {
                 Chưa có tài khoản?{' '}
                 <button onClick={() => { setMode('register'); resetRegister(); }} className="font-semibold text-blue-600 hover:underline">
                   Đăng ký ngay
+                </button>
+              </>
+            ) : mode === 'forgot' ? (
+              <>
+                Đã nhớ mật khẩu?{' '}
+                <button onClick={() => { setMode('login'); resetForgot(); }} className="font-semibold text-blue-600 hover:underline">
+                  Đăng nhập
                 </button>
               </>
             ) : (
