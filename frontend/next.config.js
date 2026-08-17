@@ -4,7 +4,7 @@ const nextConfig = {
     return [
       {
         source: '/favicon.ico',
-        destination: '/favicon-pho.png',
+        destination: '/favicon.svg',
       },
       {
         source: '/api/:path*',
