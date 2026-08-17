@@ -241,7 +241,11 @@ def build_email_html(title: str, message: str, code: str, note: str) -> str:
         <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:520px;background-color:#ffffff;border-radius:16px;overflow:hidden;box-shadow:0 8px 30px rgba(0,0,0,0.08);">
           <tr>
             <td align="center" style="background:linear-gradient(135deg,#2563eb,#1d4ed8);padding:32px 24px 24px;">
-              <div style="width:56px;height:56px;border-radius:16px;background-color:#ffffff;margin:0 auto 14px;display:flex;align-items:center;justify-content:center;font-size:28px;">🍜</div>
+              <table role="presentation" cellpadding="0" cellspacing="0" align="center" style="margin:0 auto 14px;">
+                <tr>
+                  <td width="28" height="28" align="center" style="width:28px;height:28px;padding:14px;border-radius:16px;background-color:#ffffff;font-size:28px;line-height:28px;">🍜</td>
+                </tr>
+              </table>
               <div style="color:#ffffff;font-size:20px;font-weight:700;letter-spacing:0.5px;">Cẩm nang du lịch</div>
               <div style="color:#bfdbfe;font-size:13px;margin-top:4px;">Khám phá ẩm thực Việt Nam</div>
             </td>
