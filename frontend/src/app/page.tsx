@@ -531,7 +531,7 @@ export default function HomePage() {
                 <h3 className="mb-3 text-[18px] font-bold text-slate-900 dark:text-white">{item.title}</h3>
                 <p className="text-[14px] leading-relaxed text-slate-500 dark:text-slate-400">{item.text}</p>
                 {(item as { huyhieu?: string }).huyhieu && (
-                  <div className="absolute -bottom-3 rounded-full bg-[#3b82f6] px-4 py-1 text-[11px] font-bold text-white shadow-sm">
+                  <div className="absolute -bottom-3 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-full bg-[#3b82f6] px-4 py-1 text-[11px] font-bold text-white shadow-sm">
                     {(item as { huyhieu: string }).huyhieu}
                   </div>
                 )}
