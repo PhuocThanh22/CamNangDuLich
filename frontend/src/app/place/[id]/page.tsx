@@ -394,6 +394,13 @@ export default function PlacePage() {
               <div className="mt-4 flex flex-wrap items-center gap-2">
                 <button
                   type="button"
+                  onClick={() => {
+                    const dest =
+                      item.vido != null && item.kinhdo != null
+                        ? `${item.vido},${item.kinhdo}`
+                        : encodeURIComponent(`${item.ten} ${item.diachi || ''}`.trim());
+                    window.open(`https://www.google.com/maps/dir/?api=1&destination=${dest}`, '_blank');
+                  }}
                   className="flex items-center gap-2 rounded-xl bg-[#3b82f6] px-5 py-2.5 text-[13px] font-bold text-white shadow-[0_4px_14px_rgba(59,130,246,0.4)] transition hover:bg-[#2563eb]"
                 >
                   <Navigation2 className="h-4 w-4" />
@@ -401,6 +408,10 @@ export default function PlacePage() {
                 </button>
                 <button
                   type="button"
+                  onClick={() => {
+                    if (item.id) router.push(`/map?place_id=${item.id}`);
+                    else router.push('/map');
+                  }}
                   className="flex items-center gap-2 rounded-xl border border-blue-200 bg-blue-50 px-5 py-2.5 text-[13px] font-bold text-blue-700 transition hover:bg-blue-100 dark:border-blue-900/40 dark:bg-blue-900/40 dark:text-blue-300 dark:hover:bg-blue-900/60"
                 >
                   <MapPin className="h-4 w-4" />

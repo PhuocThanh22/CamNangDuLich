@@ -326,11 +326,13 @@ export default function MapClient() {
   }, []);
 
   useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const placeId = params.get('place_id');
     placeService.getAll({})
       .then((res) => {
         const data = res.data as Record<string, unknown>[];
         if (data?.length) {
-          setPlaces(data.map((p, i) => ({
+          const mapped = data.map((p, i) => ({
             id: (p.id as string) || `api-${i}`,
             ten: p.ten as string,
             vido: p.vido as number,
@@ -347,7 +349,17 @@ export default function MapClient() {
             gia: (p.gia as string) || '30k–120k đ',
             trangthai: (p.trangthai as string) || 'Đang mở',
             ladulieu: (p.ladulieu as boolean) || false,
-          })));
+          }));
+          setPlaces(mapped);
+          if (placeId) {
+            const target = mapped.find((pl) => String(pl.id) === placeId);
+            if (target) {
+              setSelectedPlace(target);
+              setFlyToPlace(target);
+              setMapCenter([target.vido, target.kinhdo]);
+              initialCenterRef.current = [target.vido, target.kinhdo];
+            }
+          }
           return;
         }
         setPlaces(generateDemoPlaces(mapCenter));

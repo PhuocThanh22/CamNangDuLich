@@ -475,6 +475,18 @@ export default function HomePage() {
             {filteredNearby.map((item) => (
               <motion.article
                 key={(item.id as string) || item.ten}
+                onClick={() => {
+                  if (item.id) router.push(`/place/${item.id}`);
+                }}
+                onKeyDown={(e) => {
+                  if (item.id && (e.key === 'Enter' || e.key === ' ')) {
+                    e.preventDefault();
+                    router.push(`/place/${item.id}`);
+                  }
+                }}
+                role="button"
+                tabIndex={0}
+                aria-label={`Xem chi tiết ${item.ten}`}
                 whileHover={{ y: -4, transition: { duration: 0.2 } }}
                 className="flex cursor-pointer overflow-hidden rounded-2xl bg-white shadow-[0_2px_16px_rgba(0,0,0,0.06)] transition-shadow hover:shadow-[0_8px_32px_rgba(0,0,0,0.12)] dark:bg-[#111a2e] dark:shadow-[0_2px_16px_rgba(0,0,0,0.4)] dark:hover:shadow-[0_8px_32px_rgba(0,0,0,0.6)]"
               >
