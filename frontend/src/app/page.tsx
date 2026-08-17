@@ -189,7 +189,19 @@ export default function HomePage() {
           const catIcons: Record<string, React.ComponentType<{ className?: string }>> = { 'Bánh mì': Sandwich, 'Phở': Soup, 'Bún': UtensilsCrossed, 'Cơm': Utensils, 'Hải sản': Fish, 'Đồ ngọt': CakeSlice, 'Cà phê': Coffee, 'Lẩu': CookingPot, 'Chè': CupSoda, 'Bánh xèo': EggFried };
           const catBgs: Record<string, string> = { 'Bánh mì': 'bg-[#fed7aa] dark:bg-[#431407]/60', 'Phở': 'bg-[#bfdbfe] dark:bg-[#172554]/60', 'Bún': 'bg-[#bbf7d0] dark:bg-[#052e16]/60', 'Cơm': 'bg-[#f5d0fe] dark:bg-[#3b0764]/60', 'Hải sản': 'bg-[#a5f3fc] dark:bg-[#083344]/60', 'Đồ ngọt': 'bg-[#fecdd3] dark:bg-[#4c0519]/60', 'Cà phê': 'bg-[#fde68a] dark:bg-[#422006]/60', 'Lẩu': 'bg-[#fca5a5] dark:bg-[#7f1d1d]/60', 'Chè': 'bg-[#99f6e4] dark:bg-[#134e4a]/60', 'Bánh xèo': 'bg-[#fdba74] dark:bg-[#7c2d12]/60' };
           const catIconColors: Record<string, string> = { 'Lẩu': 'text-red-500', 'Chè': 'text-teal-600', 'Bánh xèo': 'text-orange-600' };
-          setCategoriesList((catRes.data as Record<string, unknown>[]).map((c) => ({
+          const catOrder = ['Bánh mì', 'Phở', 'Bún', 'Cơm', 'Hải sản', 'Đồ ngọt', 'Cà phê', 'Lẩu', 'Chè', 'Bánh xèo'];
+          const rawCats = catRes.data as { title?: string; phanloai?: string; count?: number }[];
+          const sortedCats = [...rawCats].sort((a, b) => {
+            const titleA = (a.title || a.phanloai) as string;
+            const titleB = (b.title || b.phanloai) as string;
+            const ia = catOrder.indexOf(titleA);
+            const ib = catOrder.indexOf(titleB);
+            if (ia !== -1 && ib !== -1) return ia - ib;
+            if (ia !== -1) return -1;
+            if (ib !== -1) return 1;
+            return (b.count || 0) - (a.count || 0);
+          });
+          setCategoriesList(sortedCats.map((c) => ({
             title: (c.title || c.phanloai) as string,
             count: `${c.count} địa điểm`,
             icon: createElement(catIcons[c.title as string] || MapPin, { className: `h-6 w-6 ${catIconColors[c.title as string] || 'text-blue-500'}` }),
@@ -248,10 +260,7 @@ export default function HomePage() {
   }, [featuredPlaces, userLocation]);
 
   const filteredNearby = useMemo(() => {
-    let result = [...nearbyPlaces].map((p) => ({
-      ...p,
-      trangthai: getStatusFromHours(p.giohoatdong || p.giomocua),
-    }));
+    let result = [...nearbyPlaces];
     if (userLocation) {
       result = result.map((p) => {
         if (p.vido != null && p.kinhdo != null) {
@@ -402,7 +411,9 @@ export default function HomePage() {
               <button
                 key={f.key}
                 type="button"
-                onClick={() => setActiveFilter(f.key)}
+                onClick={() =>
+                  setActiveFilter((prev) => (prev === f.key ? 'all' : f.key))
+                }
                 className={`inline-flex items-center gap-1.5 rounded-full px-4 py-2 text-[13px] font-semibold transition-all ${
                   activeFilter === f.key
                     ? 'bg-[#3b82f6] text-white shadow-[0_4px_12px_rgba(59,130,246,0.35)]'
@@ -463,6 +474,22 @@ export default function HomePage() {
               </motion.article>
             ))}
           </motion.div>
+
+          {filteredNearby.length === 0 && (
+            <div className="rounded-2xl bg-white px-6 py-12 text-center shadow-sm dark:bg-[#111a2e]">
+              <p className="text-[15px] font-semibold text-slate-600 dark:text-slate-300">
+                Không có quán ăn nào phù hợp với bộ lọc hiện tại
+              </p>
+              <button
+                type="button"
+                onClick={() => setActiveFilter('all')}
+                className="mt-4 inline-flex items-center gap-1.5 rounded-full bg-[#3b82f6] px-5 py-2 text-[13px] font-semibold text-white transition hover:bg-[#2563eb]"
+              >
+                <Sparkles className="h-3.5 w-3.5" />
+                Xem tất cả quán
+              </button>
+            </div>
+          )}
 
           <div className="mt-8 flex justify-center">
             <button

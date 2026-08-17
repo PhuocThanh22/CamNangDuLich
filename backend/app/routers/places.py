@@ -67,6 +67,7 @@ def read_categories(db: Session = Depends(get_db)):
         )
         .filter(PlaceModel.phanloai.isnot(None))
         .group_by(PlaceModel.phanloai)
+        .order_by(func.count(PlaceModel.id).desc())
         .all()
     )
     return [{"title": r.phanloai, "count": r.count} for r in results]
