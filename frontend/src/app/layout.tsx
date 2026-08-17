@@ -9,7 +9,7 @@ export const metadata = {
     'Tìm quán ăn ngon gần bạn, xem đánh giá, menu, giá cả và chỉ đường trực tiếp trên bản đồ. Khám phá ẩm thực đường phố Việt Nam dễ dàng hơn với FoodMap.',
   keywords: 'ẩm thực, đồ ăn, đường phố, Việt Nam, bản đồ ẩm thực, foodmap, quán ăn, địa điểm ăn uống',
   icons: {
-    icon: '/favicon.svg',
+    icon: '/favicon-pho.png',
   },
   openGraph: {
     title: 'FoodMap Vietnam - Khám phá ẩm thực đường phố',

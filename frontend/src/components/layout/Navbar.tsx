@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { MapPin, UserRound, Menu, X, Shield, Settings, Sun, Moon } from 'lucide-react';
+import { UserRound, Menu, X, Shield, Settings, Sun, Moon } from 'lucide-react';
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
 import { getUser } from '@/services/authService';
@@ -58,8 +58,8 @@ export default function Navbar() {
           href="/"
           className="flex items-center gap-2 transition-opacity hover:opacity-80"
         >
-          <div className="flex h-8 w-8 items-center justify-center rounded-[9px] bg-[#3b82f6] text-white shadow-[0_4px_12px_rgba(59,130,246,0.4)]">
-            <MapPin className="h-4 w-4" />
+          <div className="h-8 w-8 overflow-hidden rounded-[9px] shadow-[0_4px_12px_rgba(59,130,246,0.4)]">
+            <img src="/favicon-pho.png" alt="FoodMap Vietnam" className="h-full w-full object-cover" />
           </div>
           <span className="hidden text-[16px] font-bold tracking-tight text-slate-900 dark:text-white sm:block">
             FoodMap<span className="text-[#3b82f6]"> Vietnam</span>
