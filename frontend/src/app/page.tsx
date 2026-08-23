@@ -317,6 +317,10 @@ export default function HomePage() {
       return p;
     });
     result = result.filter((p) => p.distKm != null && p.distKm <= 10);
+    result = result.map((p) => ({
+      ...p,
+      trangthai: getStatusFromHours(p.giohoatdong || p.giomocua),
+    }));
     if (activeFilter === 'open') {
       result = result.filter((p) => p.trangthai === 'Đang mở');
     } else if (activeFilter === 'top') {
