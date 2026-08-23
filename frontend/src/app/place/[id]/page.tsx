@@ -159,6 +159,7 @@ export default function PlacePage() {
   const [showMenuForm, setShowMenuForm] = useState(false);
   const [menuFormData, setMenuFormData] = useState({ ten: '', gia: '', mota: '', hinh: '' });
   const [currentUser, setCurrentUser] = useState(getUser());
+  const [toast, setToast] = useState<string | null>(null);
   const tabs = ['Tổng quan', 'Thực đơn', `Đánh giá (${reviews.length || 0})`, 'Ảnh'];
   const avgRating = reviews.length > 0
     ? (reviews.reduce((s, r) => s + r.diemdanhgia, 0) / reviews.length).toFixed(1)
@@ -300,6 +301,31 @@ export default function PlacePage() {
     } catch {}
   };
 
+  const handleShare = async () => {
+    if (!item) return;
+    const url = `${window.location.origin}/place/${item.id ?? params.id}`;
+    try {
+      if (navigator.share) {
+        await navigator.share({
+          title: item.ten,
+          text: `Xem ${item.ten} trên Cẩm Nang Du Lịch`,
+          url,
+        });
+        return;
+      }
+      throw new Error('Web Share API not supported');
+    } catch (err) {
+      if ((err as DOMException)?.name === 'AbortError') return;
+      try {
+        await navigator.clipboard.writeText(url);
+        setToast('Đã sao chép liên kết!');
+      } catch {
+        setToast('Không thể chia sẻ. Vui lòng sao chép URL từ thanh địa chỉ.');
+      }
+      setTimeout(() => setToast(null), 2500);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-[#f8fafc] dark:bg-[#0b1120]">
       <div className="bg-white dark:bg-[#111a2e]">
@@ -437,6 +463,7 @@ export default function PlacePage() {
                 </button>
                 <button
                   type="button"
+                  onClick={handleShare}
                   className="flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-[13px] font-semibold text-slate-600 transition hover:bg-slate-50 dark:border-slate-700 dark:bg-[#0f172a] dark:text-slate-300 dark:hover:bg-slate-800"
                 >
                   <Share2 className="h-4 w-4" />
@@ -868,6 +895,19 @@ export default function PlacePage() {
                 </button>
               </div>
             </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      <AnimatePresence>
+        {toast && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 20 }}
+            className="fixed bottom-6 left-1/2 z-[9999] -translate-x-1/2 rounded-full bg-slate-900 px-5 py-2.5 text-[13px] font-semibold text-white shadow-xl dark:bg-white dark:text-slate-900"
+          >
+            {toast}
           </motion.div>
         )}
       </AnimatePresence>
