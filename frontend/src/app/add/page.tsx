@@ -120,6 +120,13 @@ export default function AddPlacePage() {
 
   const fieldClassName = 'w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-[14px] text-slate-900 outline-none placeholder:text-slate-400 transition focus:border-[#3b82f6] focus:bg-white focus:ring-2 focus:ring-[#3b82f6]/20 dark:border-slate-700 dark:bg-[#0f172a] dark:text-slate-200 dark:placeholder:text-slate-500 dark:focus:bg-[#0f172a]';
 
+  const selectClassName = (hasValue: boolean) =>
+    `w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-[14px] outline-none transition focus:border-[#3b82f6] focus:bg-white focus:ring-2 focus:ring-[#3b82f6]/20 dark:border-slate-700 dark:bg-[#0f172a] dark:focus:bg-[#0f172a] ${
+      hasValue
+        ? 'text-slate-900 dark:text-slate-200'
+        : 'text-slate-400 dark:text-slate-500'
+    }`;
+
   if (loading) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-[#f8fafc] dark:bg-[#0b1120]">
@@ -184,7 +191,7 @@ export default function AddPlacePage() {
                     <select
                       value={phanloai}
                       onChange={(e) => setPhanloai(e.target.value)}
-                      className={fieldClassName}
+                      className={selectClassName(!!phanloai)}
                       required
                     >
                       <option value="">Chọn loại món…</option>
@@ -204,7 +211,7 @@ export default function AddPlacePage() {
                     <select
                       value={gia}
                       onChange={(e) => setGia(e.target.value)}
-                      className={fieldClassName}
+                      className={selectClassName(!!gia)}
                     >
                       <option value="">Chọn khoảng giá…</option>
                       <option value="Dưới 30k">Dưới 30k</option>
@@ -218,7 +225,7 @@ export default function AddPlacePage() {
                     <select
                       value={tinh}
                       onChange={(e) => setTinh(e.target.value)}
-                      className={fieldClassName}
+                      className={selectClassName(!!tinh)}
                       required
                     >
                       <option value="">Chọn tỉnh/thành…</option>
