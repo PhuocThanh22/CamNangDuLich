@@ -138,6 +138,7 @@ interface Filter {
 export default function HomePage() {
   const router = useRouter();
   const [activeFilter, setActiveFilter] = useState('all');
+  const [nearbyOnly, setNearbyOnly] = useState(false);
   const [featuredPlaces, setFeaturedPlaces] = useState<FeaturedItem[]>(fallbackFeatured);
   const [nearbyPlaces, setNearbyPlaces] = useState<NearbyItem[]>(fallbackNearby);
   const [nearbyResults, setNearbyResults] = useState<NearbyItem[] | null>(null);
@@ -303,15 +304,24 @@ export default function HomePage() {
   }, [featuredPlaces, userLocation]);
 
   const filteredNearby = useMemo(() => {
-    let result = [...(activeFilter === 'near' && nearbyResults ? nearbyResults : nearbyPlaces)];
+    let result: (NearbyItem & { distKm?: number })[] = [
+      ...(activeFilter === 'near' && nearbyResults ? nearbyResults : nearbyPlaces),
+    ].map((p) => ({ ...p }));
     if (userLocation) {
       result = result.map((p) => {
         if (p.vido != null && p.kinhdo != null) {
           const d = calcDistance(userLocation[0], userLocation[1], p.vido, p.kinhdo);
-          return { ...p, khoangcach: d };
+          return { ...p, khoangcach: d, distKm: parseKm(d) };
         }
         return p;
       });
+    }
+    if (nearbyOnly) {
+      if (!userLocation) {
+        result = [];
+      } else {
+        result = result.filter((p) => p.distKm != null && p.distKm <= 10);
+      }
     }
     if (activeFilter === 'open') {
       result = result.filter((p) => p.trangthai === 'Đang mở');
@@ -325,9 +335,11 @@ export default function HomePage() {
           .filter((p) => parseKm(p.khoangcach) <= 10)
           .sort((a, b) => parseKm(a.khoangcach) - parseKm(b.khoangcach));
       }
+    } else if (nearbyOnly && userLocation) {
+      result = result.sort((a, b) => (a.distKm ?? Infinity) - (b.distKm ?? Infinity));
     }
     return result;
-  }, [nearbyPlaces, nearbyResults, activeFilter, userLocation]);
+  }, [nearbyPlaces, nearbyResults, activeFilter, nearbyOnly, userLocation]);
 
   return (
     <div className="w-full bg-white dark:bg-[#0b1120]">
@@ -451,7 +463,7 @@ export default function HomePage() {
             </div>
           </div>
 
-          <div className="mb-7 flex flex-wrap gap-2">
+          <div className="mb-7 flex flex-wrap items-center gap-2">
             {filters.map((f) => (
               <button
                 key={f.key}
@@ -469,6 +481,20 @@ export default function HomePage() {
                 {f.label}
               </button>
             ))}
+            <span className="mx-1 hidden h-6 w-px bg-slate-200 dark:bg-slate-700 sm:block" />
+            <button
+              type="button"
+              onClick={() => setNearbyOnly((v) => !v)}
+              title="Chỉ hiện quán trong bán kính 10 km từ vị trí của bạn"
+              className={`inline-flex items-center gap-1.5 rounded-full px-4 py-2 text-[13px] font-semibold transition-all ${
+                nearbyOnly
+                  ? 'bg-emerald-500 text-white shadow-[0_4px_12px_rgba(16,185,129,0.35)]'
+                  : 'bg-white text-slate-600 shadow-sm hover:bg-slate-50 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700'
+              }`}
+            >
+              <Navigation className="h-3.5 w-3.5" />
+              Trong bán kính 10 km
+            </button>
           </div>
 
           <div className="grid gap-4 lg:grid-cols-3">
@@ -531,11 +557,11 @@ export default function HomePage() {
           {filteredNearby.length === 0 && (
             <div className="rounded-2xl bg-white px-6 py-12 text-center shadow-sm dark:bg-[#111a2e]">
               <p className="text-[15px] font-semibold text-slate-600 dark:text-slate-300">
-                {activeFilter === 'near' && !userLocation
+                {(nearbyOnly || activeFilter === 'near') && !userLocation
                   ? 'Bạn cần bật định vị (GPS) để xem quán gần bạn trong bán kính 10 km'
                   : 'Không có quán ăn nào phù hợp với bộ lọc hiện tại'}
               </p>
-              {activeFilter === 'near' && !userLocation ? (
+              {(nearbyOnly || activeFilter === 'near') && !userLocation ? (
                 <button
                   type="button"
                   onClick={requestLocation}
