@@ -29,6 +29,11 @@ export default function Hero() {
     { label: 'tỉnh thành', value: '63', icon: <Map className="h-5 w-5" /> },
   ];
 
+  const handleSearch = () => {
+    const q = searchValue.trim();
+    router.push(q ? `/map?search=${encodeURIComponent(q)}` : '/map');
+  };
+
   return (
     <section className="relative flex min-h-[85vh] w-full flex-col items-center justify-center overflow-hidden">
       <motion.div className="absolute inset-0" style={{ scale: bgScale, opacity: bgOpacity }}>
@@ -96,7 +101,7 @@ export default function Hero() {
                 onChange={(e) => setSearchValue(e.target.value)}
                 placeholder="Bạn muốn ăn gì? Ví dụ: Bánh mì, Phở, Hải sản..."
                 className="w-full bg-transparent text-[14px] text-slate-800 outline-none placeholder:text-slate-400"
-                onKeyDown={(e) => e.key === 'Enter' && router.push('/map')}
+                onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
               />
             </div>
             <button

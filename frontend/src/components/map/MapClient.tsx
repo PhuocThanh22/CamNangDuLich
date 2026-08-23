@@ -322,6 +322,11 @@ export default function MapClient() {
     const params = new URLSearchParams(window.location.search);
     const cat = params.get('cat');
     const radius = params.get('radius');
+    const search = params.get('search');
+    if (search) {
+      setSearchQuery(search);
+      setShowSidebar(true);
+    }
     if (cat) {
       setFilters((f) => ({ ...f, category: cat }));
       setUrlFilter(true);
