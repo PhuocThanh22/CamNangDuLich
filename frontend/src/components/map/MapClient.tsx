@@ -115,6 +115,14 @@ interface CityMarker {
   places: Place[];
 }
 
+function normalizeText(s: string): string {
+  return s
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/đ/g, 'd');
+}
+
 function computeCityMarkers(placesList: Place[]): CityMarker[] {
   return VIETNAM_CITIES.map((city) => {
     const cityPlaces = placesList.filter(
@@ -443,13 +451,13 @@ export default function MapClient() {
 
   const filteredPlaces = useMemo(() => {
     const valid = places.filter((p) => p.vido != null && p.kinhdo != null);
-    if (!searchQuery) return valid;
-    const q = searchQuery.toLowerCase();
+    if (!searchQuery.trim()) return valid;
+    const q = normalizeText(searchQuery.trim());
     return valid.filter(
       (p) =>
-        p.ten.toLowerCase().includes(q) ||
-        p.monan.toLowerCase().includes(q) ||
-        p.diachi.toLowerCase().includes(q)
+        normalizeText(p.ten || '').includes(q) ||
+        normalizeText(p.monan || '').includes(q) ||
+        normalizeText(p.diachi || '').includes(q)
     );
   }, [searchQuery, places]);
 
@@ -460,7 +468,8 @@ export default function MapClient() {
 
   const nearbyPlaces = useMemo(() => {
     let result = filteredPlaces;
-    if (userLocation) {
+    const isSearching = searchQuery.trim().length > 0;
+    if (userLocation && !isSearching) {
       result = result
         .map((p) => ({
           ...p,
@@ -474,7 +483,7 @@ export default function MapClient() {
         .filter((p) => p.distRaw <= committedRadius)
         .sort((a, b) => a.distRaw! - b.distRaw!);
     }
-    if (filters.category !== 'all') {
+    if (!isSearching && filters.category !== 'all') {
       result = result.filter(
         (p) =>
           p.monan === filters.category || p.tienich === filters.category
@@ -489,7 +498,7 @@ export default function MapClient() {
       result = result.filter((p) => getStatusFromHours(p.giohoatdong || p.giomocua) === 'Đang mở');
     }
     return result;
-  }, [filteredPlaces, userLocation, committedRadius, filters]);
+  }, [filteredPlaces, userLocation, committedRadius, filters, searchQuery]);
 
   const tileUrl = MAP_TILES.find((t) => t.id === activeTile)?.url || MAP_TILES[0].url;
   const tileAttr = MAP_TILES.find((t) => t.id === activeTile)?.attr || MAP_TILES[0].attr;
@@ -793,14 +802,18 @@ export default function MapClient() {
                     <div className="flex flex-col items-center justify-center py-12 text-center">
                       <Search className="mb-3 h-10 w-10 text-slate-300 dark:text-slate-500" />
                       <p className="text-[14px] font-medium text-slate-500 dark:text-slate-400">
-                        {userLocation
-                          ? 'Không có quán ăn nào trong bán kính này'
-                          : 'Hãy định vị vị trí của bạn'}
+                        {searchQuery.trim()
+                          ? 'Không tìm thấy địa điểm phù hợp'
+                          : userLocation
+                            ? 'Không có quán ăn nào trong bán kính này'
+                            : 'Hãy định vị vị trí của bạn'}
                       </p>
                       <p className="text-[12px] text-slate-400 dark:text-slate-500">
-                        {userLocation
-                          ? 'Thử tăng bán kính tìm kiếm'
-                          : 'Nhấn "Định vị" để xem quán ăn gần bạn'}
+                        {searchQuery.trim()
+                          ? 'Thử từ khóa khác, ví dụ: tên quán, món ăn hoặc địa chỉ'
+                          : userLocation
+                            ? 'Thử tăng bán kính tìm kiếm'
+                            : 'Nhấn "Định vị" để xem quán ăn gần bạn'}
                       </p>
                     </div>
                   ) : (
